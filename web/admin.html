@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Борода — Адмін-панель</title>
+<title>Борода CRM PRO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
@@ -15,99 +15,78 @@
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;font-size:15px;line-height:1.45}
-h1, h2 {font-family:'Playfair Display',serif; font-weight:600; letter-spacing:0.5px; margin:0 0 4px; color:var(--brass);}
-h1 {font-size:24px;}
-.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
-header{padding:28px 0 14px; border-bottom:1px solid var(--line); margin-bottom: 20px;}
-.sub{color:var(--muted);margin:0;font-size:13px}
-.tabs{display:flex;gap:6px;margin:14px 0 18px;background:var(--chip);padding:4px;border-radius:12px; border: 1px solid var(--line);}
-.tab{flex:1;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:500;padding:10px 6px;border-radius:9px;cursor:pointer;min-height:44px; transition: 0.3s;}
-.tab[aria-selected="true"]{background:var(--brass);color:#000;box-shadow:0 2px 10px rgba(212,175,55,0.2)}
-.tab:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
-.hint{font-size:13px;color:var(--muted);margin:-6px 0 14px}
-section[hidden]{display:none}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
-label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
-input[type=text],input[type=tel],input[type=date],input[type=password]{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink);min-height:44px}
-.btn{border:0;background:linear-gradient(45deg, #b8860b, #ffd700);color:#000;font:inherit;font-weight:600;padding:13px 18px;border-radius:8px;cursor:pointer;width:100%;min-height:48px;margin-top:14px; text-transform: uppercase; letter-spacing: 1px;}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px; text-align:center;}
-.stat b{display:block;font-weight:600;font-size:22px; color:var(--brass);}
-.stat span{font-size:12px;color:var(--muted); text-transform:uppercase;}
-.row{display:flex;gap:12px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line)}
-.row:first-child{border-top:0; padding-top:0;}
-.time{font-size:16px;min-width:54px; color:var(--brass); font-weight:600;}
-.grow{flex:1;min-width:0}
-.grow b{font-weight:600; font-size:16px;}
-.meta{font-size:13px;color:var(--muted); margin-top:4px;}
-.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;background:var(--chip);color:var(--ink);margin-left:6px; text-transform:uppercase;}
-.badge.new{color:#fff; background:var(--warn)}
-.badge.done{color:#fff; background:var(--ok)}
-.badge.cancelled{color:#fff; background:var(--red)}
-.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.mini{border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:12px;padding:8px 12px;border-radius:6px;cursor:pointer;min-height:36px; transition:0.2s;}
-.mini:hover {border-color:var(--brass);}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;font-size:14px;line-height:1.45}
+h1, h2 {font-family:'Playfair Display',serif; font-weight:600; color:var(--brass); margin:0 0 4px;}
+.wrap{max-width:800px;margin:0 auto;padding:0 16px 48px}
+header{padding:24px 0; border-bottom:1px solid var(--line); margin-bottom: 20px;}
+.tabs{display:flex;gap:6px;margin:14px 0;background:var(--chip);padding:4px;border-radius:12px; border: 1px solid var(--line);}
+.tab{flex:1;background:transparent;color:var(--muted);border:0;font:inherit;font-weight:500;padding:10px;border-radius:9px;cursor:pointer; transition:0.3s;}
+.tab[aria-selected="true"]{background:var(--brass);color:#000;}
+.date-filters {display:flex; gap:12px; margin-bottom: 16px; align-items:center;}
+input[type=date], input[type=password]{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink);}
+.btn{background:linear-gradient(45deg, #b8860b, #ffd700);color:#000;border:0;padding:12px 20px;border-radius:8px;font-weight:600;cursor:pointer; text-transform:uppercase;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px; text-align:center;}
+.stat b{display:block;font-size:24px; color:var(--brass);}
+.stat span{font-size:11px;color:var(--muted); text-transform:uppercase;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;}
+.row{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.time{font-size:15px; color:var(--brass); font-weight:600; min-width:60px;}
+.grow{flex:1}
+.badge{font-size:10px;padding:3px 8px;border-radius:12px;text-transform:uppercase; margin-left:8px;}
+.b-booked{background:var(--warn);color:#fff}
+.b-done{background:var(--ok);color:#fff}
+.b-cancelled{background:var(--red);color:#fff}
+.acts{margin-top:10px;}
+.mini{background:transparent;border:1px solid var(--line);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px; transition:0.2s;}
+.mini:hover{border-color:var(--brass)}
 .mini.go{background:var(--brass);color:#000;border-color:var(--brass)}
-.empty{color:var(--muted);padding:8px 0; font-style:italic;}
-.tag{font-size:12px;color:var(--warn);font-weight:600}
-.foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:20px; border-top:1px solid var(--line); padding-top:10px;}
-.link{background:none;border:0;color:var(--brass);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:10px 0;min-height:44px}
-#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--brass);color:#000;padding:11px 20px;border-radius:8px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;z-index:10}
-#toast.show{opacity:1}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:grid;place-items:center;z-index:20;padding:16px}
-.overlay[hidden]{display:none}
-.dlg{background:var(--surface);border:1px solid var(--brass);border-radius:12px;padding:26px;max-width:380px;width:100%; box-shadow: 0 10px 30px rgba(212,175,55,0.15);}
-.dlg h2{margin-bottom:8px; font-size:22px;}
-.dlg p{color:var(--muted);font-size:13px;margin:0 0 16px}
-.err{color:var(--red);font-size:13px;min-height:18px;margin:8px 0 0}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:grid;place-items:center;}
+.dlg{background:var(--surface);padding:24px;border-radius:12px;border:1px solid var(--brass); width:320px; text-align:center;}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>Борода CRM</h1>
-  <p class="sub">Керування візитами та клієнтами</p>
+  <h1>Борода CRM PRO</h1>
+  <span style="color:var(--muted)">Аналітика та керування бізнесом</span>
 </header>
 
 <div class="tabs" role="tablist">
-  <button class="tab" role="tab" id="t-day" aria-selected="true" data-tab="day">Записи на день</button>
-  <button class="tab" role="tab" id="t-cli" aria-selected="false" data-tab="cli">База клієнтів</button>
+  <button class="tab" id="t-day" aria-selected="true" data-tab="day">Записи (Період)</button>
+  <button class="tab" id="t-cli" aria-selected="false" data-tab="cli">База клієнтів</button>
 </div>
 
-<section id="day" role="tabpanel">
-  <input type="date" id="ddate" style="margin-bottom:16px">
+<section id="day">
+  <div class="date-filters">
+    <span style="color:var(--muted)">Період з:</span>
+    <input type="date" id="dstart">
+    <span style="color:var(--muted)">по:</span>
+    <input type="date" id="dend">
+  </div>
+  
   <div class="stats">
-    <div class="stat"><b id="s-count">0</b><span>Активних</span></div>
     <div class="stat"><b id="s-rev">0 ₴</b><span>Виручка</span></div>
-    <div class="stat"><b id="s-load">0%</b><span>Завантаження</span></div>
+    <div class="stat"><b id="s-done">0</b><span>Завершено</span></div>
+    <div class="stat"><b id="s-count">0</b><span>Очікується</span></div>
+    <div class="stat"><b id="s-lost">0 ₴</b><span style="color:var(--red)">Втрачено (відміни)</span></div>
   </div>
   <div class="card" id="daylist"></div>
 </section>
 
-<section id="cli" role="tabpanel" hidden>
-  <p class="hint">Список клієнтів генерується автоматично. Позначка показує, кому варто нагадати про візит.</p>
+<section id="cli" hidden>
   <div class="card" id="clilist"></div>
 </section>
-
-<div class="foot">
-  <span class="meta">Синхронізація з barber.db</span>
-  <button class="link" id="rekey">Вийти / Змінити ключ</button>
-</div>
 </div>
 
 <div class="overlay" id="lock">
   <div class="dlg">
-    <h2>Вхід у систему</h2>
-    <p>Введіть токен доступу (ADMIN_PANEL_TOKEN)</p>
-    <input type="password" id="key" placeholder="••••••••" autocomplete="off">
-    <p class="err" id="keyerr"></p>
-    <button class="btn" id="unlock" style="margin-top:10px">Увійти</button>
+    <h2>Авторизація</h2>
+    <input type="password" id="key" placeholder="Введіть токен" style="margin:16px 0; width:100%;">
+    <button class="btn" id="unlock" style="width:100%">Увійти</button>
   </div>
 </div>
-<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
@@ -119,99 +98,87 @@ input[type=text],input[type=tel],input[type=date],input[type=password]{width:100
   function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
   function key(){return localStorage.getItem("admin_key")||""}
   function setKey(k){if(k)localStorage.setItem("admin_key",k);else localStorage.removeItem("admin_key")}
-  function toast(t){var el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove("show")},2200)}
 
   function req(path,opts){
     opts=opts||{};
     opts.headers=Object.assign({"X-Admin-Token":key()},opts.headers||{});
-    if(opts.body&&typeof opts.body!=="string"){opts.body=JSON.stringify(opts);opts.headers["Content-Type"]="application/json"}
-    return fetch(path,opts).then(function(r){
-      return r.json().then(function(j){
-        if(r.status===403){setKey("");$("lock").hidden=false;throw new Error("Невірний ключ доступу")}
-        return j;
-      });
-    });
+    if(opts.body){opts.body=JSON.stringify(opts.body);opts.headers["Content-Type"]="application/json"}
+    return fetch(path,opts).then(r=>r.json().then(j=>{
+      if(r.status===403){setKey("");$("lock").hidden=false;throw new Error("Auth")}
+      return j;
+    }));
   }
 
   function renderDay(){
-    var date=$("ddate").value||iso(new Date());
-    req("/admin/api/day?date="+date).then(function(r){
-      if(!r.ok){$("daylist").innerHTML='<p class="empty">'+(r.error||"Помилка")+"</p>";return}
-      $("s-count").textContent=r.stats.count;
+    var start=$("dstart").value||iso(new Date());
+    var end=$("dend").value||iso(new Date());
+    
+    req("/admin/api/day?start="+start+"&end="+end).then(function(r){
+      if(!r.ok) return;
       $("s-rev").textContent=money(r.stats.revenue);
-      $("s-load").textContent=r.stats.load+"%";
-      if(!r.items.length){$("daylist").innerHTML="<p class=\"empty\">На цей день записів немає.</p>";return}
+      $("s-done").textContent=r.stats.done_count;
+      $("s-count").textContent=r.stats.count - r.stats.done_count;
+      $("s-lost").textContent=money(r.stats.lost_revenue);
+      
+      if(!r.items.length){$("daylist").innerHTML="<div class='empty'>Записів у цьому періоді немає.</div>";return}
+      
       $("daylist").innerHTML=r.items.map(function(a){
         var acts="";
-        if(a.status==="booked")acts='<button class="mini go" data-act="done" data-id="'+a.id+'">Прийшов</button><button class="mini" data-act="cancelled" data-id="'+a.id+'">Скасувати</button>';
-        else acts='<button class="mini" data-act="booked" data-id="'+a.id+'">Повернути в очікування</button>';
-        return '<div class="row"><div class="time">'+esc(a.time)+'</div><div class="grow"><b>'+esc(a.name)+'</b>'
-          +' <span class="badge '+a.status+'">'+STATUS[a.status]+'</span>'
-          +'<div class="meta">'+esc(a.service)+" · "+esc(a.master)+" · "+money(a.price)+" · "+esc(a.source)+'</div>'
-          +'<div class="meta">'+esc(a.phone)+'</div><div class="acts">'+acts+"</div></div></div>";
+        if(a.status==="booked") acts=`<button class="mini go" data-act="done" data-id="${a.id}">Завершено</button> <button class="mini" data-act="cancelled" data-id="${a.id}">Скасувати</button>`;
+        else acts=`<button class="mini" data-act="booked" data-id="${a.id}">Повернути</button>`;
+        
+        return `<div class="row">
+          <div class="time">${a.date}<br>${a.time}</div>
+          <div class="grow">
+            <b>${esc(a.name)}</b> <span class="badge b-${a.status}">${STATUS[a.status]}</span>
+            <div style="color:var(--muted); font-size:12px; margin-top:4px;">${esc(a.service)} · ${esc(a.master)} · ${money(a.price)}</div>
+            <div style="font-size:13px; margin-top:2px;">${esc(a.phone)}</div>
+            <div class="acts">${acts}</div>
+          </div>
+        </div>`;
       }).join("");
-    }).catch(function(e){$("daylist").innerHTML='<p class="empty">'+esc(e.message)+"</p>"});
+    });
   }
 
   function renderClients(){
     req("/admin/api/clients").then(function(r){
-      if(!r.ok){$("clilist").innerHTML='<p class="empty">'+(r.error||"Помилка")+"</p>";return}
-      if(!r.clients.length){$("clilist").innerHTML="<p class=\"empty\">Клієнтів поки немає.</p>";return}
-      var today=new Date();today.setHours(0,0,0,0);
-      $("clilist").innerHTML=r.clients.map(function(c){
-        var days=c.last?Math.round((today-new Date(c.last+"T00:00:00"))/86400000):null;
-        var stale=days!==null&&days>=30&&!c.upcoming;
-        var p=String(c.phone);
-        return '<div class="row"><div class="grow"><b>'+esc(c.name)+'</b>'+(stale?' <span class="tag">не був '+days+" дн.</span>":"")
-          +'<div class="meta">'+esc(c.phone)+'</div>'
-          +'<div class="meta">Візитів: '+(c.visits||0)+" · Виручка: "+money(c.spent)+(c.last?" · Останній: "+esc(c.last):"")+"</div>"
-          +(stale?'<div class="acts"><button class="mini go" data-phone="'+esc(p)+'">Нагадати про візит</button></div>':"")
-          +"</div></div>";
-      }).join("");
-    }).catch(function(e){$("clilist").innerHTML='<p class="empty">'+esc(e.message)+"</p>"});
+      if(!r.ok) return;
+      $("clilist").innerHTML=r.clients.map(c=>`
+        <div class="row"><div class="grow">
+          <b>${esc(c.name)}</b>
+          <div style="color:var(--muted); font-size:12px;">${esc(c.phone)} · Візитів: ${c.visits||0} · Сума: ${money(c.spent)}</div>
+        </div></div>`).join("");
+    });
   }
 
   document.addEventListener("click",function(e){
     var t=e.target.closest("button");if(!t)return;
     if(t.dataset.tab){
-      ["day","cli"].forEach(function(id){
-        $(id).hidden=id!==t.dataset.tab;
-        $("t-"+id).setAttribute("aria-selected",id===t.dataset.tab);
-      });
-      if(t.dataset.tab==="day")renderDay();else renderClients();
-      return;
+      $("day").hidden = t.dataset.tab !== "day";
+      $("cli").hidden = t.dataset.tab !== "cli";
+      $("t-day").setAttribute("aria-selected", t.dataset.tab === "day");
+      $("t-cli").setAttribute("aria-selected", t.dataset.tab === "cli");
+      t.dataset.tab==="day" ? renderDay() : renderClients();
     }
     if(t.dataset.act){
-      req("/admin/api/status",{method:"POST",body:{id:t.dataset.id,status:t.dataset.act}})
-        .then(function(r){if(r.ok){toast("Статус оновлено");renderDay()}else toast(r.error||"Помилка")});
-      return;
-    }
-    if(t.dataset.phone){
-      var text="Привіт! Це барбершоп «Борода». Давно не бачились. Запишіться онлайн на зручний час, і ми вас чекаємо.";
-      try{navigator.clipboard.writeText(text).then(function(){toast("Повідомлення скопійовано")},function(){toast(text)})}catch(err){toast(text)}
-      return;
+      req("/admin/api/status",{method:"POST",body:{id:t.dataset.id,status:t.dataset.act}}).then(renderDay);
     }
     if(t.id==="unlock"){
-      var k=$("key").value.trim();
-      $("keyerr").textContent="";
-      // ИСПРАВЛЕННЫЙ БАГ: передаем введенный пароль напрямую в заголовке проверки!
+      var k=$("key").value;
       req("/admin/api/clients", {headers: {"X-Admin-Token": k}}).then(function(r){
-        if(r.ok){setKey(k);$("lock").hidden=true;renderDay()}
-        else{$("keyerr").textContent=r.error||"Немає доступу";setKey("")}
-      }).catch(function(){
-        setKey("");
-        $("keyerr").textContent="Невірний ключ. Перевірте налаштування сервера.";
+        if(r.ok){setKey(k);$("lock").hidden=true;renderDay();}
+        else alert("Невірний токен");
       });
-      return;
     }
-    if(t.id==="rekey"){setKey("");$("lock").hidden=false;$("key").value="";return}
   });
-  $("ddate").addEventListener("change",renderDay);
+
+  $("dstart").addEventListener("change",renderDay);
+  $("dend").addEventListener("change",renderDay);
 
   var today=iso(new Date());
-  $("ddate").value=today;
-  if(!key()){$("lock").hidden=false}
-  else{renderDay()}
+  $("dstart").value=today;
+  $("dend").value=today;
+  if(!key()) $("lock").hidden=false; else renderDay();
 })();
 </script>
 </body>
