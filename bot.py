@@ -751,26 +751,31 @@ async def index(request):
 
 # ---------- Адмін-панель ----------
 ADMIN_TOKEN = os.getenv("ADMIN_PANEL_TOKEN", "")
-ADMIN_STATUS = {"booked": "Записан", "done": "Прийшов", "cancelled": "Скасовано"}
-
+ADMIN_STATUS = {"booked": "Очікується", "done": "Завершено", "cancelled": "Скасовано"}
 
 def admin_ok(request) -> bool:
     if not ADMIN_TOKEN:
         return False
     return request.headers.get("X-Admin-Token", "") == ADMIN_TOKEN or request.query.get("token", "") == ADMIN_TOKEN
 
-
+# НОВАЯ ФУНКЦИЯ ВСТАЕТ РОВНО НА МЕСТО СТАРОЙ
 async def admin_day(request):
     if not admin_ok(request):
         return web.json_response({"ok": False, "error": "Немає доступу"}, status=403)
-    try:
-        day = date.fromisoformat(request.query.get("date", ""))
-    except ValueError:
-        return jerr("Невірна дата.")
+    
+    start_d = request.query.get("start", "")
+    end_d = request.query.get("end", "")
+    
+    if not start_d or not end_d:
+        today = now().date().isoformat()
+        start_d, end_d = today, today
+
     with closing(db()) as c:
         rows = c.execute(
-            "SELECT * FROM appts WHERE substr(start,1,10)=? ORDER BY start", (day.isoformat(),)
+            "SELECT * FROM appts WHERE substr(start,1,10) BETWEEN ? AND ? ORDER BY start", 
+            (start_d, end_d)
         ).fetchall()
+        
     items = []
     for r in rows:
         st = datetime.fromisoformat(r["start"])
@@ -778,6 +783,7 @@ async def admin_day(request):
         items.append(
             {
                 "id": r["id"],
+                "date": f"{st:%d.%m}",
                 "time": f"{st:%H:%M}",
                 "name": r["name"],
                 "phone": r["phone"],
@@ -789,17 +795,20 @@ async def admin_day(request):
                 "source": "сайт" if r["source"] == "web" else "бот",
             }
         )
+        
     active = [i for i in items if i["status"] != "cancelled"]
     revenue = sum(i["price"] for i in items if i["status"] == "done")
-    used = sum(i["units"] for i in active)
+    lost_revenue = sum(i["price"] for i in items if i["status"] == "cancelled")
+    
     return web.json_response(
         {
             "ok": True,
             "items": items,
             "stats": {
                 "count": len(active),
+                "done_count": len([i for i in items if i["status"] == "done"]),
                 "revenue": revenue,
-                "load": round(used / (SLOTS * len(MASTERS)) * 100),
+                "lost_revenue": lost_revenue
             },
         }
     )
