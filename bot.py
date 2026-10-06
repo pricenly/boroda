@@ -901,7 +901,60 @@ async def main() -> None:
     finally:
         task.cancel()
         await runner.cleanup()
+async def admin_day(request):
+    if not admin_ok(request):
+        return web.json_response({"ok": False, "error": "Немає доступу"}, status=403)
+    
+    start_d = request.query.get("start", "")
+    end_d = request.query.get("end", "")
+    
+    if not start_d or not end_d:
+        today = now().date().isoformat()
+        start_d, end_d = today, today
 
+    with closing(db()) as c:
+        # Теперь ищем записи в диапазоне дат
+        rows = c.execute(
+            "SELECT * FROM appts WHERE substr(start,1,10) BETWEEN ? AND ? ORDER BY start", 
+            (start_d, end_d)
+        ).fetchall()
+        
+    items = []
+    for r in rows:
+        st = datetime.fromisoformat(r["start"])
+        svc = SERVICES.get(r["service"], ("?", 0, 0))
+        items.append(
+            {
+                "id": r["id"],
+                "date": f"{st:%d.%m}",
+                "time": f"{st:%H:%M}",
+                "name": r["name"],
+                "phone": r["phone"],
+                "service": svc[0],
+                "master": MASTERS.get(r["master"], r["master"]),
+                "price": svc[2],
+                "status": r["status"],
+                "units": units(r["service"]) if r["service"] in SERVICES else 1,
+                "source": "сайт" if r["source"] == "web" else "бот",
+            }
+        )
+        
+    active = [i for i in items if i["status"] != "cancelled"]
+    revenue = sum(i["price"] for i in items if i["status"] == "done")
+    lost_revenue = sum(i["price"] for i in items if i["status"] == "cancelled")
+    
+    return web.json_response(
+        {
+            "ok": True,
+            "items": items,
+            "stats": {
+                "count": len(active),
+                "done_count": len([i for i in items if i["status"] == "done"]),
+                "revenue": revenue,
+                "lost_revenue": lost_revenue
+            },
+        }
+    )
 
 if __name__ == "__main__":
     asyncio.run(main())
