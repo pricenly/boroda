@@ -19,7 +19,7 @@ h1,h2,h3,.brand{font-family:'Playfair Display',serif;}
 a{color:var(--brass); text-decoration:none; transition:0.3s;}
 .wrap{max-width:800px;margin:0 auto;padding:0 22px}
 
-/* Navbar & Burger Menu */
+/* Navbar */
 .navbar {position:fixed; top:0; left:0; right:0; height:70px; background:rgba(5,5,5,0.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 22px;}
 .brand {font-size:24px; font-weight:600; color:var(--brass); letter-spacing:2px; text-transform:uppercase;}
 .nav-links {display:flex; gap:24px; align-items:center;}
@@ -27,16 +27,6 @@ a{color:var(--brass); text-decoration:none; transition:0.3s;}
 .nav-links a:hover {color:var(--brass);}
 .btn-cab {border:1px solid var(--brass); padding:8px 16px; border-radius:6px; color:var(--brass) !important;}
 .btn-cab:hover {background:var(--brass); color:#000 !important;}
-
-/* Mobile Menu Toggle */
-.menu-toggle-lbl {display:none; cursor:pointer; flex-direction:column; gap:5px;}
-.menu-toggle-lbl span {display:block; width:25px; height:2px; background:var(--brass); transition:0.3s;}
-#menu-toggle {display:none;}
-@media (max-width: 600px) {
-  .nav-links {display:none; position:absolute; top:70px; left:0; right:0; background:#050505; flex-direction:column; padding:20px; border-bottom:1px solid var(--line);}
-  .menu-toggle-lbl {display:flex;}
-  #menu-toggle:checked ~ .nav-links {display:flex;}
-}
 
 /* Hero */
 .hero{padding: 140px 0 80px; text-align:center; background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%); border-bottom:1px solid var(--line);}
@@ -51,20 +41,22 @@ h2{font-size:32px;text-align:center; margin:0 0 40px; color:var(--brass);}
 
 /* Booking UI */
 .book{background:var(--soft);border:1px solid var(--line); border-radius:12px;padding:40px 30px;}
+.demo{background:rgba(212,175,55,0.1);border:1px dashed var(--brass);border-radius:8px;padding:12px;font-size:14px;color:var(--brass);margin-bottom:20px}
 .lab{display:block;font-size:12px; text-transform:uppercase; letter-spacing:2px; color:var(--muted);margin:24px 0 12px;}
 .chips{display:flex;flex-wrap:wrap;gap:10px}
 .chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:14px 20px;border-radius:6px;cursor:pointer; transition:0.3s;}
 .chip:hover{border-color:var(--brass-dim);}
 .chip[aria-pressed="true"]{border-color:var(--brass);background:rgba(212,175,55,0.1); color:var(--brass);}
+.chip small{display:block;color:var(--muted);font-size:13px; margin-top:4px;}
+.slot{min-width:80px;text-align:center; font-weight:500;}
+.none{color:var(--muted);font-size:15px;margin:0; font-style:italic;}
 input[type=text],input[type=tel]{width:100%;font:inherit;padding:16px;border:1px solid var(--line);border-radius:6px;background:#000;color:var(--ink);}
 input:focus{border-color:var(--brass); outline:none;}
+.trap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .submit{width:100%;margin-top:30px;}
+.submit:disabled{opacity:.5;cursor:not-allowed}
+.msg{color:var(--red);font-size:14px;min-height:22px;margin:12px 0 0}
 .done{border:1px solid var(--brass);background:rgba(212,175,55,0.1);border-radius:8px;padding:24px;margin-top:24px; text-align:center;}
-
-/* Reviews Mockup */
-.reviews-grid {display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));}
-.review-card {background:var(--soft); border:1px solid var(--line); padding:24px; border-radius:8px;}
-.stars {color:var(--brass); font-size:18px; margin-bottom:10px;}
 
 footer{padding:40px 0; text-align:center; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:2px; border-top:1px solid var(--line); margin-top:60px;}
 [hidden]{display:none!important}
@@ -74,15 +66,9 @@ footer{padding:40px 0; text-align:center; color:var(--muted); font-size:12px; te
 
 <nav class="navbar">
   <div class="brand">BORODA</div>
-  <input type="checkbox" id="menu-toggle">
-  <label for="menu-toggle" class="menu-toggle-lbl">
-    <span></span><span></span><span></span>
-  </label>
   <div class="nav-links">
     <a href="#book">Запис</a>
-    <a href="#masters">Майстри</a>
-    <a href="#reviews">Відгуки</a>
-    <a href="#" class="btn-cab" onclick="alert('Особистий кабінет знаходиться в розробці (Фаза 3). Тут буде авторизація через Telegram.')">Кабінет</a>
+    <a href="#" class="btn-cab" onclick="alert('Особистий кабінет знаходиться в розробці. Незабаром тут буде авторизація через Telegram.')">Кабінет</a>
   </div>
 </nav>
 
@@ -98,10 +84,13 @@ footer{padding:40px 0; text-align:center; color:var(--muted); font-size:12px; te
   <section id="book">
     <h2>Оформити візит</h2>
     <div class="book">
+      <div class="demo" id="demo" hidden>Демо-режим: так виглядає запис. Відкрийте сайт на сервері Railway для підключення до бази.</div>
+
       <span class="lab">Послуга</span><div class="chips" id="svc"></div>
       <span class="lab">Майстер</span><div class="chips" id="mst"></div>
       <span class="lab">Дата</span><div class="chips" id="days"></div>
       <span class="lab">Час</span><div class="chips" id="slots"></div>
+      <p class="none" id="slotnote"></p>
       
       <span class="lab" style="margin-top:40px;">Ваші дані</span>
       <div style="display:grid; gap:16px;">
@@ -109,34 +98,15 @@ footer{padding:40px 0; text-align:center; color:var(--muted); font-size:12px; te
         <input type="tel" id="phone" placeholder="Телефон (050 123 45 67)">
       </div>
       <input type="text" id="website" class="trap" tabindex="-1">
-      <p id="msg" style="color:#8b0000; font-size:14px;"></p>
+      <p id="msg" class="msg"></p>
       
       <button class="btn submit" id="send">Підтвердити запис</button>
 
       <div class="done" id="done" hidden>
         <h3 style="color:var(--brass); margin:0 0 10px;">Запис підтверджено</h3>
         <p id="donetext" style="margin:0 0 20px;"></p>
-        <a class="btn" id="tglink" href="#" style="width:100%">Нагадування в Telegram</a>
+        <a class="btn" id="tglink" href="#" style="width:100%" hidden>Нагадування в Telegram</a>
       </div>
-    </div>
-  </section>
-
-  <section id="reviews">
-    <h2>Відгуки клієнтів</h2>
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>"Топ рівень. Андрій зробив ідеальний фейд, як я і просив. Атмосфера пушка."</p>
-        <span style="color:var(--muted); font-size:12px;">— Олександр, вчора</span>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>"Дуже зручно записуватись. Прийшов, сів у крісло, вийшов новим чоловіком."</p>
-        <span style="color:var(--muted); font-size:12px;">— Іван, 3 дні тому</span>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:24px;">
-      <a href="#" style="font-size:14px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--brass);">Залишити відгук (В розробці)</a>
     </div>
   </section>
 </main>
@@ -144,41 +114,71 @@ footer{padding:40px 0; text-align:center; color:var(--muted); font-size:12px; te
 <footer>© 2026 BORODA BARBERSHOP</footer>
 
 <script>
-// Тот же самый JS скрипт, что и в прошлом файле, чтобы запись работала
+/* ТВОЙ РАБОЧИЙ И ПРОВЕРЕННЫЙ СКРИПТ */
 (function(){
   var WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
   var mock=false, cfg=null, days=[];
   var sel={service:null,master:null,date:null,slot:null};
   function $(id){return document.getElementById(id)}
-  function esc(s){return String(s).replace(/[&<>"']/g,c=>{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])}
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
   function money(n){return n.toLocaleString("uk-UA")+" ₴"}
+  function pad(n){return n<10?"0"+n:""+n}
+
+  var MCFG={ok:true,bot:"",services:[
+    {id:"cut",name:"Стрижка",min:45,price:400},{id:"beard",name:"Борода",min:30,price:250},
+    {id:"combo",name:"Стрижка + борода",min:75,price:600},{id:"kid",name:"Дитяча стрижка",min:30,price:300}],
+    masters:[{id:"a",name:"Андрій"},{id:"m",name:"Максим"},{id:"o",name:"Олег"}]};
+  function hash(n){n=Math.imul(n^61,0x27d4eb2d);n^=n>>>15;n=Math.imul(n,0x2c1b3c6d);n^=n>>>12;return n>>>0}
+  function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+  function mockSlots(d,master){
+    var key=d.getFullYear()*372+d.getMonth()*31+d.getDate()+master.charCodeAt(0),now=new Date(),isToday=iso(d)===iso(now),out=[];
+    for(var k=0;k<18;k++){var m=600+k*30;
+      if(isToday&&m<=now.getHours()*60+now.getMinutes()+30)continue;
+      if(hash(key*31+k)%100<40)continue;
+      out.push({i:k,label:pad(Math.floor(m/60))+":"+pad(m%60)})}
+    return out}
+  function mockApi(path,body){
+    var u=new URL(path,"http://x"),q=u.searchParams,p=u.pathname;
+    if(p==="/api/config")return MCFG;
+    if(p==="/api/days"){var r=[];for(var k=0;k<7;k++){var d=new Date(Date.now()+k*86400000);
+      if(mockSlots(d,q.get("master")).length)r.push({date:iso(d),label:WD[d.getDay()]+" "+pad(d.getDate())+"."+pad(d.getMonth()+1)})}
+      return {ok:true,days:r}}
+    if(p==="/api/slots"){var parts=q.get("date").split("-");return {ok:true,slots:mockSlots(new Date(+parts[0],+parts[1]-1,+parts[2]),q.get("master"))}}
+    if(p==="/api/book"){return {ok:true,when:body.date.split("-").reverse().join(".")+" о "+body.slotLabel,service:"",master:"",price:0,tg_link:null}}
+    return {ok:false,error:"?"}}
 
   function req(path,body){
+    if(mock)return Promise.resolve(mockApi(path,body));
     var opt=body?{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}:undefined;
-    return fetch(path,opt).then(r=>r.json().then(j=>{j.status=r.status;return j}));
+    return fetch(path,opt).then(function(r){return r.json().then(function(j){j.status=r.status;return j})});
   }
 
   function renderSvc(){
-    $("svc").innerHTML=cfg.services.map(s=>`<button type="button" class="chip" data-svc="${s.id}" aria-pressed="${sel.service===s.id}">${esc(s.name)}<small>${s.min} хв · ${money(s.price)}</small></button>`).join("");
-    $("mst").innerHTML=cfg.masters.map(m=>`<button type="button" class="chip" data-mst="${m.id}" aria-pressed="${sel.master===m.id}">${esc(m.name)}</button>`).join("");
+    $("svc").innerHTML=cfg.services.map(function(s){
+      return '<button type="button" class="chip" data-svc="'+s.id+'" aria-pressed="'+(sel.service===s.id)+'">'+esc(s.name)+'<small>'+s.min+' хв · '+money(s.price)+'</small></button>'}).join("");
+    $("mst").innerHTML=cfg.masters.map(function(m){
+      return '<button type="button" class="chip" data-mst="'+m.id+'" aria-pressed="'+(sel.master===m.id)+'">'+esc(m.name)+'</button>'}).join("");
   }
   function renderDays(){
-    $("days").innerHTML=days.length?days.map(d=>`<button type="button" class="chip" data-day="${d.date}" aria-pressed="${sel.date===d.date}">${esc(d.label)}</button>`).join(""):'<p>Немає вільних вікон.</p>';
+    $("days").innerHTML=days.length?days.map(function(d){
+      return '<button type="button" class="chip" data-day="'+d.date+'" aria-pressed="'+(sel.date===d.date)+'">'+esc(d.label)+'</button>'}).join(""):'<p class="none">Найближчим часом вільних вікон немає.</p>';
   }
   var slots=[];
   function renderSlots(){
-    $("slots").innerHTML=slots.map(s=>`<button type="button" class="chip slot" data-slot="${s.i}" aria-pressed="${sel.slot===s.i}">${s.label}</button>`).join("");
+    $("slots").innerHTML=slots.map(function(s){
+      return '<button type="button" class="chip slot" data-slot="'+s.i+'" aria-pressed="'+(sel.slot===s.i)+'">'+s.label+'</button>'}).join("");
+    $("slotnote").textContent=sel.date&&!slots.length?"На цей день вільного часу немає.":"";
   }
   function loadDays(){
     sel.date=null;sel.slot=null;slots=[];renderSlots();
-    req("/api/days?service="+sel.service+"&master="+sel.master).then(r=>{
+    req("/api/days?service="+sel.service+"&master="+sel.master).then(function(r){
       days=r.days||[];renderDays();
       if(days.length){sel.date=days[0].date;renderDays();loadSlots()}
     });
   }
   function loadSlots(){
     sel.slot=null;
-    req("/api/slots?service="+sel.service+"&master="+sel.master+"&date="+sel.date).then(r=>{slots=r.slots||[];renderSlots()});
+    req("/api/slots?service="+sel.service+"&master="+sel.master+"&date="+sel.date).then(function(r){slots=r.slots||[];renderSlots()});
   }
 
   function start(c){
@@ -199,25 +199,26 @@ footer{padding:40px 0; text-align:center; color:var(--muted); font-size:12px; te
   $("send").addEventListener("click",function(){
     var msg=$("msg");msg.textContent="";
     var name=$("name").value.trim(),phone=$("phone").value.trim();
-    if(!sel.date||sel.slot===null){msg.textContent="Оберіть дату й час.";return}
-    if(name.length<2){msg.textContent="Вкажіть ім'я.";return}
-    if(phone.length<10){msg.textContent="Вкажіть коректний телефон.";return}
-    var label="";slots.forEach(s=>{if(s.i===sel.slot)label=s.label});
-    
+    if(!sel.date||sel.slot===null){msg.textContent="Оберіть дату й вільний час.";return}
+    if(name.length<2){msg.textContent="Вкажіть ім'я.";$("name").focus();return}
+    if(phone.replace(/\D/g,"").length<10){msg.textContent="Вкажіть телефон у форматі 050 123 45 67.";$("phone").focus();return}
+    var label="";slots.forEach(function(s){if(s.i===sel.slot)label=s.label});
     var btn=$("send");btn.disabled=true;btn.textContent="Записуємо...";
     req("/api/book",{service:sel.service,master:sel.master,date:sel.date,slot:sel.slot,name:name,phone:phone,website:$("website").value,slotLabel:label})
-    .then(r=>{
+    .then(function(r){
       btn.disabled=false;btn.textContent="Підтвердити запис";
-      if(!r.ok){msg.textContent=r.error;return}
-      var svc=cfg.services.filter(s=>s.id===sel.service)[0],m=cfg.masters.filter(x=>x.id===sel.master)[0];
-      $("donetext").textContent=`${name}, чекаємо вас ${r.when}. Майстер ${m.name}.`;
-      if(r.tg_link){$("tglink").href=r.tg_link; $("tglink").hidden=false}
-      $("done").hidden=false;
+      if(!r.ok){msg.textContent=r.error||"Не вдалося записатися. Спробуйте ще раз.";loadSlots();return}
+      var svc=cfg.services.filter(function(s){return s.id===sel.service})[0],m=cfg.masters.filter(function(x){return x.id===sel.master})[0];
+      $("donetext").textContent=name+", чекаємо вас "+r.when+". "+svc.name+", майстер "+m.name+", "+money(svc.price)+".";
+      var a=$("tglink");
+      if(r.tg_link){a.href=r.tg_link;a.hidden=false}else a.hidden=true;
+      $("done").hidden=false;$("done").scrollIntoView({behavior:"smooth",block:"center"});
       $("name").value="";$("phone").value="";loadSlots();
-    }).catch(()=>{btn.disabled=false;btn.textContent="Підтвердити запис";msg.textContent="Помилка сервера."});
+    }).catch(function(){btn.disabled=false;btn.textContent="Підтвердити запис";msg.textContent="Немає зв'язку із сервером. Спробуйте ще раз."});
   });
 
-  req("/api/config").then(c=>{if(c.ok)start(c)});
+  req("/api/config").then(function(c){if(!c||!c.services)throw 0;start(c)})
+    .catch(function(){mock=true;$("demo").hidden=false;start(MCFG)});
 })();
 </script>
 </body>
