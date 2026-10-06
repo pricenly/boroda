@@ -3,121 +3,106 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Барбершоп «Борода» — адмін-панель</title>
+<title>Борода — Адмін-панель</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FFFFFF;--surface:#FFFFFF;--ink:#14233C;--muted:#5C6B7F;--line:#D5DCE3;
-  --red:#C8372D;--blue:#2A4B7C;--ok:#2E7D5B;--warn:#9A6414;--chip:#E4E9EE;
+  --bg:#0a0a0a;--surface:#141414;--ink:#f0f0f0;--muted:#888888;--line:#2a2a2a;
+  --red:#8b0000;--blue:#7FA6DB;--ok:#2E7D5B;--warn:#E0A94A;--chip:#1f1f1f;
+  --brass:#D4AF37;
   box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--bg:#0F1826;--surface:#17233A;--ink:#EAF0F7;--muted:#9AA9BC;--line:#2A3A55;--red:#E5594E;--blue:#7FA6DB;--ok:#4CB88A;--warn:#E0A94A;--chip:#22324D}
-}
-:root[data-theme="dark"]{--bg:#0F1826;--surface:#17233A;--ink:#EAF0F7;--muted:#9AA9BC;--line:#2A3A55;--red:#E5594E;--blue:#7FA6DB;--ok:#4CB88A;--warn:#E0A94A;--chip:#22324D}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;font-size:15px;line-height:1.45}
+h1, h2 {font-family:'Playfair Display',serif; font-weight:600; letter-spacing:0.5px; margin:0 0 4px; color:var(--brass);}
+h1 {font-size:24px;}
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
-header{padding:28px 0 14px}
-.pole{height:8px;border-radius:4px;margin-bottom:14px;background:repeating-linear-gradient(-45deg,var(--red) 0 10px,#fff 10px 20px,var(--blue) 20px 30px,#fff 30px 40px)}
-h1{font-weight:600;font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
-.sub{color:var(--muted);margin:0;font-size:14px}
-.tabs{display:flex;gap:6px;margin:14px 0 18px;background:var(--chip);padding:4px;border-radius:12px}
-.tab{flex:1;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:500;padding:10px 6px;border-radius:9px;cursor:pointer;min-height:44px}
-.tab[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(20,35,60,.12)}
-.tab:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+header{padding:28px 0 14px; border-bottom:1px solid var(--line); margin-bottom: 20px;}
+.sub{color:var(--muted);margin:0;font-size:13px}
+.tabs{display:flex;gap:6px;margin:14px 0 18px;background:var(--chip);padding:4px;border-radius:12px; border: 1px solid var(--line);}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:500;padding:10px 6px;border-radius:9px;cursor:pointer;min-height:44px; transition: 0.3s;}
+.tab[aria-selected="true"]{background:var(--brass);color:#000;box-shadow:0 2px 10px rgba(212,175,55,0.2)}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 .hint{font-size:13px;color:var(--muted);margin:-6px 0 14px}
 section[hidden]{display:none}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
-h2{font-size:16px;margin:0 0 10px;font-weight:600}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;padding:9px 12px;border-radius:10px;cursor:pointer;min-height:44px;text-align:left}
-.chip small{display:block;color:var(--muted);font-size:12px}
-.chip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
-.slot{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;padding:10px 0;border-radius:10px;cursor:pointer;min-height:44px}
-.slot[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.slot:disabled{opacity:.35;text-decoration:line-through;cursor:not-allowed}
 label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
-input[type=text],input[type=tel],input[type=date]{width:100%;font:inherit;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);min-height:44px}
-.btn{border:0;background:var(--ink);color:var(--surface);font:inherit;font-weight:600;padding:13px 18px;border-radius:12px;cursor:pointer;width:100%;min-height:48px;margin-top:14px}
+input[type=text],input[type=tel],input[type=date],input[type=password]{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink);min-height:44px}
+.btn{border:0;background:linear-gradient(45deg, #b8860b, #ffd700);color:#000;font:inherit;font-weight:600;padding:13px 18px;border-radius:8px;cursor:pointer;width:100%;min-height:48px;margin-top:14px; text-transform: uppercase; letter-spacing: 1px;}
 .btn:disabled{opacity:.45;cursor:not-allowed}
-.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);margin-top:8px}
-.msg{font-size:14px;color:var(--red);min-height:20px;margin:8px 0 0}
-.ok{border-color:var(--ok)}
-.ok h2{color:var(--ok)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
-.stat b{display:block;font-weight:600;font-size:20px}
-.stat span{font-size:12px;color:var(--muted)}
-.row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
-.row:first-child{border-top:0}
-.time{font-family:"Onest",system-ui,sans-serif;font-size:15px;min-width:54px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px; text-align:center;}
+.stat b{display:block;font-weight:600;font-size:22px; color:var(--brass);}
+.stat span{font-size:12px;color:var(--muted); text-transform:uppercase;}
+.row{display:flex;gap:12px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0; padding-top:0;}
+.time{font-size:16px;min-width:54px; color:var(--brass); font-weight:600;}
 .grow{flex:1;min-width:0}
-.grow b{font-weight:600}
-.meta{font-size:13px;color:var(--muted)}
-.badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--chip);color:var(--ink);margin-left:6px}
-.badge.new{color:var(--warn)}.badge.confirmed{color:var(--blue)}.badge.done{color:var(--ok)}.badge.cancelled{color:var(--red)}
-.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.mini{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;padding:8px 11px;border-radius:9px;cursor:pointer;min-height:40px}
-.mini.go{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.empty{color:var(--muted);padding:8px 0}
+.grow b{font-weight:600; font-size:16px;}
+.meta{font-size:13px;color:var(--muted); margin-top:4px;}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;background:var(--chip);color:var(--ink);margin-left:6px; text-transform:uppercase;}
+.badge.new{color:#fff; background:var(--warn)}
+.badge.done{color:#fff; background:var(--ok)}
+.badge.cancelled{color:#fff; background:var(--red)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.mini{border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;font-size:12px;padding:8px 12px;border-radius:6px;cursor:pointer;min-height:36px; transition:0.2s;}
+.mini:hover {border-color:var(--brass);}
+.mini.go{background:var(--brass);color:#000;border-color:var(--brass)}
+.empty{color:var(--muted);padding:8px 0; font-style:italic;}
 .tag{font-size:12px;color:var(--warn);font-weight:600}
-.foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:8px}
-.link{background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:10px 0;min-height:44px}
-#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:11px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;z-index:10}
+.foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:20px; border-top:1px solid var(--line); padding-top:10px;}
+.link{background:none;border:0;color:var(--brass);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:10px 0;min-height:44px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--brass);color:#000;padding:11px 20px;border-radius:8px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;z-index:10}
 #toast.show{opacity:1}
-@media (prefers-reduced-motion:reduce){#toast{transition:none}}
-
-.overlay{position:fixed;inset:0;background:rgba(10,15,25,.72);display:grid;place-items:center;z-index:20;padding:16px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:grid;place-items:center;z-index:20;padding:16px}
 .overlay[hidden]{display:none}
-.dlg{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;max-width:380px;width:100%}
-.dlg h2{margin-bottom:6px}
-.dlg p{color:var(--muted);font-size:14px;margin:0 0 12px}
-.err{color:var(--red);font-size:13px;min-height:18px;margin:6px 0 0}
+.dlg{background:var(--surface);border:1px solid var(--brass);border-radius:12px;padding:26px;max-width:380px;width:100%; box-shadow: 0 10px 30px rgba(212,175,55,0.15);}
+.dlg h2{margin-bottom:8px; font-size:22px;}
+.dlg p{color:var(--muted);font-size:13px;margin:0 0 16px}
+.err{color:var(--red);font-size:13px;min-height:18px;margin:8px 0 0}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>Барбершоп «Борода»</h1>
-  <p class="sub">Адмін-панель: записи та клієнти з бази даних</p>
+  <h1>Борода CRM</h1>
+  <p class="sub">Керування візитами та клієнтами</p>
 </header>
 
-<div class="tabs" role="tablist" aria-label="Розділи">
+<div class="tabs" role="tablist">
   <button class="tab" role="tab" id="t-day" aria-selected="true" data-tab="day">Записи на день</button>
-  <button class="tab" role="tab" id="t-cli" aria-selected="false" data-tab="cli">Клієнти</button>
+  <button class="tab" role="tab" id="t-cli" aria-selected="false" data-tab="cli">База клієнтів</button>
 </div>
 
-<section id="day" role="tabpanel" aria-labelledby="t-day">
-  <input type="date" id="ddate" aria-label="Дата для перегляду" style="margin-bottom:12px">
+<section id="day" role="tabpanel">
+  <input type="date" id="ddate" style="margin-bottom:16px">
   <div class="stats">
-    <div class="stat"><b id="s-count">0</b><span>активних записів</span></div>
-    <div class="stat"><b id="s-rev">0 ₴</b><span>виручка (прийшли)</span></div>
-    <div class="stat"><b id="s-load">0%</b><span>завантаження</span></div>
+    <div class="stat"><b id="s-count">0</b><span>Активних</span></div>
+    <div class="stat"><b id="s-rev">0 ₴</b><span>Виручка</span></div>
+    <div class="stat"><b id="s-load">0%</b><span>Завантаження</span></div>
   </div>
   <div class="card" id="daylist"></div>
 </section>
 
-<section id="cli" role="tabpanel" aria-labelledby="t-cli" hidden>
-  <p class="hint">База клієнтів збирається автоматично з записів. Позначка показує, кого час нагадати про себе.</p>
+<section id="cli" role="tabpanel" hidden>
+  <p class="hint">Список клієнтів генерується автоматично. Позначка показує, кому варто нагадати про візит.</p>
   <div class="card" id="clilist"></div>
 </section>
 
 <div class="foot">
-  <span class="meta">Дані — з реальної бази barber.db.</span>
-  <button class="link" id="rekey">Змінити ключ доступу</button>
+  <span class="meta">Синхронізація з barber.db</span>
+  <button class="link" id="rekey">Вийти / Змінити ключ</button>
 </div>
 </div>
 
 <div class="overlay" id="lock">
   <div class="dlg">
-    <h2>Вхід для власника</h2>
-    <p>Введіть ключ адмін-панелі (ADMIN_PANEL_TOKEN із налаштувань сервера).</p>
-    <input type="password" id="key" placeholder="Ключ доступу" autocomplete="off">
+    <h2>Вхід у систему</h2>
+    <p>Введіть токен доступу (ADMIN_PANEL_TOKEN)</p>
+    <input type="password" id="key" placeholder="••••••••" autocomplete="off">
     <p class="err" id="keyerr"></p>
     <button class="btn" id="unlock" style="margin-top:10px">Увійти</button>
   </div>
@@ -126,7 +111,7 @@ input[type=text],input[type=tel],input[type=date]{width:100%;font:inherit;paddin
 
 <script>
 (function(){
-  var STATUS={booked:"Записан",done:"Прийшов",cancelled:"Скасовано"};
+  var STATUS={booked:"Очікується",done:"Завершено",cancelled:"Скасовано"};
   function $(id){return document.getElementById(id)}
   function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
   function money(n){return (n||0).toLocaleString("uk-UA")+" ₴"}
@@ -158,8 +143,8 @@ input[type=text],input[type=tel],input[type=date]{width:100%;font:inherit;paddin
       if(!r.items.length){$("daylist").innerHTML="<p class=\"empty\">На цей день записів немає.</p>";return}
       $("daylist").innerHTML=r.items.map(function(a){
         var acts="";
-        if(a.status==="booked")acts='<button class="mini go" data-act="done" data-id="'+a.id+'">Клієнт прийшов</button><button class="mini" data-act="cancelled" data-id="'+a.id+'">Скасувати</button>';
-        else acts='<button class="mini" data-act="booked" data-id="'+a.id+'">Повернути в «Записан»</button>';
+        if(a.status==="booked")acts='<button class="mini go" data-act="done" data-id="'+a.id+'">Прийшов</button><button class="mini" data-act="cancelled" data-id="'+a.id+'">Скасувати</button>';
+        else acts='<button class="mini" data-act="booked" data-id="'+a.id+'">Повернути в очікування</button>';
         return '<div class="row"><div class="time">'+esc(a.time)+'</div><div class="grow"><b>'+esc(a.name)+'</b>'
           +' <span class="badge '+a.status+'">'+STATUS[a.status]+'</span>'
           +'<div class="meta">'+esc(a.service)+" · "+esc(a.master)+" · "+money(a.price)+" · "+esc(a.source)+'</div>'
@@ -179,8 +164,8 @@ input[type=text],input[type=tel],input[type=date]{width:100%;font:inherit;paddin
         var p=String(c.phone);
         return '<div class="row"><div class="grow"><b>'+esc(c.name)+'</b>'+(stale?' <span class="tag">не був '+days+" дн.</span>":"")
           +'<div class="meta">'+esc(c.phone)+'</div>'
-          +'<div class="meta">Візитів: '+(c.visits||0)+" · Разом: "+money(c.spent)+(c.last?" · Останній: "+esc(c.last):"")+"</div>"
-          +(stale?'<div class="acts"><button class="mini go" data-phone="'+esc(p)+'">Скопіювати нагадування</button></div>':"")
+          +'<div class="meta">Візитів: '+(c.visits||0)+" · Виручка: "+money(c.spent)+(c.last?" · Останній: "+esc(c.last):"")+"</div>"
+          +(stale?'<div class="acts"><button class="mini go" data-phone="'+esc(p)+'">Нагадати про візит</button></div>':"")
           +"</div></div>";
       }).join("");
     }).catch(function(e){$("clilist").innerHTML='<p class="empty">'+esc(e.message)+"</p>"});
@@ -198,23 +183,24 @@ input[type=text],input[type=tel],input[type=date]{width:100%;font:inherit;paddin
     }
     if(t.dataset.act){
       req("/admin/api/status",{method:"POST",body:{id:t.dataset.id,status:t.dataset.act}})
-        .then(function(r){if(r.ok){toast("Статус змінено");renderDay()}else toast(r.error||"Помилка")});
+        .then(function(r){if(r.ok){toast("Статус оновлено");renderDay()}else toast(r.error||"Помилка")});
       return;
     }
     if(t.dataset.phone){
       var text="Привіт! Це барбершоп «Борода». Давно не бачились. Запишіться онлайн на зручний час, і ми вас чекаємо.";
-      try{navigator.clipboard.writeText(text).then(function(){toast("Текст скопійовано")},function(){toast(text)})}catch(err){toast(text)}
+      try{navigator.clipboard.writeText(text).then(function(){toast("Повідомлення скопійовано")},function(){toast(text)})}catch(err){toast(text)}
       return;
     }
     if(t.id==="unlock"){
       var k=$("key").value.trim();
       $("keyerr").textContent="";
-      req("/admin/api/clients").then(function(r){
+      // ИСПРАВЛЕННЫЙ БАГ: передаем введенный пароль напрямую в заголовке проверки!
+      req("/admin/api/clients", {headers: {"X-Admin-Token": k}}).then(function(r){
         if(r.ok){setKey(k);$("lock").hidden=true;renderDay()}
         else{$("keyerr").textContent=r.error||"Немає доступу";setKey("")}
       }).catch(function(){
         setKey("");
-        $("keyerr").textContent="Невірний ключ. Перевірте ADMIN_PANEL_TOKEN у налаштуваннях сервера.";
+        $("keyerr").textContent="Невірний ключ. Перевірте налаштування сервера.";
       });
       return;
     }
