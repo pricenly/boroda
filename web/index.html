@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Борода — Barbershop & Club | Онлайн-запис</title>
 <meta name="description" content="Барбершоп «Борода»: стрижки, борода, королівське гоління. Онлайн-запис без дзвінків, нагадування в Telegram.">
-<meta property="og:title" content="Борода — Barbershop & Club"><meta property="og:description" content="Онлайн-запис без дзвінків, нагадування в Telegram, знижки постійним гостям.">
 <meta name="theme-color" content="#0D0D0F">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D0D0F'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%23D4AF37' font-family='serif'%3EБ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +26,7 @@ nav{display:flex;gap:24px;font-size:13px;font-weight:500;letter-spacing:.06em;te
 nav a:hover{color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 24px;border:0;border-radius:8px;background:var(--gold);color:var(--bg);font:700 12px Montserrat,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s}
 .btn:hover{background:var(--gold2);transform:translateY(-1px)}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .btn.ghost{background:var(--ch);color:var(--ink);border:1px solid var(--line);font-weight:600}.btn.ghost:hover{border-color:var(--gold);background:rgba(212,175,55,.06)}
 .btn.tg{background:var(--tg);color:#fff}
 .btn.sm{min-height:36px;padding:0 14px;font-size:11px}
@@ -46,29 +45,83 @@ section{padding:72px 0}.alt{background:#111114}
 h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
 .sub{color:var(--mut);margin:-22px 0 28px;text-align:center}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px}
-.book{max-width:760px;margin:0 auto}
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.chips + .chips{margin-top:10px}
-.chip{padding:11px 16px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:600 14px Montserrat,sans-serif;cursor:pointer;text-align:left;transition:.15s}
-.chip small{display:block;font-weight:400;color:var(--mut);font-size:12px;margin-top:2px}
-.chip:hover{border-color:rgba(212,175,55,.6);transform:translateY(-1px)}
-.chip[aria-pressed=true]{background:linear-gradient(180deg,rgba(212,175,55,.16),rgba(212,175,55,.06));border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 1px rgba(212,175,55,.15) inset}
-.chip[aria-pressed=true] small{color:var(--gold)}
-.chip.t{min-width:80px;text-align:center}
-.chip.t[aria-pressed=true]{background:var(--gold);color:var(--bg)}
-.none{color:var(--mut);font-style:italic;margin:12px 0 0}
+
+/* ---------- 4-STEP WIZARD ---------- */
+.book{max-width:900px;margin:0 auto}
+.steps-head{display:flex;align-items:center;gap:6px;margin:0 0 26px;justify-content:center}
+.step{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.05em;color:var(--mut);transition:color .3s}
+.step-num{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--ch);color:var(--mut);transition:all .35s cubic-bezier(.4,0,.2,1);position:relative}
+.step-lbl{text-transform:uppercase;font-weight:600}
+.step.active{color:var(--ink)}
+.step.active .step-num{background:var(--gold);border-color:var(--gold);color:var(--bg);transform:scale(1.08);box-shadow:0 0 0 5px rgba(212,175,55,.15)}
+.step.done{color:var(--ink)}
+.step.done .step-num{background:var(--ok);border-color:var(--ok);color:#fff}
+.step.done .step-num::before{content:"✓";position:absolute;font-size:14px;font-weight:800}
+.step.done .step-num span{display:none}
+.step-line{flex:1;max-width:60px;height:1.5px;background:var(--line);transition:background .4s}
+.step-line.done{background:var(--ok)}
+
+.book-body{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-bottom:22px}
+.step-panel{display:none;animation:fadeSlide .35s cubic-bezier(.3,0,.3,1)}
+.step-panel.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.step-title{font:600 13px Montserrat,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 14px}
+
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc-card{background:var(--ch);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:left;cursor:pointer;transition:.2s;color:var(--ink);font:inherit;position:relative;overflow:hidden}
+.svc-card:hover{border-color:rgba(212,175,55,.6);transform:translateY(-2px)}
+.svc-card[aria-pressed=true]{background:linear-gradient(180deg,rgba(212,175,55,.14),rgba(212,175,55,.04));border-color:var(--gold);box-shadow:0 0 0 1px rgba(212,175,55,.2) inset}
+.svc-card[aria-pressed=true]::after{content:"✓";position:absolute;top:10px;right:12px;color:var(--gold);font-size:14px;font-weight:700}
+.svc-card b{display:block;font-size:15px;font-weight:600;margin-bottom:4px}
+.svc-card small{color:var(--mut);font-size:12px}
+.svc-card[aria-pressed=true] small{color:var(--gold)}
+
+.mst-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mst-card{background:var(--ch);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:.2s;color:var(--ink);font:inherit;display:flex;align-items:center;gap:12px;text-align:left}
+.mst-card:hover{border-color:rgba(212,175,55,.6);transform:translateY(-2px)}
+.mst-card[aria-pressed=true]{background:linear-gradient(180deg,rgba(212,175,55,.14),rgba(212,175,55,.04));border-color:var(--gold)}
+.mst-av{width:40px;height:40px;border-radius:50%;background:var(--card);border:1.5px solid rgba(212,175,55,.4);display:grid;place-items:center;font:700 16px 'Playfair Display',serif;color:var(--gold);flex:none}
+.mst-card[aria-pressed=true] .mst-av{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.mst-card b{display:block;font-size:14px;font-weight:600}
+.mst-card small{color:var(--mut);font-size:12px}
+
+.date-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:thin}
+.date-chip{flex:none;padding:10px 14px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:600 13px Montserrat,sans-serif;cursor:pointer;transition:.2s;text-align:center;min-width:80px}
+.date-chip:hover{border-color:rgba(212,175,55,.6)}
+.date-chip[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.slot-chip{padding:10px 8px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:9px;font:600 13px Montserrat,sans-serif;cursor:pointer;transition:.2s;text-align:center}
+.slot-chip:hover{border-color:rgba(212,175,55,.6);transform:translateY(-1px)}
+.slot-chip[aria-pressed=true]{background:linear-gradient(180deg,var(--gold2),var(--gold));border-color:var(--gold);color:var(--bg);box-shadow:0 4px 12px rgba(212,175,55,.25)}
+
+.contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 input[type=text],input[type=tel]{width:100%;padding:14px;background:var(--ch);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit}
 input:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .trap{position:absolute;left:-9999px;opacity:0;width:1px;height:1px}
-.msg{color:var(--red);min-height:22px;font-size:14px;margin:10px 0 0}
-#send{width:100%;min-height:54px;margin-top:8px;font-size:13px}
+
+.summary{background:linear-gradient(180deg,rgba(212,175,55,.05),transparent),var(--ch);border:1px solid var(--line);border-radius:14px;padding:22px;align-self:start;position:sticky;top:88px}
+.summary h4{margin:0 0 16px;font:600 12px Montserrat,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.s-line{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.s-line span{color:var(--mut)}
+.s-line b{text-align:right;color:var(--ink)}
+.s-line b.empty{color:var(--mut);font-weight:500;font-style:italic}
+.s-total{display:flex;justify-content:space-between;gap:12px;padding:16px 0 4px;font-size:15px;align-items:baseline}
+.s-total b{font:700 22px 'Playfair Display',serif;color:var(--gold)}
+.s-note{color:var(--mut);font-size:12px;margin:12px 0 0;line-height:1.5}
+
+.step-nav{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:8px}
+.step-nav .btn{min-width:180px}
+
+.msg{color:var(--red);min-height:22px;font-size:14px;margin:12px 0 0}
+
 .done{text-align:center;padding:26px 0}.done h3{font-size:26px;margin:0 0 10px}
+
 .team{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
 .mc{background:var(--ch);border:1px solid var(--line);border-radius:16px;padding:26px;text-align:center;transition:.2s}
 .mc:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.4)}
 .ava{width:88px;height:88px;margin:0 auto 14px;border-radius:50%;border:2px solid rgba(212,175,55,.45);background:var(--card);display:grid;place-items:center;font:700 28px 'Playfair Display',serif;color:var(--gold)}
 .mc h3{margin:0 0 4px}.mc small{color:var(--mut)}.star{color:var(--gold)}
+
 .mq{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
 .mt{display:flex;gap:16px;width:max-content;animation:mq 60s linear infinite}
 .mq:hover .mt{animation-play-state:paused}
@@ -77,24 +130,62 @@ input:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175
 .rv p{margin:10px 0 14px;font-size:14px;line-height:1.55}
 .rv b{display:block;font-size:14px}
 .rv small{color:var(--mut);font-size:12px}
+
 details{border-bottom:1px solid var(--line);padding:16px 0}summary{cursor:pointer;font-weight:600;list-style:none}
 summary::-webkit-details-marker{display:none}
 summary::before{content:"+";color:var(--gold);margin-right:10px;font-weight:400}
 details[open] summary::before{content:"−"}
 details p{color:var(--mut);margin:10px 0 0;padding-left:26px}
+
 .tgb{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:30px;border:1px solid rgba(212,175,55,.3);border-radius:16px;background:linear-gradient(135deg,rgba(212,175,55,.06),transparent),rgba(0,0,0,.35)}
 footer{background:#09090B;border-top:1px solid var(--line);padding:48px 0 90px;color:var(--mut);font-size:13px}
 footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}footer h4{font:700 14px 'Playfair Display',serif;color:var(--ink);margin:0 0 10px}footer p{margin:4px 0}
-.shade{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70;backdrop-filter:blur(2px)}
-.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--card);border-left:1px solid var(--line);z-index:80;overflow:auto;padding:calc(22px + env(safe-area-inset-top,0px)) 22px 30px;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
-.drawer h3{margin:22px 0 10px;font-size:18px;color:var(--gold)}
-.dots{display:flex;gap:8px;margin:10px 0}.dots i{flex:1;height:10px;border-radius:6px;background:var(--line)}.dots i.on{background:var(--gold)}.dots i.gift{background:transparent;border:1px dashed var(--gold)}.dots i.gift.on{background:var(--ok);border:0}
-.ap{background:var(--ch);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}.ap small{color:var(--mut)}
-.ava-lg{width:64px;height:64px;border-radius:50%;background:var(--ch);border:2px solid rgba(212,175,55,.45);display:grid;place-items:center;font:700 24px 'Playfair Display',serif;color:var(--gold);margin-right:14px}
+
+/* ---------- CABINET (animated) ---------- */
+.shade{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:70;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .32s ease}
+.shade.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);background:linear-gradient(180deg,var(--card),#141418);border-left:1px solid var(--line);z-index:80;overflow:auto;padding:calc(22px + env(safe-area-inset-top,0px)) 22px 30px;box-shadow:-20px 0 60px rgba(0,0,0,.55);transform:translateX(105%);transition:transform .38s cubic-bezier(.22,.9,.28,1);will-change:transform}
+.drawer.open{transform:translateX(0)}
+.drawer h3{margin:24px 0 12px;font-size:15px;color:var(--gold);letter-spacing:.05em;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:600;display:flex;align-items:center;gap:8px}
+.drawer h3::before{content:"";width:3px;height:14px;background:var(--gold);border-radius:2px}
+.cab-head{display:flex;align-items:center;gap:14px;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:8px;animation:cabSlide .5s .1s cubic-bezier(.3,.9,.3,1) both}
+@keyframes cabSlide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.ava-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--card),var(--ch));border:2px solid rgba(212,175,55,.45);display:grid;place-items:center;font:700 24px 'Playfair Display',serif;color:var(--gold);flex:none;box-shadow:0 0 0 6px rgba(212,175,55,.06)}
+#cabname{margin:0;font-size:20px;font-family:'Playfair Display',serif;color:var(--ink)}
+#cabphone{margin:2px 0 0;font-size:12px;color:var(--mut)}
+.dots{display:flex;gap:8px;margin:8px 0 6px}
+.dots i{flex:1;height:10px;border-radius:6px;background:var(--line);transition:background .5s ease,transform .35s ease,box-shadow .35s ease}
+.dots i.on{background:linear-gradient(90deg,var(--gold),var(--gold2));box-shadow:0 0 12px rgba(212,175,55,.35)}
+.dots i.gift{background:transparent;border:1px dashed var(--gold)}
+.dots i.gift.on{background:var(--ok);border:0;box-shadow:0 0 12px rgba(52,211,153,.4)}
+.ap{background:var(--ch);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;animation:cardIn .45s cubic-bezier(.3,.9,.3,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ap:nth-child(1){animation-delay:.06s}
+.ap:nth-child(2){animation-delay:.12s}
+.ap:nth-child(3){animation-delay:.18s}
+.ap:nth-child(4){animation-delay:.24s}
+.ap small{color:var(--mut)}
+.none{color:var(--mut);font-style:italic;margin:8px 0}
 .mcta{display:none}
-@media(max-width:900px){nav,.hide-m{display:none}.hero .wrap,footer .f{grid-template-columns:1fr}.hero{padding-top:44px}.stats{gap:22px}.two{grid-template-columns:1fr}.panel{padding:20px}
-.mcta{display:flex;position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:40;min-height:50px;box-shadow:0 10px 30px rgba(0,0,0,.5)}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.mt{animation:none}.mq{overflow-x:auto}}
+
+@media(max-width:900px){
+  nav,.hide-m{display:none}
+  .hero .wrap,footer .f{grid-template-columns:1fr}
+  .hero{padding-top:44px}.stats{gap:22px}
+  .panel{padding:20px}
+  .book-body{grid-template-columns:1fr;gap:14px}
+  .summary{position:static;order:2}
+  .step-panel{order:1}
+  .steps-head{gap:2px}
+  .step-lbl{display:none}
+  .step-num{width:28px;height:28px}
+  .step-line{max-width:24px}
+  .svc-grid,.mst-grid,.contacts-grid{grid-template-columns:1fr}
+  .step-nav{flex-direction:column-reverse;gap:8px}
+  .step-nav .btn{width:100%}
+  .mcta{display:flex;position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:40;min-height:50px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -116,26 +207,79 @@ footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}footer h4{fo
 </div></div>
 
 <section id="book" class="alt"><div class="wrap book">
-  <h2 style="text-align:center">Онлайн-запис</h2>
-  <p class="sub">Три кліки — і час за вами</p>
-  <div class="panel" id="bk">
+  <h2 style="text-align:center">Запис за 4 кроки</h2>
+  <p class="sub">Підтвердження приходить одразу, дзвінок не потрібен</p>
+
+  <div class="panel">
     <div id="wiz">
-      <div class="chips" id="svc"></div>
-      <div class="chips" id="mst"></div>
-      <div class="chips" id="days"></div>
-      <div class="chips" id="slots"></div>
-      <p class="none" id="slotnote"></p>
-      <div class="two">
-        <input type="text" id="name" placeholder="Ім'я" autocomplete="name">
-        <input type="tel" id="phone" placeholder="Телефон: 050 123 45 67" autocomplete="tel">
+      <div class="steps-head" id="stepshead">
+        <div class="step active" data-step="1"><span class="step-num"><span>1</span></span><span class="step-lbl">Послуга</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="2"><span class="step-num"><span>2</span></span><span class="step-lbl">Майстер</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3"><span class="step-num"><span>3</span></span><span class="step-lbl">Час</span></div>
+        <div class="step-line"></div>
+        <div class="step" data-step="4"><span class="step-num"><span>4</span></span><span class="step-lbl">Контакти</span></div>
       </div>
-      <input type="text" id="website" class="trap" tabindex="-1" autocomplete="off">
+
+      <div class="book-body">
+        <div class="step-body">
+
+          <div class="step-panel active" data-step="1">
+            <p class="step-title">Оберіть послугу</p>
+            <div class="svc-grid" id="svc"></div>
+          </div>
+
+          <div class="step-panel" data-step="2">
+            <p class="step-title">Оберіть майстра</p>
+            <div class="mst-grid" id="mst"></div>
+          </div>
+
+          <div class="step-panel" data-step="3">
+            <p class="step-title">Оберіть дату</p>
+            <div class="date-row" id="days"></div>
+            <p class="step-title">Вільний час</p>
+            <div class="slots-grid" id="slots"></div>
+            <p class="none" id="slotnote"></p>
+          </div>
+
+          <div class="step-panel" data-step="4">
+            <p class="step-title">Ваші контакти</p>
+            <div class="contacts-grid">
+              <input type="text" id="name" placeholder="Ім'я" autocomplete="name">
+              <input type="tel" id="phone" placeholder="Телефон: 050 123 45 67" autocomplete="tel">
+            </div>
+            <input type="text" id="website" class="trap" tabindex="-1" autocomplete="off">
+          </div>
+
+        </div>
+
+        <aside class="summary">
+          <h4>Деталі візиту</h4>
+          <div class="s-line"><span>Послуга</span><b id="sum-svc" class="empty">—</b></div>
+          <div class="s-line"><span>Майстер</span><b id="sum-mst" class="empty">—</b></div>
+          <div class="s-line"><span>Дата і час</span><b id="sum-when" class="empty">—</b></div>
+          <div class="s-total"><span>До сплати</span><b id="sum-price">0 ₴</b></div>
+          <p class="s-note">Оплата на місці після візиту: готівкою або карткою.</p>
+        </aside>
+      </div>
+
       <p class="msg" id="msg"></p>
-      <button class="btn" id="send">Записатися</button>
+
+      <div class="step-nav">
+        <button class="btn ghost" id="bkprev" hidden>← Назад</button>
+        <button class="btn" id="bknext" disabled>Далі: майстер →</button>
+      </div>
     </div>
+
     <div class="done" id="done" hidden>
-      <h3>Запис підтверджено ✂️</h3><p id="donetext"></p>
-      <div class="row" style="justify-content:center"><button class="btn ghost" id="icsb">Додати в календар</button><a class="btn tg" id="tglink" target="_blank" hidden>Нагадування в Telegram</a><button class="btn ghost" id="again">Ще один запис</button></div>
+      <h3>Запис підтверджено ✂️</h3>
+      <p id="donetext"></p>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="btn ghost" id="icsb">Додати в календар</button>
+        <a class="btn tg" id="tglink" target="_blank" hidden>Нагадування в Telegram</a>
+        <button class="btn ghost" id="again">Ще один запис</button>
+      </div>
     </div>
   </div>
 </div></section>
@@ -159,15 +303,13 @@ footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}footer h4{fo
 </div><p style="margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:12px">© 2026 «Борода Barbershop &amp; Club»</p></div></footer>
 <a class="btn mcta" href="#book">Записатися онлайн</a>
 
-<div class="shade" id="shade" hidden></div>
-<aside class="drawer" id="cab" hidden>
-  <div class="row" style="justify-content:space-between;align-items:center;gap:12px">
-    <div class="row" style="align-items:center;flex-wrap:nowrap">
-      <div class="ava-lg" id="cabava">Б</div>
-      <div>
-        <h2 id="cabname" style="font-size:22px;margin:0">Кабінет</h2>
-        <p class="none" id="cabphone" style="margin:2px 0 0;font-style:normal;font-size:12px"></p>
-      </div>
+<div class="shade" id="shade"></div>
+<aside class="drawer" id="cab">
+  <div class="cab-head">
+    <div class="ava-lg" id="cabava">Б</div>
+    <div style="flex:1;min-width:0">
+      <h2 id="cabname">Кабінет</h2>
+      <p id="cabphone"></p>
     </div>
     <button class="btn ghost sm" data-close>Закрити</button>
   </div>
@@ -180,7 +322,8 @@ footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}footer h4{fo
 <script>
 (function(){
 var WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],ANY={id:"any",name:"Будь-який вільний"},ST={booked:"очікується",done:"завершено",cancelled:"скасовано"};
-var mock=false,cfg=null,days=[],slots=[],me=null,last=null,sel={service:null,master:"any",date:null,slot:null};
+var mock=false,cfg=null,days=[],slots=[],me=null,last=null,step=1;
+var sel={service:null,master:"any",date:null,slot:null};
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function money(n){return Number(n).toLocaleString("uk-UA")+" ₴"}
@@ -217,25 +360,59 @@ function req(path,body){
   return fetch(path,{method:body?"POST":"GET",headers:h,body:body?JSON.stringify(body):undefined}).then(function(r){return r.json()});
 }
 
-function upd(){
-  var s=find(cfg.services,sel.service),sl=slots.filter(function(x){return x.i===sel.slot})[0],d=days.filter(function(x){return x.date===sel.date})[0];
-  $("send").textContent=s&&sl&&d?"Записатися · "+s.name+" · "+d.label+" "+sl.label+" · "+money(s.price):"Записатися";
+/* ---------- WIZARD ---------- */
+function renderStep(){
+  document.querySelectorAll(".step-panel").forEach(function(p){p.classList.toggle("active",+p.dataset.step===step)});
+  document.querySelectorAll(".step").forEach(function(s){
+    var n=+s.dataset.step;
+    s.classList.toggle("active",n===step);
+    s.classList.toggle("done",n<step);
+  });
+  document.querySelectorAll(".step-line").forEach(function(l,i){l.classList.toggle("done",i+1<step)});
+  $("bkprev").hidden=step===1;
+  var nb=$("bknext");
+  if(step===1){nb.textContent="Далі: майстер →";nb.disabled=!sel.service}
+  else if(step===2){nb.textContent="Далі: час →";nb.disabled=false}
+  else if(step===3){nb.textContent="Далі: контакти →";nb.disabled=sel.slot===null}
+  else{nb.textContent="Записатися"+(priceNow()?" · "+money(priceNow()):"");nb.disabled=false}
+  $("msg").textContent="";
 }
+function priceNow(){var s=find(cfg.services,sel.service);return s?s.price:0}
+
 function renderChips(){
-  $("svc").innerHTML=cfg.services.map(function(s){return '<button type="button" class="chip" data-svc="'+esc(s.id)+'" aria-pressed="'+(sel.service===s.id)+'">'+esc(s.name)+'<small>'+s.min+' хв · '+money(s.price)+'</small></button>'}).join("");
-  $("mst").innerHTML=[ANY].concat(cfg.masters).map(function(m){return '<button type="button" class="chip" data-mst="'+esc(m.id)+'" aria-pressed="'+(sel.master===m.id)+'">'+esc(m.name)+'</button>'}).join("");
-  upd();
+  $("svc").innerHTML=cfg.services.map(function(s){return '<button type="button" class="svc-card" data-svc="'+esc(s.id)+'" aria-pressed="'+(sel.service===s.id)+'"><b>'+esc(s.name)+'</b><small>'+s.min+' хв · '+money(s.price)+'</small></button>'}).join("");
+  var all=[ANY].concat(cfg.masters);
+  $("mst").innerHTML=all.map(function(m){
+    var r=m.rating?'<small>★ '+m.rating+' · '+m.reviews+' відгуків</small>':(m.id==="any"?"<small>Швидше за все</small>":"<small>Барбер</small>");
+    return '<button type="button" class="mst-card" data-mst="'+esc(m.id)+'" aria-pressed="'+(sel.master===m.id)+'"><span class="mst-av">'+esc(m.name.slice(0,1))+'</span><span><b>'+esc(m.name)+'</b>'+r+'</span></button>';
+  }).join("");
+  updateSummary();
 }
-function renderDays(){$("days").innerHTML=days.length?days.map(function(d){return '<button type="button" class="chip" data-day="'+d.date+'" aria-pressed="'+(sel.date===d.date)+'">'+esc(d.label)+'</button>'}).join(""):'<p class="none">Найближчим часом вільних вікон немає. Спробуйте іншого майстра.</p>'}
+function renderDays(){
+  $("days").innerHTML=days.length?days.map(function(d){return '<button type="button" class="date-chip" data-day="'+d.date+'" aria-pressed="'+(sel.date===d.date)+'">'+esc(d.label)+'</button>'}).join(""):'<p class="none">Найближчим часом вільних вікон немає. Спробуйте іншого майстра.</p>';
+}
 function renderSlots(){
-  $("slots").innerHTML=slots.map(function(s){return '<button type="button" class="chip t" data-slot="'+s.i+'" aria-pressed="'+(sel.slot===s.i)+'">'+s.label+'</button>'}).join("");
-  $("slotnote").textContent=sel.date&&!slots.length?"На цей день вільного часу немає.":"";upd();
+  $("slots").innerHTML=slots.length?slots.map(function(s){return '<button type="button" class="slot-chip" data-slot="'+s.i+'" aria-pressed="'+(sel.slot===s.i)+'">'+s.label+'</button>'}).join(""):'<p class="none">Вільних годин на цей день немає.</p>';
+  $("slotnote").textContent=sel.date&&!slots.length?"Оберіть інший день.":"";
+  updateSummary();
+}
+function updateSummary(){
+  var s=find(cfg.services,sel.service);
+  var mm=sel.master==="any"?ANY:find(cfg.masters,sel.master);
+  var d=days.filter(function(x){return x.date===sel.date})[0];
+  var sl=slots.filter(function(x){return x.i===sel.slot})[0];
+  function set(id,val){var el=$(id);el.textContent=val||"—";el.classList.toggle("empty",!val)}
+  set("sum-svc",s?s.name+" · "+s.min+" хв":"");
+  set("sum-mst",mm?mm.name:"");
+  set("sum-when",(d&&sl)?d.label+", "+sl.label:"");
+  $("sum-price").textContent=s?money(s.price):"0 ₴";
+  renderStep();
 }
 function loadDays(){
   sel.date=null;sel.slot=null;slots=[];renderSlots();
   req("/api/days?service="+sel.service+"&master="+sel.master).then(function(r){
     days=r.days||[];renderDays();
-    if(days.length){sel.date=days[0].date;renderDays();loadSlots()}else{$("next").textContent="вільних вікон немає";upd()}
+    if(days.length){sel.date=days[0].date;renderDays();loadSlots()}else{updateSummary()}
   });
 }
 function loadSlots(){
@@ -245,7 +422,9 @@ function loadSlots(){
     var d=days.filter(function(x){return x.date===sel.date})[0];if(slots.length&&d)$("next").textContent=d.label+", "+slots[0].label;
   });
 }
+function gotoStep(n){step=n;renderStep();if(n===3&&!days.length)loadDays();document.getElementById("book").scrollIntoView({block:"start",behavior:"smooth"})}
 
+/* ---------- ICS ---------- */
 function ics(i){
   function f(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(d.getHours())+pad(d.getMinutes())+"00"}
   var s=new Date(i.start),e=new Date(s.getTime()+i.min*6e4);
@@ -253,8 +432,19 @@ function ics(i){
   var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/calendar"}));a.download="boroda.ics";a.click();
 }
 
+/* ---------- CABINET ---------- */
 function acct(on){$("acct").textContent=on?"Кабінет":"Увійти";$("acct").dataset.on=on?"1":""}
-function openCab(o){$("cab").hidden=!o;$("shade").hidden=!o;document.body.style.overflow=o?"hidden":""}
+function openCab(o){
+  if(o){
+    $("cab").classList.add("open");
+    $("shade").classList.add("open");
+    document.body.style.overflow="hidden";
+  }else{
+    $("cab").classList.remove("open");
+    $("shade").classList.remove("open");
+    document.body.style.overflow="";
+  }
+}
 function loadMe(){
   if(!sess()){acct(false);return}
   req("/api/me").then(function(r){
@@ -288,6 +478,7 @@ function login(){
   });
 }
 
+/* ---------- START ---------- */
 function start(c){
   cfg=c;sel.service=c.services[0].id;
   document.querySelectorAll("[data-bot]").forEach(function(a){if(c.bot){a.href="https://t.me/"+c.bot;a.hidden=false}});
@@ -304,41 +495,50 @@ function start(c){
   var L=c.loyalty||{},faq=[["Як скасувати або перенести запис?","Скасувати можна в особистому кабінеті на сайті або в Telegram-боті (команда /my). Потім оберіть новий час онлайн."],["Коли прийде нагадування?","За 4 години до візиту в Telegram. Увійдіть через Telegram на сайті або натисніть кнопку підключення після запису."],["Як оплатити?","Після візиту на місці: готівкою або карткою."]];
   if(L.every>0)faq.push(["Є знижки для постійних гостей?","Так: кожен "+L.every+"-й запис зі знижкою "+L.percent+"%. Прогрес видно в особистому кабінеті."]);
   $("faqb").innerHTML=faq.map(function(f){return "<details><summary>"+esc(f[0])+"</summary><p>"+esc(f[1])+"</p></details>"}).join("");
-  renderChips();loadDays();loadMe();
+  renderChips();renderStep();
   req("/api/reviews").then(function(r){
     if(!r.ok||!r.items.length)return;
     var one=r.items.map(function(i){return '<div class="rv"><span class="star">'+stars(i.rating)+'</span><p>'+esc(i.comment)+'</p><b>'+esc(i.name)+'</b><small> · майстер '+esc(i.master)+'</small></div>'}).join("");
     $("rvt").innerHTML=one+one;$("rvt").style.animationDuration=Math.max(30,r.items.length*9)+"s";$("reviews").hidden=false;
   });
+  loadMe();
 }
 
+/* ---------- EVENTS ---------- */
 document.addEventListener("click",function(e){
   if(e.target.id==="shade")return openCab(false);
   var t=e.target.closest("button");if(!t)return;var d=t.dataset;
-  if(d.svc){sel.service=d.svc;renderChips();return loadDays()}
-  if(d.mst){sel.master=d.mst;renderChips();return loadDays()}
-  if(d.day){sel.date=d.day;renderDays();return loadSlots()}
-  if(d.slot!==undefined){sel.slot=parseInt(d.slot,10);return renderSlots()}
+  if(d.svc){sel.service=d.svc;renderChips();loadDays();return}
+  if(d.mst){sel.master=d.mst;renderChips();loadDays();return}
+  if(d.day){sel.date=d.day;renderDays();loadSlots();return}
+  if(d.slot!==undefined){sel.slot=parseInt(d.slot,10);renderSlots();return}
+  if(t.id==="bknext"){
+    if(step===1&&!sel.service)return;
+    if(step===2){gotoStep(3);return}
+    if(step===3&&sel.slot===null)return;
+    if(step===4)return submit();
+    gotoStep(step+1);return;
+  }
+  if(t.id==="bkprev"){gotoStep(step-1);return}
   if(d.close!==undefined)return openCab(false);
   if(d.logout!==undefined){return req("/api/auth/logout",{}).then(function(){setSess("");me=null;acct(false);openCab(false)})}
   if(d.cancel&&confirm("Скасувати цей запис?"))return req("/api/me/cancel",{id:+d.cancel}).then(function(r){if(r.ok){loadMe();loadDays()}else alert(r.error||"Помилка")});
   if(d.ics){var i=find(me.items,+d.ics);return i&&ics(i)}
-  if(d.again){var it=find(me.items,+d.again);if(it){if(find(cfg.services,it.sid))sel.service=it.sid;if(find(cfg.masters,it.mid))sel.master=it.mid;openCab(false);renderChips();loadDays();$("book").scrollIntoView()}return}
+  if(d.again){var it=find(me.items,+d.again);if(it){if(find(cfg.services,it.sid))sel.service=it.sid;if(find(cfg.masters,it.mid))sel.master=it.mid;openCab(false);renderChips();loadDays();gotoStep(1);$("book").scrollIntoView()}return}
   if(t.id==="acct")return $("acct").dataset.on?openCab(true):login();
   if(t.id==="icsb"&&last)return ics(last);
-  if(t.id==="again"){$("done").hidden=true;$("wiz").hidden=false;loadDays()}
+  if(t.id==="again"){$("done").hidden=true;$("wiz").hidden=false;sel.slot=null;gotoStep(1)}
 });
 
-$("send").addEventListener("click",function(){
+function submit(){
   var msg=$("msg");msg.textContent="";
   var name=$("name").value.trim(),phone=$("phone").value.trim();
-  if(!sel.date||sel.slot===null){msg.textContent="Оберіть дату й вільний час.";return}
   if(name.length<2){msg.textContent="Вкажіть ім'я.";$("name").focus();return}
   if(phone.replace(/\D/g,"").length<10){msg.textContent="Вкажіть телефон у форматі 050 123 45 67.";$("phone").focus();return}
   var label="";slots.forEach(function(s){if(s.i===sel.slot)label=s.label});
-  var b=$("send");b.disabled=true;b.textContent="Записуємо…";
+  var b=$("bknext");b.disabled=true;b.textContent="Записуємо…";
   req("/api/book",{service:sel.service,master:sel.master,date:sel.date,slot:sel.slot,name:name,phone:phone,website:$("website").value,slotLabel:label}).then(function(r){
-    b.disabled=false;upd();
+    b.disabled=false;renderStep();
     if(!r.ok){msg.textContent=r.error||"Не вдалося записатися. Спробуйте ще раз.";loadSlots();return}
     var s=find(cfg.services,sel.service),m=sel.master==="any"?ANY:find(cfg.masters,sel.master);
     last={start:r.start,min:r.min||s.min,service:s.name};
@@ -346,8 +546,8 @@ $("send").addEventListener("click",function(){
     if(r.tg_link&&!sess()){$("tglink").href=r.tg_link;$("tglink").hidden=false}else $("tglink").hidden=true;
     $("wiz").hidden=true;$("done").hidden=false;$("bk").scrollIntoView({block:"center"});
     $("name").value="";$("phone").value="";loadMe();
-  }).catch(function(){b.disabled=false;upd();msg.textContent="Немає зв'язку із сервером. Спробуйте ще раз."});
-});
+  }).catch(function(){b.disabled=false;renderStep();msg.textContent="Немає зв'язку із сервером. Спробуйте ще раз."});
+}
 
 req("/api/config").then(function(c){if(!c||!c.services)throw 0;start(c)}).catch(function(){mock=true;start(MCFG)});
 })();
