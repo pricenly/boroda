@@ -53,8 +53,8 @@ h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
 /* ---------- WIZARD ---------- */
 .book{max-width:920px;margin:0 auto}
 .steps-head{display:flex;align-items:center;gap:8px;margin:0 0 28px;justify-content:center}
-.step{display:flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.08em;color:#6a6a72;transition:color .3s}
-.step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid #3a3a44;display:grid;place-items:center;font-weight:600;font-size:12px;background:transparent;color:#6a6a72;transition:background .35s ease,border-color .35s ease,color .35s ease;flex:none}
+.step{display:flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.08em;color:#6a6a72;transition:color .3s;flex:0 0 auto}
+.step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid #3a3a44;display:grid;place-items:center;font-weight:600;font-size:12px;background:transparent;color:#6a6a72;transition:background-color .3s ease,border-color .3s ease,color .3s ease;flex:0 0 26px;overflow:hidden;box-shadow:none!important;line-height:1}
 .step-lbl{text-transform:uppercase;font-weight:600}
 .step.active{color:var(--ink)}
 .step.active .step-num{background:var(--gold);border-color:var(--gold);color:#151515;font-weight:700}
@@ -62,8 +62,26 @@ h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
 .step.done .step-num{background:transparent;border-color:var(--gold);color:var(--gold)}
 .step.done .step-num span{display:none}
 .step.done .step-num::before{content:"✓";font-size:12px;font-weight:700;line-height:1}
-.step-line{flex:1;max-width:56px;height:2px;background:#2c2c35;border-radius:2px;transition:background .5s ease,box-shadow .5s ease}
-.step-line.done{background:linear-gradient(90deg,rgba(212,175,55,.55),var(--gold));box-shadow:0 0 10px rgba(212,175,55,.45)}
+
+/* Золотая полоска — ровно 2px, без свечения и квадратов */
+.step-line{
+  flex:1 1 auto;
+  max-width:56px;
+  height:2px;
+  min-height:2px;
+  max-height:2px;
+  background:#2c2c35;
+  border-radius:2px;
+  transition:background-color .45s ease;
+  align-self:center;
+  overflow:hidden;
+  line-height:0;
+  font-size:0;
+  box-shadow:none!important;
+  padding:0;
+  margin:0;
+}
+.step-line.done{background:var(--gold)}
 
 .book-body{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;margin-bottom:22px}
 .step-body{position:relative;min-height:280px}
@@ -201,7 +219,7 @@ footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}footer h4{fo
   .step-panel{order:1}
   .steps-head{gap:4px;margin-bottom:22px}
   .step-lbl{display:none}
-  .step-num{width:24px;height:24px;font-size:11px}
+  .step-num{width:24px;height:24px;font-size:11px;flex:0 0 24px}
   .step-line{max-width:22px}
   .svc-grid,.mst-grid,.contacts-grid{grid-template-columns:1fr}
   .step-nav{flex-direction:column-reverse;gap:8px}
