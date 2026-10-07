@@ -4,13 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Борода — Barbershop & Club | Онлайн-запис</title>
+<meta name="description" content="Барбершоп «Борода»: стрижки, борода, королівське гоління. Онлайн-запис без дзвінків, нагадування в Telegram.">
+<meta property="og:title" content="Борода — Barbershop & Club"><meta property="og:description" content="Онлайн-запис без дзвінків, нагадування в Telegram, знижки постійним гостям.">
+<meta name="theme-color" content="#0D0D0F">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230D0D0F'/%3E%3Ctext x='32' y='44' font-size='34' text-anchor='middle' fill='%23D4AF37' font-family='serif'%3EБ%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#D4AF37;--gold2:#F3DA7A;--bg:#0D0D0F;--ch:#151518;--card:#1B1B20;--line:#2C2C35;--mut:#9E9EA8;--ink:#F3F3F6;--tg:#2AABEE;--red:#e5566b;--ok:#34d399}
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Montserrat,sans-serif;padding-bottom:env(safe-area-inset-bottom,0)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Montserrat,sans-serif;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 4px)}
 h1,h2,h3,.serif{font-family:'Playfair Display',serif}
 a{color:inherit;text-decoration:none}
 [hidden]{display:none!important}
@@ -19,315 +23,333 @@ header{position:sticky;top:0;z-index:50;background:rgba(13,13,15,.92);backdrop-f
 .bar{height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .logo b{display:block;font:700 21px 'Playfair Display',serif;letter-spacing:.2em;color:var(--gold)}
 .logo small{font-size:9px;letter-spacing:.3em;color:var(--mut)}
-nav{display:flex;gap:26px;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#c4c4cd}
+nav{display:flex;gap:24px;font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#c4c4cd}
 nav a:hover{color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 24px;border:0;border-radius:8px;background:var(--gold);color:var(--bg);font:700 12px Montserrat,sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s}
-.btn:hover{background:var(--gold2)}
-.btn.ghost{background:var(--ch);color:var(--ink);border:1px solid var(--line);font-weight:600}
-.btn.ghost:hover{border-color:var(--gold)}
+.btn:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.ghost{background:var(--ch);color:var(--ink);border:1px solid var(--line);font-weight:600}.btn.ghost:hover{border-color:var(--gold);background:rgba(212,175,55,.06)}
 .btn.tg{background:var(--tg);color:#fff}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.hero{padding:72px 0 80px;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 30% 0,rgba(212,175,55,.12),transparent 60%)}
+.btn.sm{min-height:36px;padding:0 14px;font-size:11px}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.hero{padding:76px 0 84px;border-bottom:1px solid var(--line);background:
+  radial-gradient(ellipse at 20% 0,rgba(212,175,55,.16),transparent 55%),
+  radial-gradient(ellipse at 90% 30%,rgba(42,171,238,.06),transparent 55%)}
 .hero .wrap{display:grid;grid-template-columns:7fr 5fr;gap:48px;align-items:center}
-h1{font-size:clamp(34px,5.2vw,58px);line-height:1.1;margin:0 0 20px}
-h1 em{color:var(--gold)}
+h1{font-size:clamp(34px,5.2vw,58px);line-height:1.1;margin:0 0 20px}h1 em{color:var(--gold);font-style:italic}
 .lead{color:var(--mut);font-size:17px;max-width:34em;margin:0 0 28px}
-.row{display:flex;flex-wrap:wrap;gap:14px}
-.stats{display:flex;gap:36px;margin-top:36px;padding-top:24px;border-top:1px solid var(--line)}
-.stats b{display:block;font:700 28px 'Playfair Display',serif;color:var(--gold)}
-.stats span{font-size:12px;color:var(--mut)}
-.next{background:var(--ch);border:1px solid var(--line);border-radius:16px;padding:26px}
-.next small{color:var(--mut);display:block}
-.next strong{font:600 26px 'Playfair Display',serif;color:var(--ok)}
-section{padding:72px 0}
-.alt{background:#111114}
-h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 8px}
-.sub{color:var(--mut);margin:0 0 32px}
-.grid{display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-bottom:20px;margin-bottom:22px;border-bottom:1px solid var(--line)}
-.tab{border:0;background:none;color:var(--mut);font:600 12px Montserrat,sans-serif;padding:10px 6px;border-radius:8px;cursor:pointer}
-.tab[aria-selected=true]{background:var(--gold);color:var(--bg)}
-.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.opt{text-align:left;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:16px;font:inherit;cursor:pointer;transition:.2s}
-.opt:hover{border-color:rgba(212,175,55,.6)}
-.opt[aria-pressed=true]{border-color:var(--gold);background:rgba(212,175,55,.08)}
-.opt b{display:block;font-size:15px}
-.opt small{color:var(--mut)}
-.opt .pr{float:right;font:700 17px 'Playfair Display',serif;color:var(--gold)}
+.stats{display:flex;gap:36px;margin-top:34px;padding-top:22px;border-top:1px solid var(--line)}
+.stats b{display:block;font:700 28px 'Playfair Display',serif;color:var(--gold)}.stats span{font-size:12px;color:var(--mut)}
+.next{background:linear-gradient(180deg,rgba(212,175,55,.06),transparent),var(--ch);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:inset 0 1px 0 rgba(212,175,55,.15)}
+.next small{color:var(--mut);display:block}.next strong{font:600 26px 'Playfair Display',serif;color:var(--ok)}
+section{padding:72px 0}.alt{background:#111114}
+h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
+.sub{color:var(--mut);margin:-22px 0 28px;text-align:center}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px}
+.book{max-width:760px;margin:0 auto}
 .chips{display:flex;flex-wrap:wrap;gap:10px}
-.chip{min-width:84px;padding:12px 16px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:600 14px Montserrat,sans-serif;cursor:pointer}
-.chip:hover{border-color:rgba(212,175,55,.6)}
-.chip[aria-pressed=true]{background:var(--gold);color:var(--bg);border-color:var(--gold)}
-.lab{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:20px 0 10px}
-.none{color:var(--mut);font-style:italic;margin:0}
-.nav2{display:flex;justify-content:space-between;margin-top:26px}
-input[type=text],input[type=tel]{width:100%;padding:14px;margin-bottom:12px;background:var(--ch);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit}
-input:focus{outline:0;border-color:var(--gold)}
+.chips + .chips{margin-top:10px}
+.chip{padding:11px 16px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:600 14px Montserrat,sans-serif;cursor:pointer;text-align:left;transition:.15s}
+.chip small{display:block;font-weight:400;color:var(--mut);font-size:12px;margin-top:2px}
+.chip:hover{border-color:rgba(212,175,55,.6);transform:translateY(-1px)}
+.chip[aria-pressed=true]{background:linear-gradient(180deg,rgba(212,175,55,.16),rgba(212,175,55,.06));border-color:var(--gold);color:var(--gold2);box-shadow:0 0 0 1px rgba(212,175,55,.15) inset}
+.chip[aria-pressed=true] small{color:var(--gold)}
+.chip.t{min-width:80px;text-align:center}
+.chip.t[aria-pressed=true]{background:var(--gold);color:var(--bg)}
+.none{color:var(--mut);font-style:italic;margin:12px 0 0}
+input[type=text],input[type=tel]{width:100%;padding:14px;background:var(--ch);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit}
+input:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
 .trap{position:absolute;left:-9999px;opacity:0;width:1px;height:1px}
-.msg{color:var(--red);min-height:22px;font-size:14px;margin:6px 0 0}
-.sum{position:sticky;top:96px}
-.sum h3{margin:0 0 16px;font-size:18px}
-.sum dl{margin:0}.sum dt{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-top:14px}
-.sum dd{margin:2px 0 0;font-weight:600}
-.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-.total b{font:700 26px 'Playfair Display',serif;color:var(--gold)}
-.fine{font-size:12px;color:var(--mut);margin:12px 0 0}
-.done{text-align:center;padding:30px 0}
-.done h3{font-size:24px;margin:0 0 10px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
-.card{background:var(--ch);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px}
-.card .btn{margin-top:auto}
-.ava{width:84px;height:84px;border-radius:50%;border:2px solid rgba(212,175,55,.4);background:var(--card);display:grid;place-items:center;font:700 26px 'Playfair Display',serif;color:var(--gold)}
-.perks{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.perks .card{text-align:center}
-.tgb{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:30px;border:1px solid rgba(212,175,55,.3);border-radius:16px;background:rgba(0,0,0,.35)}
-footer{background:#09090B;border-top:1px solid var(--line);padding:48px 0 28px;color:var(--mut);font-size:13px}
-footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-footer h4{font:700 14px 'Playfair Display',serif;color:var(--ink);margin:0 0 10px;letter-spacing:.06em}
-footer p{margin:4px 0}
-.crow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.crow:last-child{border:0}.crow small{color:var(--mut)}
-@media(max-width:900px){nav{display:none}.hero .wrap,.grid,.perks,footer .f{grid-template-columns:1fr}.sum{position:static}.hero{padding-top:44px}.stats{gap:22px}.tabs span{display:none}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.msg{color:var(--red);min-height:22px;font-size:14px;margin:10px 0 0}
+#send{width:100%;min-height:54px;margin-top:8px;font-size:13px}
+.done{text-align:center;padding:26px 0}.done h3{font-size:26px;margin:0 0 10px}
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.mc{background:var(--ch);border:1px solid var(--line);border-radius:16px;padding:26px;text-align:center;transition:.2s}
+.mc:hover{transform:translateY(-3px);border-color:rgba(212,175,55,.4)}
+.ava{width:88px;height:88px;margin:0 auto 14px;border-radius:50%;border:2px solid rgba(212,175,55,.45);background:var(--card);display:grid;place-items:center;font:700 28px 'Playfair Display',serif;color:var(--gold)}
+.mc h3{margin:0 0 4px}.mc small{color:var(--mut)}.star{color:var(--gold)}
+.mq{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.mt{display:flex;gap:16px;width:max-content;animation:mq 60s linear infinite}
+.mq:hover .mt{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.rv{width:340px;flex:none;background:var(--ch);border:1px solid var(--line);border-radius:16px;padding:22px}
+.rv p{margin:10px 0 14px;font-size:14px;line-height:1.55}
+.rv b{display:block;font-size:14px}
+.rv small{color:var(--mut);font-size:12px}
+details{border-bottom:1px solid var(--line);padding:16px 0}summary{cursor:pointer;font-weight:600;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+";color:var(--gold);margin-right:10px;font-weight:400}
+details[open] summary::before{content:"−"}
+details p{color:var(--mut);margin:10px 0 0;padding-left:26px}
+.tgb{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:30px;border:1px solid rgba(212,175,55,.3);border-radius:16px;background:linear-gradient(135deg,rgba(212,175,55,.06),transparent),rgba(0,0,0,.35)}
+footer{background:#09090B;border-top:1px solid var(--line);padding:48px 0 90px;color:var(--mut);font-size:13px}
+footer .f{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}footer h4{font:700 14px 'Playfair Display',serif;color:var(--ink);margin:0 0 10px}footer p{margin:4px 0}
+.shade{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70;backdrop-filter:blur(2px)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--card);border-left:1px solid var(--line);z-index:80;overflow:auto;padding:calc(22px + env(safe-area-inset-top,0px)) 22px 30px;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+.drawer h3{margin:22px 0 10px;font-size:18px;color:var(--gold)}
+.dots{display:flex;gap:8px;margin:10px 0}.dots i{flex:1;height:10px;border-radius:6px;background:var(--line)}.dots i.on{background:var(--gold)}.dots i.gift{background:transparent;border:1px dashed var(--gold)}.dots i.gift.on{background:var(--ok);border:0}
+.ap{background:var(--ch);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}.ap small{color:var(--mut)}
+.ava-lg{width:64px;height:64px;border-radius:50%;background:var(--ch);border:2px solid rgba(212,175,55,.45);display:grid;place-items:center;font:700 24px 'Playfair Display',serif;color:var(--gold);margin-right:14px}
+.mcta{display:none}
+@media(max-width:900px){nav,.hide-m{display:none}.hero .wrap,footer .f{grid-template-columns:1fr}.hero{padding-top:44px}.stats{gap:22px}.two{grid-template-columns:1fr}.panel{padding:20px}
+.mcta{display:flex;position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);z-index:40;min-height:50px;box-shadow:0 10px 30px rgba(0,0,0,.5)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.mt{animation:none}.mq{overflow-x:auto}}
 </style>
 </head>
 <body>
 <header><div class="wrap bar">
   <a href="#" class="logo"><b>БОРОДА</b><small>BARBERSHOP &amp; CLUB</small></a>
-  <nav><a href="#services">Послуги</a><a href="#masters">Майстри</a><a href="#book">Запис</a><a href="#contacts">Контакти</a></nav>
-  <div class="row" style="gap:10px"><button class="btn tg" id="login" hidden>Увійти через Telegram</button><a class="btn tg" id="loginlink" target="_blank" hidden>Відкрити Telegram</a><a class="btn ghost" data-bot target="_blank" hidden>Telegram</a><a class="btn" href="#book">Записатися</a></div>
+  <nav><a href="#book">Запис</a><a href="#masters">Майстри</a><a href="#reviews">Відгуки</a><a href="#faq">Питання</a><a href="#contacts">Контакти</a></nav>
+  <div class="row" style="gap:10px"><a class="btn tg sm" id="loginlink" target="_blank" hidden>Відкрити Telegram</a><button class="btn ghost" id="acct">Увійти</button><a class="btn hide-m" href="#book">Записатися</a></div>
 </div></header>
 
 <main>
 <div class="hero"><div class="wrap">
   <div>
     <h1>Мистецтво стрижки та <em>культура джентльменів</em></h1>
-    <p class="lead">Преміальний догляд, точні контури бороди небезпечною бритвою та справжній клубний релакс. Запис без дзвінків: вільний час сайту й Telegram-бота завжди збігається.</p>
+    <p class="lead">Преміум-догляд, точні контури бороди небезпечною бритвою та клубна атмосфера. Запис без дзвінків, нагадування в Telegram, знижки постійним гостям.</p>
     <div class="row"><a class="btn" href="#book">Обрати час онлайн</a><a class="btn ghost" data-bot target="_blank" hidden>Telegram-бот</a></div>
-    <div class="stats"><div><b>8+</b><span>років досвіду</span></div><div><b>15 000+</b><span>задоволених гостей</span></div><div><b>4.9</b><span>рейтинг сервісу</span></div></div>
+    <div class="stats" id="stats" hidden></div>
   </div>
   <div class="next"><small>Найближче вільне вікно</small><strong id="next">завантажуємо…</strong><small style="margin-top:10px" id="addr1"></small></div>
 </div></div>
 
-<section id="book" class="alt"><div class="wrap">
-  <h2>Запис за 4 кроки</h2><p class="sub">Підтвердження приходить одразу, дзвінок не потрібен.</p>
-  <div class="demo panel" id="demo" hidden style="margin-bottom:20px;border-style:dashed;color:var(--gold)">Демо-режим: сайт відкрито без сервера, записи не зберігаються.</div>
-  <div class="grid">
-  <div class="panel">
+<section id="book" class="alt"><div class="wrap book">
+  <h2 style="text-align:center">Онлайн-запис</h2>
+  <p class="sub">Три кліки — і час за вами</p>
+  <div class="panel" id="bk">
     <div id="wiz">
-      <div class="tabs" role="tablist">
-        <button class="tab" data-step="1" aria-selected="true">1 <span>Послуга</span></button>
-        <button class="tab" data-step="2" aria-selected="false">2 <span>Майстер</span></button>
-        <button class="tab" data-step="3" aria-selected="false">3 <span>Час</span></button>
-        <button class="tab" data-step="4" aria-selected="false">4 <span>Контакти</span></button>
-      </div>
-      <div class="step" data-s="1"><div class="opts" id="svc"></div><div class="nav2"><span></span><button class="btn" data-go="2">Далі: майстер</button></div></div>
-      <div class="step" data-s="2" hidden><div class="opts" id="mst"></div><div class="nav2"><button class="btn ghost" data-go="1">Назад</button><button class="btn" data-go="3">Далі: час</button></div></div>
-      <div class="step" data-s="3" hidden>
-        <span class="lab" style="margin-top:0">Дата</span><div class="chips" id="days"></div>
-        <span class="lab">Вільний час</span><div class="chips" id="slots"></div><p class="none" id="slotnote"></p>
-        <div class="nav2"><button class="btn ghost" data-go="2">Назад</button><button class="btn" data-go="4">Далі: контакти</button></div>
-      </div>
-      <div class="step" data-s="4" hidden>
-        <input type="text" id="name" placeholder="Ваше ім'я" autocomplete="name">
+      <div class="chips" id="svc"></div>
+      <div class="chips" id="mst"></div>
+      <div class="chips" id="days"></div>
+      <div class="chips" id="slots"></div>
+      <p class="none" id="slotnote"></p>
+      <div class="two">
+        <input type="text" id="name" placeholder="Ім'я" autocomplete="name">
         <input type="tel" id="phone" placeholder="Телефон: 050 123 45 67" autocomplete="tel">
-        <input type="text" id="website" class="trap" tabindex="-1" autocomplete="off">
-        <p class="msg" id="msg"></p>
-        <div class="nav2"><button class="btn ghost" data-go="3">Назад</button><button class="btn" id="send">Підтвердити запис</button></div>
       </div>
+      <input type="text" id="website" class="trap" tabindex="-1" autocomplete="off">
+      <p class="msg" id="msg"></p>
+      <button class="btn" id="send">Записатися</button>
     </div>
     <div class="done" id="done" hidden>
-      <h3>Запис підтверджено</h3><p id="donetext"></p>
-      <div class="row" style="justify-content:center"><a class="btn tg" id="tglink" target="_blank" hidden>Підключити нагадування в Telegram</a><button class="btn ghost" id="again">Зробити ще один запис</button></div>
+      <h3>Запис підтверджено ✂️</h3><p id="donetext"></p>
+      <div class="row" style="justify-content:center"><button class="btn ghost" id="icsb">Додати в календар</button><a class="btn tg" id="tglink" target="_blank" hidden>Нагадування в Telegram</a><button class="btn ghost" id="again">Ще один запис</button></div>
     </div>
-  </div>
-  <aside class="panel sum"><h3>Деталі візиту</h3><dl>
-    <dt>Послуга</dt><dd id="s-svc">—</dd><dt>Майстер</dt><dd id="s-mst">—</dd><dt>Дата і час</dt><dd id="s-when" style="color:var(--gold)">—</dd>
-  </dl><div class="total"><span class="fine" style="margin:0">До сплати</span><b id="s-price">0 ₴</b></div>
-  <p class="fine">Оплата на місці після візиту: готівкою або карткою.</p></aside>
   </div>
 </div></section>
 
-<section id="cab" hidden><div class="wrap"><div class="panel">
-  <div class="row" style="justify-content:space-between;align-items:center"><div><h2 id="cabname" style="font-size:26px;margin:0"></h2><p class="sub" id="cabbonus" style="margin:4px 0 0;color:var(--gold)"></p></div><button class="btn ghost" data-logout>Вийти</button></div>
-  <div id="cablist" style="margin-top:14px"></div>
-</div></div></section>
-<section id="services"><div class="wrap"><h2>Послуги та ціни</h2><p class="sub">Миття голови, моделювання контурів і напої з клубного бару входять у візит.</p><div class="cards" id="svcCards"></div></div></section>
-<section id="masters" class="alt"><div class="wrap"><h2>Майстри клубу</h2><p class="sub">Оберіть свого барбера або доручіть вибір нам.</p><div class="cards" id="mstCards"></div></div></section>
-<section><div class="wrap"><div class="perks">
-  <div class="card"><h3 style="margin:0">Клубний лаунж-бар</h3><p style="margin:0;color:var(--mut)">Віскі, еспресо чи крафтові лимонади під час візиту.</p></div>
-  <div class="card"><h3 style="margin:0">Стерильність</h3><p style="margin:0;color:var(--mut)">Ультразвукова очистка, сухожар і одноразові пакети, що відкриваються при вас.</p></div>
-  <div class="card"><h3 style="margin:0">Преміальний догляд</h3><p style="margin:0;color:var(--mut)">Оригінальна косметика з Англії та США.</p></div>
-</div></div></section>
+<section id="masters"><div class="wrap"><h2>Майстри клубу</h2><div class="team" id="team"></div></div></section>
+
+<section id="reviews" class="alt" hidden><div class="wrap"><h2>Гості про нас</h2></div><div class="mq"><div class="mt" id="rvt"></div></div></section>
+
+<section id="faq"><div class="wrap" style="max-width:760px"><h2>Питання та відповіді</h2><div id="faqb"></div></div></section>
+
 <section style="padding-top:0"><div class="wrap"><div class="tgb">
-  <div><h3 style="margin:0 0 6px;font-size:22px">Керуйте записом у Telegram</h3><p style="margin:0;color:var(--mut)">Нагадування, перегляд записів і скасування в один дотик.</p></div>
+  <div><h3 style="margin:0 0 6px;font-size:22px;font-family:'Playfair Display',serif;color:var(--gold)">Керуйте записом у Telegram</h3><p style="margin:0;color:var(--mut)">Нагадування за 4 години, перегляд записів, бонуси й скасування в один дотик.</p></div>
   <a class="btn tg" data-bot target="_blank" hidden>Відкрити бота</a>
 </div></div></section>
 </main>
 
-<footer id="contacts"><div class="wrap">
-  <div class="f">
-    <div><h4>БОРОДА</h4><p>Барбершоп і джентльменський клуб.</p></div>
-    <div><h4>Адреса та години</h4><p id="addr2"></p><p id="hours"></p></div>
-    <div><h4>Адміністрація</h4><p><a href="/admin" style="color:var(--gold)">Вхід у CRM</a></p></div>
+<footer id="contacts"><div class="wrap"><div class="f">
+  <div><h4>БОРОДА</h4><p>Барбершоп і джентльменський клуб.</p></div>
+  <div><h4>Адреса та години</h4><p id="addr2"></p><p id="hours"></p><p id="phoneb"></p><p id="mapb"></p></div>
+  <div><h4>Адміністрація</h4><p><a href="/admin" style="color:var(--gold)">Вхід у CRM</a></p></div>
+</div><p style="margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:12px">© 2026 «Борода Barbershop &amp; Club»</p></div></footer>
+<a class="btn mcta" href="#book">Записатися онлайн</a>
+
+<div class="shade" id="shade" hidden></div>
+<aside class="drawer" id="cab" hidden>
+  <div class="row" style="justify-content:space-between;align-items:center;gap:12px">
+    <div class="row" style="align-items:center;flex-wrap:nowrap">
+      <div class="ava-lg" id="cabava">Б</div>
+      <div>
+        <h2 id="cabname" style="font-size:22px;margin:0">Кабінет</h2>
+        <p class="none" id="cabphone" style="margin:2px 0 0;font-style:normal;font-size:12px"></p>
+      </div>
+    </div>
+    <button class="btn ghost sm" data-close>Закрити</button>
   </div>
-  <p style="margin-top:28px;padding-top:18px;border-top:1px solid var(--line);font-size:12px">© 2026 «Борода Barbershop &amp; Club»</p>
-</div></footer>
+  <h3>Бонуси</h3><div id="cabbonus"></div>
+  <h3>Майбутні записи</h3><div id="cabup"></div>
+  <h3>Історія</h3><div id="cabhist"></div>
+  <button class="btn ghost sm" data-logout style="margin-top:20px">Вийти</button>
+</aside>
 
 <script>
 (function(){
-  var WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],ANY={id:"any",name:"Будь-який вільний майстер"};
-  var mock=false,cfg=null,days=[],slots=[],step=1,sel={service:null,master:"any",date:null,slot:null};
-  function $(id){return document.getElementById(id)}
-  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-  function money(n){return Number(n).toLocaleString("uk-UA")+" ₴"}
-  function pad(n){return n<10?"0"+n:""+n}
-  function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
-  function find(a,id){return a.filter(function(x){return x.id===id})[0]}
+var WD=["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],ANY={id:"any",name:"Будь-який вільний"},ST={booked:"очікується",done:"завершено",cancelled:"скасовано"};
+var mock=false,cfg=null,days=[],slots=[],me=null,last=null,sel={service:null,master:"any",date:null,slot:null};
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function money(n){return Number(n).toLocaleString("uk-UA")+" ₴"}
+function pad(n){return n<10?"0"+n:""+n}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function find(a,id){return a.filter(function(x){return x.id===id})[0]}
+function sess(){try{return localStorage.getItem("sess")||""}catch(e){return ""}}
+function setSess(v){try{v?localStorage.setItem("sess",v):localStorage.removeItem("sess")}catch(e){}}
+function stars(n){return "★★★★★".slice(0,n)}
 
-  /* ---- демо-режим, якщо сервера немає ---- */
-  var MCFG={ok:true,bot:"",address:"вул. Прикладна, 1",hours:"10:00–19:00",services:[{id:"cut",name:"Стрижка",min:45,price:400},{id:"beard",name:"Борода",min:30,price:250},{id:"combo",name:"Стрижка + борода",min:75,price:600},{id:"kid",name:"Дитяча стрижка",min:30,price:300}],masters:[{id:"a",name:"Андрій"},{id:"m",name:"Максим"},{id:"o",name:"Олег"}]};
-  function hash(n){n=Math.imul(n^61,0x27d4eb2d);n^=n>>>15;n=Math.imul(n,0x2c1b3c6d);n^=n>>>12;return n>>>0}
-  function mSlots(d,m){var key=d.getFullYear()*372+d.getMonth()*31+d.getDate()+m.charCodeAt(0),n=new Date(),out=[];
-    for(var k=0;k<18;k++){var t=600+k*30;if(iso(d)===iso(n)&&t<=n.getHours()*60+n.getMinutes()+30)continue;if(hash(key*31+k)%100<40)continue;out.push({i:k,label:pad(Math.floor(t/60))+":"+pad(t%60)})}return out}
-  function mApi(path,body){var u=new URL(path,"http://x"),q=u.searchParams,p=u.pathname;
-    if(p==="/api/config")return MCFG;
-    if(p==="/api/days"){var r=[];for(var k=0;k<7;k++){var d=new Date(Date.now()+k*864e5);if(mSlots(d,q.get("master")).length)r.push({date:iso(d),label:WD[d.getDay()]+" "+pad(d.getDate())+"."+pad(d.getMonth()+1)})}return {ok:true,days:r}}
-    if(p==="/api/slots"){var s=q.get("date").split("-");return {ok:true,slots:mSlots(new Date(+s[0],+s[1]-1,+s[2]),q.get("master"))}}
-    if(p==="/api/book")return {ok:true,when:body.date.split("-").reverse().join(".")+" о "+body.slotLabel,master:"",tg_link:null};
-    return {ok:false,error:"?"}}
-  function req(path,body){
-    if(mock)return Promise.resolve(mApi(path,body));
-    var h={"X-Session":sess()};if(body)h["Content-Type"]="application/json";
-    return fetch(path,{method:body?"POST":"GET",headers:h,body:body?JSON.stringify(body):undefined}).then(function(r){return r.json().then(function(j){j.status=r.status;return j})});
-  }
+var MCFG={ok:true,shop:"Барбершоп «Борода»",bot:"demo_bot",address:"вул. Хрещатик, 15, Київ",hours:"10:00–19:00",phone:"+380670000000",map:"",loyalty:{every:5,percent:10},
+ stats:{visits:1240,reviews:86,rating:4.9,since:"2018"},
+ services:[{id:"cut",name:"Стрижка",min:45,price:400},{id:"beard",name:"Борода",min:30,price:250},{id:"combo",name:"Стрижка + борода",min:75,price:600},{id:"kid",name:"Дитяча стрижка",min:30,price:300}],
+ masters:[{id:"a",name:"Андрій",rating:4.9,reviews:41},{id:"m",name:"Максим",rating:4.8,reviews:28},{id:"o",name:"Олег",rating:5,reviews:17}]};
+var MREV=[["Олександр К.","Ходжу сюди другий рік. Стрижка завжди рівна, а нагадування в Telegram рятує.","Андрій"],["Дмитро П.","Королівське гоління — окремий кайф. Атмосфера клубу, віскі, чудова музика.","Олег"],["Ігор С.","Записався за хвилину з телефона, без дзвінків. Прийшов — усе чітко за часом.","Максим"],["Богдан Л.","Привів сина, обом сподобалось. Майстер знайшов підхід до дитини.","Андрій"],["Сергій М.","Борода нарешті виглядає як треба. Дякую за пораду з доглядом.","Максим"]];
+function hash(n){n=Math.imul(n^61,0x27d4eb2d);n^=n>>>15;n=Math.imul(n,0x2c1b3c6d);n^=n>>>12;return n>>>0}
+function mSlots(d,m){var key=d.getFullYear()*372+d.getMonth()*31+d.getDate()+m.charCodeAt(0),n=new Date(),out=[];
+  for(var k=0;k<18;k++){var t=600+k*30;if(iso(d)===iso(n)&&t<=n.getHours()*60+n.getMinutes()+30)continue;if(hash(key*31+k)%100<40)continue;out.push({i:k,label:pad(Math.floor(t/60))+":"+pad(t%60)})}return out}
+function mApi(path,body){var u=new URL(path,"http://x"),q=u.searchParams,p=u.pathname,t=Date.now();
+  if(p==="/api/config")return MCFG;
+  if(p==="/api/reviews")return {ok:true,items:MREV.map(function(r){return {name:r[0],rating:5,comment:r[1],master:r[2]}})};
+  if(p==="/api/days"){var r=[];for(var k=0;k<7;k++){var d=new Date(t+k*864e5);if(mSlots(d,q.get("master")).length)r.push({date:iso(d),label:WD[d.getDay()]+" "+pad(d.getDate())+"."+pad(d.getMonth()+1)})}return {ok:true,days:r}}
+  if(p==="/api/slots"){var s=q.get("date").split("-");return {ok:true,slots:mSlots(new Date(+s[0],+s[1]-1,+s[2]),q.get("master"))}}
+  if(p==="/api/book"){var sv=find(MCFG.services,body.service);return {ok:true,when:body.date.split("-").reverse().join(".")+" о "+body.slotLabel,master:"",start:body.date+"T"+body.slotLabel+":00",min:sv.min,tg_link:null}}
+  if(p==="/api/me"){var a=new Date(t+2*864e5);a.setHours(14,30,0,0);var b=new Date(t-20*864e5);b.setHours(11,0,0,0);
+    return {ok:true,name:"Олександр",phone:"+380671234567",bonus:1,bonus_every:5,bonus_percent:10,items:[
+     {id:1,when:iso(a).split("-").reverse().join(".")+" о 14:30",start:iso(a)+"T14:30:00",min:75,sid:"combo",mid:"a",service:"Стрижка + борода",master:"Андрій",price:600,status:"booked",upcoming:true},
+     {id:2,when:iso(b).split("-").reverse().join(".")+" о 11:00",start:iso(b)+"T11:00:00",min:45,sid:"cut",mid:"m",service:"Стрижка",master:"Максим",price:400,status:"done",upcoming:false}]}}
+  if(p==="/api/me/cancel"||p==="/api/auth/logout")return {ok:true};
+  return {ok:false,error:"?"}}
+function req(path,body){
+  if(mock)return Promise.resolve(mApi(path,body));
+  var h={"X-Session":sess()};if(body)h["Content-Type"]="application/json";
+  return fetch(path,{method:body?"POST":"GET",headers:h,body:body?JSON.stringify(body):undefined}).then(function(r){return r.json()});
+}
 
-  /* ---- відображення ---- */
-  function summary(){
-    var s=find(cfg.services,sel.service),m=sel.master==="any"?ANY:find(cfg.masters,sel.master),sl=slots.filter(function(x){return x.i===sel.slot})[0],d=find(days.map(function(x){return {id:x.date,l:x.label}}),sel.date);
-    $("s-svc").textContent=s?s.name+" · "+s.min+" хв":"—";
-    $("s-mst").textContent=m?m.name:"—";
-    $("s-when").textContent=d&&sl?d.l+" о "+sl.label:"Оберіть час";
-    $("s-price").textContent=s?money(s.price):"0 ₴";
-  }
-  function renderSvc(){
-    $("svc").innerHTML=cfg.services.map(function(s){return '<button type="button" class="opt" data-svc="'+esc(s.id)+'" aria-pressed="'+(sel.service===s.id)+'"><span class="pr">'+money(s.price)+'</span><b>'+esc(s.name)+'</b><small>'+s.min+' хв</small></button>'}).join("");
-    $("mst").innerHTML=[ANY].concat(cfg.masters).map(function(m){return '<button type="button" class="opt" data-mst="'+esc(m.id)+'" aria-pressed="'+(sel.master===m.id)+'"><b>'+esc(m.name)+'</b><small>'+(m.id==="any"?"найближче доступне вікно":"барбер")+'</small></button>'}).join("");
-    summary();
-  }
-  function renderDays(){
-    $("days").innerHTML=days.length?days.map(function(d){return '<button type="button" class="chip" data-day="'+d.date+'" aria-pressed="'+(sel.date===d.date)+'">'+esc(d.label)+'</button>'}).join(""):'<p class="none">Найближчим часом вільних вікон немає. Спробуйте іншого майстра.</p>';
-  }
-  function renderSlots(){
-    $("slots").innerHTML=slots.map(function(s){return '<button type="button" class="chip" data-slot="'+s.i+'" aria-pressed="'+(sel.slot===s.i)+'">'+s.label+'</button>'}).join("");
-    $("slotnote").textContent=sel.date&&!slots.length?"На цей день вільного часу немає.":"";
-    summary();
-  }
-  function goStep(n){
-    step=n;
-    document.querySelectorAll(".step").forEach(function(e){e.hidden=+e.dataset.s!==n});
-    document.querySelectorAll(".tab").forEach(function(e){e.setAttribute("aria-selected",+e.dataset.step===n)});
-  }
-  function loadDays(){
-    sel.date=null;sel.slot=null;slots=[];renderSlots();
-    req("/api/days?service="+sel.service+"&master="+sel.master).then(function(r){
-      days=r.days||[];renderDays();
-      if(days.length){sel.date=days[0].date;renderDays();loadSlots()}else{$("next").textContent="вільних вікон немає";summary()}
-    });
-  }
-  function loadSlots(){
-    sel.slot=null;
-    req("/api/slots?service="+sel.service+"&master="+sel.master+"&date="+sel.date).then(function(r){
-      slots=r.slots||[];renderSlots();
-      var d=find(days.map(function(x){return {id:x.date,l:x.label}}),sel.date);
-      if(slots.length&&d)$("next").textContent=d.l+", "+slots[0].label;
-    });
-  }
-  function pick(kind,id,jump){
-    if(kind==="svc")sel.service=id;else sel.master=id;
-    renderSvc();loadDays();
-    if(jump){goStep(kind==="svc"?2:3);$("book").scrollIntoView()}
-  }
-
-  function start(c){
-    cfg=c;sel.service=c.services[0].id;
-    document.querySelectorAll("[data-bot]").forEach(function(a){if(c.bot){a.href="https://t.me/"+c.bot;a.hidden=false}});
-    $("addr1").textContent=$("addr2").textContent=c.address||"";
-    $("hours").textContent=c.hours?"Щодня "+c.hours:"";
-    $("svcCards").innerHTML=c.services.map(function(s){return '<div class="card"><div><h3 style="margin:0">'+esc(s.name)+'</h3><small style="color:var(--mut)">'+s.min+' хв</small></div><b class="serif" style="font-size:24px;color:var(--gold)">'+money(s.price)+'</b><button class="btn ghost" data-pick-svc="'+esc(s.id)+'">Обрати</button></div>'}).join("");
-    $("mstCards").innerHTML=c.masters.map(function(m){return '<div class="card"><div class="ava">'+esc(m.name.slice(0,1))+'</div><h3 style="margin:0">'+esc(m.name)+'</h3><button class="btn ghost" data-pick-mst="'+esc(m.id)+'">Записатися до майстра</button></div>'}).join("");
-    renderSvc();loadDays();
-    $("login").hidden=!(c.bot&&!mock);loadMe();
-  }
-
-  /* ---- вхід через Telegram і кабінет ---- */
-  function sess(){try{return localStorage.getItem("sess")||""}catch(e){return ""}}
-  function setSess(v){try{v?localStorage.setItem("sess",v):localStorage.removeItem("sess")}catch(e){}}
-  var ST={booked:"очікується",done:"завершено",cancelled:"скасовано"};
-  function loadMe(){
-    if(mock||!sess()){$("cab").hidden=true;return}
-    req("/api/me").then(function(r){
-      if(!r.ok){setSess("");$("cab").hidden=true;$("login").hidden=!cfg.bot;return}
-      $("cab").hidden=false;$("login").hidden=true;$("loginlink").hidden=true;
-      $("cabname").textContent="Привіт, "+r.name;
-      if(!$("name").value)$("name").value=r.name;
-      if(!$("phone").value&&r.phone)$("phone").value=r.phone;
-      $("cabbonus").textContent=r.bonus===null?"":(r.bonus===0?"Наступний запис зі знижкою "+r.bonus_percent+"%!":"До знижки "+r.bonus_percent+"% залишилось записів: "+r.bonus);
-      $("cablist").innerHTML=r.items.length?r.items.map(function(i){
-        return '<div class="crow"><div><b>'+esc(i.when)+'</b> · '+esc(i.service)+'<br><small>'+esc(i.master)+' · '+money(i.price)+' · '+esc(ST[i.status]||i.status)+'</small></div>'+(i.upcoming?'<button class="btn ghost" data-cancel="'+i.id+'">Скасувати</button>':"")+'</div>'}).join(""):'<p class="none">Записів поки немає.</p>';
-    });
-  }
-  $("login").addEventListener("click",function(){
-    var b=$("login");
-    req("/api/auth/start",{}).then(function(r){
-      if(!r.ok){alert(r.error||"Помилка");return}
-      var l=$("loginlink");l.href=r.link;l.hidden=false;window.open(r.link,"_blank");
-      b.textContent="Очікуємо підтвердження…";b.disabled=true;
-      var n=0,t=setInterval(function(){req("/api/auth/check?token="+r.token).then(function(c){
-        if(c.ok&&c.status==="ok"){clearInterval(t);setSess(c.session);b.disabled=false;b.textContent="Увійти через Telegram";loadMe()}
-        else if(!c.ok||++n>150){clearInterval(t);b.disabled=false;b.textContent="Увійти через Telegram";l.hidden=true}
-      })},2000);
-    });
+function upd(){
+  var s=find(cfg.services,sel.service),sl=slots.filter(function(x){return x.i===sel.slot})[0],d=days.filter(function(x){return x.date===sel.date})[0];
+  $("send").textContent=s&&sl&&d?"Записатися · "+s.name+" · "+d.label+" "+sl.label+" · "+money(s.price):"Записатися";
+}
+function renderChips(){
+  $("svc").innerHTML=cfg.services.map(function(s){return '<button type="button" class="chip" data-svc="'+esc(s.id)+'" aria-pressed="'+(sel.service===s.id)+'">'+esc(s.name)+'<small>'+s.min+' хв · '+money(s.price)+'</small></button>'}).join("");
+  $("mst").innerHTML=[ANY].concat(cfg.masters).map(function(m){return '<button type="button" class="chip" data-mst="'+esc(m.id)+'" aria-pressed="'+(sel.master===m.id)+'">'+esc(m.name)+'</button>'}).join("");
+  upd();
+}
+function renderDays(){$("days").innerHTML=days.length?days.map(function(d){return '<button type="button" class="chip" data-day="'+d.date+'" aria-pressed="'+(sel.date===d.date)+'">'+esc(d.label)+'</button>'}).join(""):'<p class="none">Найближчим часом вільних вікон немає. Спробуйте іншого майстра.</p>'}
+function renderSlots(){
+  $("slots").innerHTML=slots.map(function(s){return '<button type="button" class="chip t" data-slot="'+s.i+'" aria-pressed="'+(sel.slot===s.i)+'">'+s.label+'</button>'}).join("");
+  $("slotnote").textContent=sel.date&&!slots.length?"На цей день вільного часу немає.":"";upd();
+}
+function loadDays(){
+  sel.date=null;sel.slot=null;slots=[];renderSlots();
+  req("/api/days?service="+sel.service+"&master="+sel.master).then(function(r){
+    days=r.days||[];renderDays();
+    if(days.length){sel.date=days[0].date;renderDays();loadSlots()}else{$("next").textContent="вільних вікон немає";upd()}
   });
-  document.addEventListener("click",function(e){
-    var t=e.target.closest("button");if(!t)return;
-    if(t.dataset.logout!==undefined){req("/api/auth/logout",{}).then(function(){setSess("");$("cab").hidden=true;$("login").hidden=!cfg.bot})}
-    if(t.dataset.cancel&&confirm("Скасувати цей запис?")){req("/api/me/cancel",{id:+t.dataset.cancel}).then(function(r){if(r.ok){loadMe();loadDays()}else alert(r.error||"Помилка")})}
+}
+function loadSlots(){
+  sel.slot=null;
+  req("/api/slots?service="+sel.service+"&master="+sel.master+"&date="+sel.date).then(function(r){
+    slots=r.slots||[];renderSlots();
+    var d=days.filter(function(x){return x.date===sel.date})[0];if(slots.length&&d)$("next").textContent=d.label+", "+slots[0].label;
   });
+}
 
-  document.addEventListener("click",function(e){
-    var t=e.target.closest("button");if(!t)return;var d=t.dataset;
-    if(d.svc)return pick("svc",d.svc);
-    if(d.mst)return pick("mst",d.mst);
-    if(d.pickSvc){sel.service=d.pickSvc;renderSvc();loadDays();goStep(2);return $("book").scrollIntoView()}
-    if(d.pickMst){sel.master=d.pickMst;renderSvc();loadDays();goStep(3);return $("book").scrollIntoView()}
-    if(d.day){sel.date=d.day;renderDays();return loadSlots()}
-    if(d.slot!==undefined){sel.slot=parseInt(d.slot,10);return renderSlots()}
-    if(d.go)return goStep(+d.go);
-    if(d.step)return goStep(+d.step);
-    if(t.id==="again"){$("done").hidden=true;$("wiz").hidden=false;goStep(1)}
+function ics(i){
+  function f(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"T"+pad(d.getHours())+pad(d.getMinutes())+"00"}
+  var s=new Date(i.start),e=new Date(s.getTime()+i.min*6e4);
+  var t=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Boroda//UA","BEGIN:VEVENT","UID:boroda-"+i.start+"@boroda","DTSTAMP:"+f(new Date()),"DTSTART:"+f(s),"DTEND:"+f(e),"SUMMARY:"+cfg.shop+" "+i.service,"LOCATION:"+(cfg.address||""),"END:VEVENT","END:VCALENDAR"].join("\r\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/calendar"}));a.download="boroda.ics";a.click();
+}
+
+function acct(on){$("acct").textContent=on?"Кабінет":"Увійти";$("acct").dataset.on=on?"1":""}
+function openCab(o){$("cab").hidden=!o;$("shade").hidden=!o;document.body.style.overflow=o?"hidden":""}
+function loadMe(){
+  if(!sess()){acct(false);return}
+  req("/api/me").then(function(r){
+    if(!r.ok){setSess("");acct(false);return}
+    me=r;acct(true);
+    if(!$("name").value)$("name").value=r.name;
+    if(!$("phone").value&&r.phone)$("phone").value=r.phone;
+    $("cabname").textContent="Привіт, "+r.name;$("cabphone").textContent=r.phone||"";
+    $("cabava").textContent=(r.name||"Б").slice(0,1).toUpperCase();
+    var ev=r.bonus_every;
+    if(ev>0){var filled=ev-1-r.bonus,dots="";for(var k=0;k<ev;k++)dots+='<i class="'+(k===ev-1?"gift":"")+((k<filled||(k===ev-1&&r.bonus===0))?" on":"")+'"></i>';
+      $("cabbonus").innerHTML='<div class="dots">'+dots+'</div><small class="none">'+(r.bonus===0?"Наступний запис зі знижкою "+r.bonus_percent+"%! 🎉":"До знижки "+r.bonus_percent+"% залишилось записів: "+r.bonus)+"</small>"}
+    else $("cabbonus").innerHTML='<p class="none">Програма лояльності не діє.</p>';
+    function card(i){return '<div class="ap"><b>'+esc(i.when)+'</b> · '+esc(i.service)+'<br><small>'+esc(i.master)+' · '+money(i.price)+' · '+esc(ST[i.status]||i.status)+'</small><div class="row" style="margin-top:10px">'
+      +(i.upcoming?'<button class="btn ghost sm" data-ics="'+i.id+'">У календар</button><button class="btn ghost sm" data-cancel="'+i.id+'">Скасувати</button>':'<button class="btn sm" data-again="'+i.id+'">Повторити</button>')+"</div></div>"}
+    var up=r.items.filter(function(i){return i.upcoming}),hi=r.items.filter(function(i){return !i.upcoming});
+    $("cabup").innerHTML=up.length?up.map(card).join(""):'<p class="none">Немає майбутніх записів.</p>';
+    $("cabhist").innerHTML=hi.length?hi.map(card).join(""):'<p class="none">Історія порожня.</p>';
   });
-
-  $("send").addEventListener("click",function(){
-    var msg=$("msg");msg.textContent="";
-    var name=$("name").value.trim(),phone=$("phone").value.trim();
-    if(!sel.date||sel.slot===null){msg.textContent="Оберіть дату й вільний час на кроці 3.";return}
-    if(name.length<2){msg.textContent="Вкажіть ім'я.";$("name").focus();return}
-    if(phone.replace(/\D/g,"").length<10){msg.textContent="Вкажіть телефон у форматі 050 123 45 67.";$("phone").focus();return}
-    var label="";slots.forEach(function(s){if(s.i===sel.slot)label=s.label});
-    var b=$("send");b.disabled=true;b.textContent="Записуємо…";
-    req("/api/book",{service:sel.service,master:sel.master,date:sel.date,slot:sel.slot,name:name,phone:phone,website:$("website").value,slotLabel:label}).then(function(r){
-      b.disabled=false;b.textContent="Підтвердити запис";
-      if(!r.ok){msg.textContent=r.error||"Не вдалося записатися. Спробуйте ще раз.";loadSlots();return}
-      var s=find(cfg.services,sel.service),m=sel.master==="any"?ANY:find(cfg.masters,sel.master);
-      $("donetext").textContent=name+", чекаємо вас "+r.when+". "+s.name+", майстер: "+(r.master||m.name)+", "+money(s.price)+".";
-      if(r.tg_link&&!sess()){$("tglink").href=r.tg_link;$("tglink").hidden=false}else $("tglink").hidden=true;
-      $("wiz").hidden=true;$("done").hidden=false;$("done").scrollIntoView({block:"center"});
-      $("name").value="";$("phone").value="";loadDays();loadMe();
-    }).catch(function(){b.disabled=false;b.textContent="Підтвердити запис";msg.textContent="Немає зв'язку із сервером. Спробуйте ще раз."});
+}
+function login(){
+  if(mock){setSess("demo");loadMe();return openCab(true)}
+  if(!cfg.bot)return alert("Вхід тимчасово недоступний.");
+  var b=$("acct");
+  req("/api/auth/start",{}).then(function(r){
+    if(!r.ok)return alert(r.error||"Помилка");
+    var l=$("loginlink");l.href=r.link;l.hidden=false;window.open(r.link,"_blank");b.textContent="Очікуємо Telegram…";b.disabled=true;
+    var n=0,t=setInterval(function(){req("/api/auth/check?token="+r.token).then(function(c){
+      if(c.ok&&c.status==="ok"){clearInterval(t);setSess(c.session);b.disabled=false;l.hidden=true;loadMe();openCab(true)}
+      else if(!c.ok||++n>150){clearInterval(t);b.disabled=false;b.textContent="Увійти";l.hidden=true}})},2000);
   });
+}
 
-  req("/api/config").then(function(c){if(!c||!c.services)throw 0;start(c)}).catch(function(){mock=true;$("demo").hidden=false;start(MCFG)});
+function start(c){
+  cfg=c;sel.service=c.services[0].id;
+  document.querySelectorAll("[data-bot]").forEach(function(a){if(c.bot){a.href="https://t.me/"+c.bot;a.hidden=false}});
+  $("addr1").textContent=$("addr2").textContent=c.address||"";
+  $("hours").textContent=c.hours?"Щодня "+c.hours:"";
+  if(c.phone)$("phoneb").innerHTML='<a href="tel:'+esc(c.phone)+'" style="color:var(--ink)">'+esc(c.phone)+'</a>';
+  if(c.map)$("mapb").innerHTML='<a href="'+esc(c.map)+'" target="_blank" style="color:var(--gold)">Маршрут на карті</a>';
+  var s=c.stats||{},h="";
+  if(s.since)h+='<div><b>з '+esc(s.since)+'</b><span>працюємо</span></div>';
+  if(s.visits>0)h+='<div><b>'+Number(s.visits).toLocaleString("uk-UA")+'</b><span>візитів</span></div>';
+  if(s.reviews>0)h+='<div><b>'+s.rating+' ★</b><span>'+s.reviews+' відгуків</span></div>';
+  $("stats").innerHTML=h;$("stats").hidden=!h;
+  $("team").innerHTML=c.masters.map(function(m){return '<div class="mc"><div class="ava">'+esc(m.name.slice(0,1))+'</div><h3>'+esc(m.name)+'</h3>'+(m.reviews>0?'<small><span class="star">★</span> '+m.rating+' · '+m.reviews+' відгуків</small>':'<small>Барбер клубу</small>')+'</div>'}).join("");
+  var L=c.loyalty||{},faq=[["Як скасувати або перенести запис?","Скасувати можна в особистому кабінеті на сайті або в Telegram-боті (команда /my). Потім оберіть новий час онлайн."],["Коли прийде нагадування?","За 4 години до візиту в Telegram. Увійдіть через Telegram на сайті або натисніть кнопку підключення після запису."],["Як оплатити?","Після візиту на місці: готівкою або карткою."]];
+  if(L.every>0)faq.push(["Є знижки для постійних гостей?","Так: кожен "+L.every+"-й запис зі знижкою "+L.percent+"%. Прогрес видно в особистому кабінеті."]);
+  $("faqb").innerHTML=faq.map(function(f){return "<details><summary>"+esc(f[0])+"</summary><p>"+esc(f[1])+"</p></details>"}).join("");
+  renderChips();loadDays();loadMe();
+  req("/api/reviews").then(function(r){
+    if(!r.ok||!r.items.length)return;
+    var one=r.items.map(function(i){return '<div class="rv"><span class="star">'+stars(i.rating)+'</span><p>'+esc(i.comment)+'</p><b>'+esc(i.name)+'</b><small> · майстер '+esc(i.master)+'</small></div>'}).join("");
+    $("rvt").innerHTML=one+one;$("rvt").style.animationDuration=Math.max(30,r.items.length*9)+"s";$("reviews").hidden=false;
+  });
+}
+
+document.addEventListener("click",function(e){
+  if(e.target.id==="shade")return openCab(false);
+  var t=e.target.closest("button");if(!t)return;var d=t.dataset;
+  if(d.svc){sel.service=d.svc;renderChips();return loadDays()}
+  if(d.mst){sel.master=d.mst;renderChips();return loadDays()}
+  if(d.day){sel.date=d.day;renderDays();return loadSlots()}
+  if(d.slot!==undefined){sel.slot=parseInt(d.slot,10);return renderSlots()}
+  if(d.close!==undefined)return openCab(false);
+  if(d.logout!==undefined){return req("/api/auth/logout",{}).then(function(){setSess("");me=null;acct(false);openCab(false)})}
+  if(d.cancel&&confirm("Скасувати цей запис?"))return req("/api/me/cancel",{id:+d.cancel}).then(function(r){if(r.ok){loadMe();loadDays()}else alert(r.error||"Помилка")});
+  if(d.ics){var i=find(me.items,+d.ics);return i&&ics(i)}
+  if(d.again){var it=find(me.items,+d.again);if(it){if(find(cfg.services,it.sid))sel.service=it.sid;if(find(cfg.masters,it.mid))sel.master=it.mid;openCab(false);renderChips();loadDays();$("book").scrollIntoView()}return}
+  if(t.id==="acct")return $("acct").dataset.on?openCab(true):login();
+  if(t.id==="icsb"&&last)return ics(last);
+  if(t.id==="again"){$("done").hidden=true;$("wiz").hidden=false;loadDays()}
+});
+
+$("send").addEventListener("click",function(){
+  var msg=$("msg");msg.textContent="";
+  var name=$("name").value.trim(),phone=$("phone").value.trim();
+  if(!sel.date||sel.slot===null){msg.textContent="Оберіть дату й вільний час.";return}
+  if(name.length<2){msg.textContent="Вкажіть ім'я.";$("name").focus();return}
+  if(phone.replace(/\D/g,"").length<10){msg.textContent="Вкажіть телефон у форматі 050 123 45 67.";$("phone").focus();return}
+  var label="";slots.forEach(function(s){if(s.i===sel.slot)label=s.label});
+  var b=$("send");b.disabled=true;b.textContent="Записуємо…";
+  req("/api/book",{service:sel.service,master:sel.master,date:sel.date,slot:sel.slot,name:name,phone:phone,website:$("website").value,slotLabel:label}).then(function(r){
+    b.disabled=false;upd();
+    if(!r.ok){msg.textContent=r.error||"Не вдалося записатися. Спробуйте ще раз.";loadSlots();return}
+    var s=find(cfg.services,sel.service),m=sel.master==="any"?ANY:find(cfg.masters,sel.master);
+    last={start:r.start,min:r.min||s.min,service:s.name};
+    $("donetext").textContent=name+", чекаємо вас "+r.when+". "+s.name+", майстер: "+(r.master||m.name)+", "+money(r.price||s.price)+(sess()?". Нагадаємо в Telegram за 4 години.":".");
+    if(r.tg_link&&!sess()){$("tglink").href=r.tg_link;$("tglink").hidden=false}else $("tglink").hidden=true;
+    $("wiz").hidden=true;$("done").hidden=false;$("bk").scrollIntoView({block:"center"});
+    $("name").value="";$("phone").value="";loadMe();
+  }).catch(function(){b.disabled=false;upd();msg.textContent="Немає зв'язку із сервером. Спробуйте ще раз."});
+});
+
+req("/api/config").then(function(c){if(!c||!c.services)throw 0;start(c)}).catch(function(){mock=true;start(MCFG)});
 })();
 </script>
 </body>
