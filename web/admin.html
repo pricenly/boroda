@@ -11,11 +11,13 @@
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Montserrat,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
 h1,h2{font-family:'Playfair Display',serif;color:var(--brass);margin:0 0 4px}
-.wrap{max-width:980px;margin:0 auto;padding:0 16px 48px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px 48px}
 header{padding:22px 0;border-bottom:1px solid var(--line);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .tabs{display:flex;gap:4px;margin:0 0 16px;background:var(--chip);padding:4px;border-radius:12px;border:1px solid var(--line);overflow-x:auto}
-.tab{flex:1;white-space:nowrap;background:0;color:var(--mut);border:0;font:inherit;font-weight:500;padding:10px 12px;border-radius:9px;cursor:pointer}
+.tab{flex:1;white-space:nowrap;background:0;color:var(--mut);border:0;font:inherit;font-weight:500;padding:10px 12px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .tab[aria-selected=true]{background:var(--brass);color:#000}
+.tab .badge-n{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px}
+.tab[aria-selected=true] .badge-n{background:#000;color:var(--brass)}
 .bar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
 input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink)}
 textarea{width:100%;min-height:110px}
@@ -37,17 +39,53 @@ textarea{width:100%;min-height:110px}
 .dlg{background:var(--sf);padding:22px;border-radius:12px;border:1px solid var(--brass);width:360px;max-width:100%;display:grid;gap:10px}
 .err{color:#ff6b6b;font-size:13px;min-height:16px;margin:0}
 .link{background:0;border:0;color:var(--brass);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+
+/* --- Чати --- */
+.chat-wrap{display:grid;grid-template-columns:300px 1fr;gap:12px;height:72vh;min-height:520px}
+.chat-list{background:var(--sf);border:1px solid var(--line);border-radius:12px;overflow-y:auto}
+.chat-item{padding:12px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.chat-item:hover{background:var(--chip)}
+.chat-item.unread{border-left:3px solid var(--red);background:rgba(192,57,43,.07)}
+.chat-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.chat-row b{font-size:13px}
+.chat-row .t{font-size:10px;color:var(--mut)}
+.chat-last{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.chat-last.m{color:#666}
+.chat-view{background:var(--sf);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
+.chat-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.chat-head b{font-size:14px;color:var(--brass)}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:#0a0a0a}
+.msg-in,.msg-out{max-width:75%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap}
+.msg-in{background:var(--chip);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.msg-out{background:var(--brass);color:#000;align-self:flex-end;border-bottom-right-radius:4px}
+.msg-time{font-size:10px;opacity:.6;margin-top:3px}
+.chat-empty{color:#666;text-align:center;margin:auto;padding:20px;font-style:italic}
+.chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);align-items:flex-end;background:var(--sf)}
+.chat-input textarea{flex:1;min-height:44px;max-height:120px;resize:none;font-size:13px}
+.chat-input .btn{padding:10px 16px}
+#chatback{display:none}
+@media(max-width:760px){
+  .chat-wrap{grid-template-columns:1fr;height:auto;min-height:0}
+  .chat-view{display:none;height:70vh}
+  .chat-view.open{display:flex}
+  .chat-list.hidden-m{display:none}
+  #chatback{display:inline-block}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header><div><h1>Борода CRM PRO</h1><span class="m">Записи, розклад, клієнти, відгуки, розсилки</span></div>
+<header><div><h1>Борода CRM PRO</h1><span class="m">Записи, розклад, клієнти, чати, розсилки</span></div>
 <div class="bar" style="margin:0"><button class="btn" id="new">+ Новий запис</button><button class="mini" id="csv">Експорт CSV</button></div></header>
 
 <div class="tabs" role="tablist">
-<button class="tab" data-tab="day" aria-selected="true">Записи</button><button class="tab" data-tab="sch" aria-selected="false">Розклад</button>
-<button class="tab" data-tab="cli" aria-selected="false">Клієнти</button><button class="tab" data-tab="rev" aria-selected="false">Відгуки</button>
-<button class="tab" data-tab="bc" aria-selected="false">Розсилка</button></div>
+<button class="tab" data-tab="day" aria-selected="true">Записи</button>
+<button class="tab" data-tab="sch" aria-selected="false">Розклад</button>
+<button class="tab" data-tab="cli" aria-selected="false">Клієнти</button>
+<button class="tab" data-tab="chat" aria-selected="false">Чати <span class="badge-n" id="chatbadge" hidden>0</span></button>
+<button class="tab" data-tab="rev" aria-selected="false">Відгуки</button>
+<button class="tab" data-tab="bc" aria-selected="false">Розсилка</button>
+</div>
 
 <section id="day">
 <div class="bar"><button class="mini" data-range="today">Сьогодні</button><button class="mini" data-range="tomorrow">Завтра</button><button class="mini" data-range="week">7 днів</button><button class="mini" data-range="month">Місяць</button>
@@ -61,7 +99,26 @@ textarea{width:100%;min-height:110px}
 <div class="card" id="daylist"></div></section>
 
 <section id="sch" hidden><div class="bar"><input type="date" id="sdate"></div><div class="card sc" id="schbox"></div></section>
+
 <section id="cli" hidden><div class="bar"><input id="cq" placeholder="Пошук клієнта" style="flex:1"></div><div class="card" id="clilist"></div></section>
+
+<section id="chat" hidden>
+  <div class="chat-wrap">
+    <div class="chat-list" id="chatlist"></div>
+    <div class="chat-view" id="chatview">
+      <div class="chat-head">
+        <button class="mini" id="chatback">←</button>
+        <div class="grow"><b id="chatname">Оберіть чат</b><div class="m" id="chatphone"></div></div>
+      </div>
+      <div class="chat-msgs" id="chatmsgs"><div class="chat-empty">Виберіть чат зі списку ліворуч</div></div>
+      <div class="chat-input">
+        <textarea id="chatinput" placeholder="Написати повідомлення… (Enter — надіслати, Shift+Enter — новий рядок)" disabled></textarea>
+        <button class="btn" id="chatsend" disabled>Надіслати</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="rev" hidden><div class="card" id="revbox"></div></section>
 <section id="bc" hidden><div class="card"><h2 style="font-size:20px">Розсилка клієнтам у Telegram</h2><p class="m">Отримають усі, хто записувався через бота або увійшов на сайті через Telegram.</p>
 <textarea id="bctext" placeholder="Текст повідомлення, наприклад: цього тижня -10% на бороду"></textarea><p class="err" id="bcmsg"></p><button class="btn" id="bcsend">Надіслати всім</button></div></section>
@@ -155,6 +212,58 @@ function renderRev(){
   });
 }
 
+/* ---- Чати ---- */
+var chatTG=null,chatTimer=null;
+function renderChats(){
+  req("/admin/api/chats").then(function(r){
+    if(!r.ok){$("chatlist").innerHTML='<p class="empty" style="padding:12px">'+esc(r.error||"Помилка")+"</p>";return}
+    var total=r.chats.reduce(function(a,c){return a+(c.unread||0)},0);
+    var badge=$("chatbadge");
+    if(total>0){badge.hidden=false;badge.textContent=total}else badge.hidden=true;
+    $("chatlist").innerHTML=r.chats.length?r.chats.map(function(c){
+      var t=(c.last_at||"").slice(11,16);
+      return '<div class="chat-item'+(c.unread?' unread':'')+'" data-chat="'+c.tg_id+'">'
+        +'<div class="chat-row"><b>'+esc(c.name)+'</b><span class="t">'+esc(t)+'</span></div>'
+        +'<div class="chat-last">'+(c.last_dir==="out"?"Ви: ":"")+esc(c.last||"")+'</div>'
+        +(c.phone?'<div class="chat-last m">'+esc(c.phone)+'</div>':"")
+        +'</div>';
+    }).join(""):'<p class="empty" style="padding:12px">Повідомлень поки немає. Клієнти можуть писати боту в Telegram.</p>';
+  });
+}
+function openChat(tg){
+  chatTG=tg;
+  $("chatview").classList.add("open");
+  $("chatlist").classList.add("hidden-m");
+  $("chatinput").disabled=false;
+  $("chatsend").disabled=false;
+  req("/admin/api/chat?tg_id="+tg).then(function(r){
+    if(!r.ok)return;
+    $("chatname").textContent=r.name||"Клієнт";
+    $("chatphone").textContent=r.phone||"";
+    if(!r.items.length){
+      $("chatmsgs").innerHTML='<div class="chat-empty">Тут ще немає повідомлень</div>';
+    }else{
+      $("chatmsgs").innerHTML=r.items.map(function(m){
+        var t=(m.at||"").slice(11,16);
+        return '<div class="msg-'+esc(m.dir)+'">'+esc(m.text)+'<div class="msg-time">'+esc(t)+'</div></div>';
+      }).join("");
+      $("chatmsgs").scrollTop=$("chatmsgs").scrollHeight;
+    }
+    renderChats();
+  });
+}
+function sendChat(){
+  var text=$("chatinput").value.trim();
+  if(!text||!chatTG)return;
+  var b=$("chatsend");b.disabled=true;b.textContent="…";
+  post("/admin/api/chat/send",{tg_id:chatTG,text:text}).then(function(r){
+    b.disabled=false;b.textContent="Надіслати";
+    if(!r.ok){alert(r.error||"Помилка");return}
+    $("chatinput").value="";
+    openChat(chatTG);
+  }).catch(function(){b.disabled=false;b.textContent="Надіслати"});
+}
+
 /* ---- Новий запис ---- */
 function loadFree(){
   $("mslot").innerHTML="<option>…</option>";
@@ -173,9 +282,12 @@ function download(name,text){var a=document.createElement("a");a.href=URL.create
 
 document.addEventListener("click",function(e){
   var t=e.target.closest("button");if(!t)return;var d=t.dataset;
-  if(d.tab){["day","sch","cli","rev","bc"].forEach(function(id){$(id).hidden=id!==d.tab});
+  if(d.chat){openChat(+d.chat);return}
+  if(t.id==="chatback"){$("chatview").classList.remove("open");$("chatlist").classList.remove("hidden-m");chatTG=null;return}
+  if(t.id==="chatsend"){sendChat();return}
+  if(d.tab){["day","sch","cli","chat","rev","bc"].forEach(function(id){$(id).hidden=id!==d.tab});
     document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===d.tab)});
-    ({day:renderDay,sch:renderSch,cli:renderClients,rev:renderRev,bc:function(){}})[d.tab]();return}
+    ({day:renderDay,sch:renderSch,cli:renderClients,rev:renderRev,bc:function(){},chat:renderChats})[d.tab]();return}
   if(d.range)return setRange(d.range);
   if(d.act)return post("/admin/api/status",{id:d.id,status:d.act}).then(function(r){r.ok?renderDay():alert(r.error||"Помилка")}).catch(function(x){alert(x.message)});
   if(d.note){var n=prompt("Нотатка до запису:",d.cur||"");if(n!==null)post("/admin/api/note",{id:+d.note,note:n}).then(renderDay);return}
@@ -198,6 +310,12 @@ document.addEventListener("click",function(e){
 $("q").addEventListener("input",renderDay);$("cq").addEventListener("input",renderClients);$("sdate").addEventListener("change",renderSch);
 ["mdate","msvc","mmst"].forEach(function(id){$(id).addEventListener("change",loadFree)});
 $("key").addEventListener("keydown",function(e){if(e.key==="Enter")unlock()});
+$("chatinput").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat()}});
+
+setInterval(function(){
+  if($("chat").hidden)return;
+  if(!chatTG)renderChats();
+},15000);
 
 function init(){
   fetch("/api/config").then(function(r){return r.json()}).then(function(c){
