@@ -186,15 +186,27 @@ input[type=date], input[type=password]{font:inherit;padding:10px;border:1px soli
       try{navigator.clipboard.writeText(text).then(function(){alert("Повідомлення скопійовано")},function(){alert(text)})}catch(err){alert(text)}
       return;
     }
-    if(t.id==="unlock"){
+if(t.id==="unlock"){
       var k=$("key").value.trim();
       $("keyerr").textContent="";
-      req("/admin/api/clients", {headers: {"X-Admin-Token": k}}).then(function(r){
-        if(r.ok){setKey(k);$("lock").hidden=true;renderDay()}
-        else{$("keyerr").textContent=r.error||"Немає доступу";setKey("")}
+      
+      // Отправляем токен методом POST в заголовке
+      fetch("/admin/api/clients", {
+        headers: {"X-Admin-Token": k}
+      }).then(function(r){
+        return r.json().then(function(j){
+          if(r.ok || j.ok){
+            setKey(k);
+            $("lock").hidden=true;
+            renderDay();
+          } else {
+            $("keyerr").textContent="Невірний ключ доступу";
+            setKey("");
+          }
+        });
       }).catch(function(){
         setKey("");
-        $("keyerr").textContent="Невірний ключ або немає з'єднання.";
+        $("keyerr").textContent="Помилка з'єднання з сервером.";
       });
       return;
     }
