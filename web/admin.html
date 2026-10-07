@@ -6,7 +6,7 @@
 <title>Борода CRM PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0a;--sf:#141414;--ink:#f0f0f0;--mut:#888;--line:#2a2a2a;--red:#c0392b;--ok:#2E7D5B;--warn:#c98a1c;--chip:#1f1f1f;--brass:#D4AF37}
+:root{--bg:#0a0a0a;--sf:#141414;--ink:#f0f0f0;--mut:#888;--line:#2a2a2a;--red:#c0392b;--ok:#2E7D5B;--warn:#c98a1c;--chip:#1f1f1f;--brass:#D4AF37;--brass2:#F3DA7A}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Montserrat,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
@@ -14,15 +14,18 @@ h1,h2{font-family:'Playfair Display',serif;color:var(--brass);margin:0 0 4px}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px 48px}
 header{padding:22px 0;border-bottom:1px solid var(--line);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .tabs{display:flex;gap:4px;margin:0 0 16px;background:var(--chip);padding:4px;border-radius:12px;border:1px solid var(--line);overflow-x:auto}
-.tab{flex:1;white-space:nowrap;background:0;color:var(--mut);border:0;font:inherit;font-weight:500;padding:10px 12px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.tab{flex:1;white-space:nowrap;background:0;color:var(--mut);border:0;font:inherit;font-weight:500;padding:10px 12px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.2s}
+.tab:hover:not([aria-selected=true]){color:var(--ink)}
 .tab[aria-selected=true]{background:var(--brass);color:#000}
-.tab .badge-n{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px}
+.tab .badge-n{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;min-width:18px;text-align:center}
 .tab[aria-selected=true] .badge-n{background:#000;color:var(--brass)}
 .bar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
 input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink)}
-textarea{width:100%;min-height:110px}
-.btn{background:linear-gradient(45deg,#b8860b,#ffd700);color:#000;border:0;padding:10px 16px;border-radius:8px;font:600 12px Montserrat,sans-serif;cursor:pointer;text-transform:uppercase}
-.mini{background:0;border:1px solid var(--line);color:var(--ink);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+textarea{width:100%;min-height:110px;font-family:inherit}
+.btn{background:linear-gradient(45deg,#b8860b,#ffd700);color:#000;border:0;padding:10px 16px;border-radius:8px;font:600 12px Montserrat,sans-serif;cursor:pointer;text-transform:uppercase;transition:.15s}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.mini{background:0;border:1px solid var(--line);color:var(--ink);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;transition:.15s}
 .mini:hover{border-color:var(--brass)}.mini.go{background:var(--brass);color:#000;border-color:var(--brass)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:12px}
 .stat{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
@@ -40,36 +43,64 @@ textarea{width:100%;min-height:110px}
 .err{color:#ff6b6b;font-size:13px;min-height:16px;margin:0}
 .link{background:0;border:0;color:var(--brass);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
 
-/* --- Чати --- */
-.chat-wrap{display:grid;grid-template-columns:300px 1fr;gap:12px;height:72vh;min-height:520px}
-.chat-list{background:var(--sf);border:1px solid var(--line);border-radius:12px;overflow-y:auto}
-.chat-item{padding:12px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+/* ---------- CHAT (messenger-style) ---------- */
+.chat-shell{display:grid;grid-template-columns:320px 1fr;background:var(--sf);border:1px solid var(--line);border-radius:14px;height:calc(100vh - 260px);min-height:520px;overflow:hidden}
+.chat-side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.chat-side-head{padding:12px;border-bottom:1px solid var(--line)}
+.chat-search{width:100%;background:#050505;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);font:inherit}
+.chat-search:focus{outline:0;border-color:var(--brass)}
+.chat-list{flex:1;overflow-y:auto;scrollbar-width:thin}
+.chat-item{padding:12px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;display:flex;gap:10px;align-items:center;position:relative}
 .chat-item:hover{background:var(--chip)}
-.chat-item.unread{border-left:3px solid var(--red);background:rgba(192,57,43,.07)}
-.chat-row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.chat-row b{font-size:13px}
-.chat-row .t{font-size:10px;color:var(--mut)}
-.chat-last{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
-.chat-last.m{color:#666}
-.chat-view{background:var(--sf);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
-.chat-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
-.chat-head b{font-size:14px;color:var(--brass)}
-.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:#0a0a0a}
-.msg-in,.msg-out{max-width:75%;padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.4;word-wrap:break-word;white-space:pre-wrap}
-.msg-in{background:var(--chip);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
-.msg-out{background:var(--brass);color:#000;align-self:flex-end;border-bottom-right-radius:4px}
-.msg-time{font-size:10px;opacity:.6;margin-top:3px}
-.chat-empty{color:#666;text-align:center;margin:auto;padding:20px;font-style:italic}
-.chat-input{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);align-items:flex-end;background:var(--sf)}
-.chat-input textarea{flex:1;min-height:44px;max-height:120px;resize:none;font-size:13px}
-.chat-input .btn{padding:10px 16px}
-#chatback{display:none}
+.chat-item.active{background:linear-gradient(90deg,rgba(212,175,55,.12),transparent);border-left:3px solid var(--brass);padding-left:9px}
+.chat-item.unread .chat-name{font-weight:700}
+.chat-item.unread::after{content:"";position:absolute;right:12px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.2)}
+.chat-av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#222,#111);border:1.5px solid rgba(212,175,55,.35);display:grid;place-items:center;font:700 15px 'Playfair Display',serif;color:var(--brass);flex:none}
+.chat-main{display:flex;flex-direction:column;min-width:0;background:linear-gradient(180deg,#0a0a0a,#0d0d0d)}
+.chat-item-body{flex:1;min-width:0}
+.chat-item-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.chat-name{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-time{font-size:10px;color:var(--mut);flex:none}
+.chat-preview{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.chat-preview.mine::before{content:"Ви: ";color:#666}
+
+.chat-empty{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;color:var(--mut);padding:40px;text-align:center;gap:6px}
+.chat-empty-ico{font-size:38px;opacity:.35;margin-bottom:6px}
+.chat-empty h3{margin:0;font-family:'Playfair Display',serif;color:var(--brass);font-size:20px}
+.chat-empty p{margin:0;font-size:13px}
+
+.chat-conv{display:flex;flex-direction:column;flex:1;min-height:0}
+.chat-conv-head{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;background:rgba(20,20,20,.6)}
+.chat-info{flex:1;min-width:0}
+.chat-info b{display:block;font-size:14px;color:var(--brass);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-info small{display:block;font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#chatback{display:none;background:0;border:0;color:var(--brass);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px}
+#chatback:hover{background:var(--chip)}
+
+.chat-thread{flex:1;overflow-y:auto;padding:18px 18px 8px;display:flex;flex-direction:column;gap:4px;scrollbar-width:thin;background-image:radial-gradient(circle at 20% 10%,rgba(212,175,55,.03),transparent 40%)}
+.msg{max-width:78%;padding:8px 13px;border-radius:16px;font-size:13.5px;line-height:1.45;word-wrap:break-word;white-space:pre-wrap;position:relative;animation:msgIn .28s cubic-bezier(.3,.9,.3,1) both}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg-in{background:#1e1e24;border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:6px}
+.msg-out{background:linear-gradient(135deg,var(--brass2),var(--brass));color:#111;align-self:flex-end;border-bottom-right-radius:6px}
+.msg-time{font-size:10px;opacity:.6;margin-top:3px;text-align:right}
+.msg-in .msg-time{text-align:left;color:var(--mut)}
+.msg-out .msg-time{color:rgba(0,0,0,.55)}
+
+.chat-compose{padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:flex-end;background:var(--sf)}
+.chat-compose textarea{flex:1;min-height:44px;max-height:140px;resize:none;font-size:14px;padding:12px 14px;background:#0a0a0a;border:1px solid var(--line);border-radius:22px;color:var(--ink);font-family:inherit;line-height:1.4}
+.chat-compose textarea:focus{outline:0;border-color:var(--brass)}
+.chat-send{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--brass2),var(--brass));color:#111;font-size:18px;cursor:pointer;display:grid;place-items:center;flex:none;transition:.15s}
+.chat-send:hover:not(:disabled){transform:scale(1.06)}
+.chat-send:disabled{opacity:.4;cursor:not-allowed}
+
+.chat-day{align-self:center;background:rgba(0,0,0,.4);padding:4px 12px;border-radius:12px;font-size:11px;color:var(--mut);margin:10px 0}
+
 @media(max-width:760px){
-  .chat-wrap{grid-template-columns:1fr;height:auto;min-height:0}
-  .chat-view{display:none;height:70vh}
-  .chat-view.open{display:flex}
-  .chat-list.hidden-m{display:none}
-  #chatback{display:inline-block}
+  .chat-shell{grid-template-columns:1fr;height:calc(100vh - 220px)}
+  .chat-side{display:flex}
+  .chat-shell.in-conv .chat-side{display:none}
+  .chat-shell.in-conv .chat-main{display:flex}
+  #chatback{display:block}
 }
 </style>
 </head>
@@ -103,19 +134,33 @@ textarea{width:100%;min-height:110px}
 <section id="cli" hidden><div class="bar"><input id="cq" placeholder="Пошук клієнта" style="flex:1"></div><div class="card" id="clilist"></div></section>
 
 <section id="chat" hidden>
-  <div class="chat-wrap">
-    <div class="chat-list" id="chatlist"></div>
-    <div class="chat-view" id="chatview">
-      <div class="chat-head">
-        <button class="mini" id="chatback">←</button>
-        <div class="grow"><b id="chatname">Оберіть чат</b><div class="m" id="chatphone"></div></div>
+  <div class="chat-shell" id="chatshell">
+    <aside class="chat-side">
+      <div class="chat-side-head"><input class="chat-search" id="chatsearch" placeholder="Пошук клієнта…"></div>
+      <div class="chat-list" id="chatlist"></div>
+    </aside>
+    <main class="chat-main">
+      <div class="chat-empty" id="chatempty">
+        <div class="chat-empty-ico">💬</div>
+        <h3>Оберіть розмову</h3>
+        <p>Виберіть клієнта зліва, щоб почати спілкування</p>
       </div>
-      <div class="chat-msgs" id="chatmsgs"><div class="chat-empty">Виберіть чат зі списку ліворуч</div></div>
-      <div class="chat-input">
-        <textarea id="chatinput" placeholder="Написати повідомлення… (Enter — надіслати, Shift+Enter — новий рядок)" disabled></textarea>
-        <button class="btn" id="chatsend" disabled>Надіслати</button>
+      <div class="chat-conv" id="chatconv" hidden>
+        <header class="chat-conv-head">
+          <button id="chatback" type="button">←</button>
+          <div class="chat-av" id="chatav">К</div>
+          <div class="chat-info">
+            <b id="chatname">Клієнт</b>
+            <small id="chatphone"></small>
+          </div>
+        </header>
+        <div class="chat-thread" id="chatmsgs"></div>
+        <form class="chat-compose" id="chatform" autocomplete="off">
+          <textarea id="chatinput" placeholder="Написати повідомлення… (Enter — надіслати, Shift+Enter — новий рядок)" rows="1"></textarea>
+          <button class="chat-send" id="chatsend" type="submit" title="Надіслати">➤</button>
+        </form>
       </div>
-    </div>
+    </main>
   </div>
 </section>
 
@@ -136,6 +181,7 @@ textarea{width:100%;min-height:110px}
 <script>
 (function(){
 var ST={booked:"Очікується",done:"Завершено",cancelled:"Скасовано"},cfg={services:[],masters:[]};
+var chatTG=null,chatList=[];
 var $=function(id){return document.getElementById(id)};
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function money(n){return (n||0).toLocaleString("uk-UA")+" ₴"}
@@ -193,7 +239,7 @@ function renderSch(){
   });
 }
 
-/* ---- Клієнти, відгуки ---- */
+/* ---- Клієнти ---- */
 function renderClients(){
   req("/admin/api/clients").then(function(r){
     var q=$("cq").value.trim().toLowerCase(),today=new Date();today.setHours(0,0,0,0);
@@ -212,56 +258,89 @@ function renderRev(){
   });
 }
 
-/* ---- Чати ---- */
-var chatTG=null,chatTimer=null;
+/* ---- CHAT ---- */
 function renderChats(){
-  req("/admin/api/chats").then(function(r){
+  return req("/admin/api/chats").then(function(r){
     if(!r.ok){$("chatlist").innerHTML='<p class="empty" style="padding:12px">'+esc(r.error||"Помилка")+"</p>";return}
-    var total=r.chats.reduce(function(a,c){return a+(c.unread||0)},0);
+    chatList=r.chats;
+    var total=chatList.reduce(function(a,c){return a+(c.unread||0)},0);
     var badge=$("chatbadge");
     if(total>0){badge.hidden=false;badge.textContent=total}else badge.hidden=true;
-    $("chatlist").innerHTML=r.chats.length?r.chats.map(function(c){
+    var q=($("chatsearch").value||"").trim().toLowerCase();
+    var filtered=chatList.filter(function(c){return !q||((c.name||"")+" "+(c.phone||"")+" "+(c.last||"")).toLowerCase().indexOf(q)>-1});
+    if(!filtered.length){$("chatlist").innerHTML='<p class="empty" style="padding:12px">'+esc(chatList.length?"Нічого не знайдено.":"Повідомлень поки немає. Клієнти можуть писати боту в Telegram.")+"</p>";return}
+    $("chatlist").innerHTML=filtered.map(function(c){
       var t=(c.last_at||"").slice(11,16);
-      return '<div class="chat-item'+(c.unread?' unread':'')+'" data-chat="'+c.tg_id+'">'
-        +'<div class="chat-row"><b>'+esc(c.name)+'</b><span class="t">'+esc(t)+'</span></div>'
-        +'<div class="chat-last">'+(c.last_dir==="out"?"Ви: ":"")+esc(c.last||"")+'</div>'
-        +(c.phone?'<div class="chat-last m">'+esc(c.phone)+'</div>':"")
-        +'</div>';
-    }).join(""):'<p class="empty" style="padding:12px">Повідомлень поки немає. Клієнти можуть писати боту в Telegram.</p>';
+      var ini=(c.name||"К").trim().slice(0,1).toUpperCase();
+      return '<div class="chat-item'+(c.unread?' unread':'')+(chatTG===c.tg_id?' active':'')+'" data-chat="'+c.tg_id+'">'
+        +'<div class="chat-av">'+esc(ini)+'</div>'
+        +'<div class="chat-item-body">'
+          +'<div class="chat-item-top"><span class="chat-name">'+esc(c.name||"Клієнт")+'</span><span class="chat-time">'+esc(t)+'</span></div>'
+          +'<div class="chat-preview'+(c.last_dir==="out"?" mine":"")+'">'+esc(c.last||"")+'</div>'
+        +'</div></div>';
+    }).join("");
+  });
+}
+function loadChatMessages(tg){
+  return req("/admin/api/chat?tg_id="+tg).then(function(r){
+    if(!r.ok)return;
+    $("chatname").textContent=r.name||"Клієнт";
+    $("chatphone").textContent=r.phone||"";
+    $("chatav").textContent=(r.name||"К").trim().slice(0,1).toUpperCase();
+    var box=$("chatmsgs");
+    var atBottom=box.scrollTop+box.clientHeight>=box.scrollHeight-60;
+    var prevTop=box.scrollTop;
+    if(!r.items.length){
+      box.innerHTML='<div class="chat-empty" style="background:0"><div class="chat-empty-ico">✉️</div><p>Тут ще немає повідомлень. Напишіть першим!</p></div>';
+    }else{
+      var lastDay="";
+      box.innerHTML=r.items.map(function(m){
+        var day=(m.at||"").slice(0,10);
+        var head="";
+        if(day!==lastDay){lastDay=day;head='<div class="chat-day">'+esc(day.split("-").reverse().join("."))+'</div>'}
+        var t=(m.at||"").slice(11,16);
+        return head+'<div class="msg msg-'+esc(m.dir)+'">'+esc(m.text)+'<div class="msg-time">'+esc(t)+'</div></div>';
+      }).join("");
+      box.scrollTop=atBottom?box.scrollHeight:prevTop;
+    }
   });
 }
 function openChat(tg){
   chatTG=tg;
-  $("chatview").classList.add("open");
-  $("chatlist").classList.add("hidden-m");
+  $("chatempty").hidden=true;
+  $("chatconv").hidden=false;
+  $("chatshell").classList.add("in-conv");
   $("chatinput").disabled=false;
   $("chatsend").disabled=false;
-  req("/admin/api/chat?tg_id="+tg).then(function(r){
-    if(!r.ok)return;
-    $("chatname").textContent=r.name||"Клієнт";
-    $("chatphone").textContent=r.phone||"";
-    if(!r.items.length){
-      $("chatmsgs").innerHTML='<div class="chat-empty">Тут ще немає повідомлень</div>';
-    }else{
-      $("chatmsgs").innerHTML=r.items.map(function(m){
-        var t=(m.at||"").slice(11,16);
-        return '<div class="msg-'+esc(m.dir)+'">'+esc(m.text)+'<div class="msg-time">'+esc(t)+'</div></div>';
-      }).join("");
-      $("chatmsgs").scrollTop=$("chatmsgs").scrollHeight;
-    }
-    renderChats();
-  });
+  $("chatinput").focus();
+  loadChatMessages(tg).then(renderChats);
+}
+function closeChat(){
+  chatTG=null;
+  $("chatempty").hidden=false;
+  $("chatconv").hidden=true;
+  $("chatshell").classList.remove("in-conv");
+  renderChats();
 }
 function sendChat(){
-  var text=$("chatinput").value.trim();
+  var ta=$("chatinput");var text=ta.value.trim();
   if(!text||!chatTG)return;
-  var b=$("chatsend");b.disabled=true;b.textContent="…";
+  var b=$("chatsend");b.disabled=true;
+  // optimistic
+  var box=$("chatmsgs");
+  var now=new Date();
+  var opt=document.createElement("div");
+  opt.className="msg msg-out";
+  opt.style.opacity=".55";
+  opt.innerHTML=esc(text)+'<div class="msg-time">'+pad(now.getHours())+":"+pad(now.getMinutes())+' · надсилається</div>';
+  box.appendChild(opt);
+  box.scrollTop=box.scrollHeight;
+  ta.value="";ta.style.height="";
   post("/admin/api/chat/send",{tg_id:chatTG,text:text}).then(function(r){
-    b.disabled=false;b.textContent="Надіслати";
-    if(!r.ok){alert(r.error||"Помилка");return}
-    $("chatinput").value="";
-    openChat(chatTG);
-  }).catch(function(){b.disabled=false;b.textContent="Надіслати"});
+    b.disabled=false;
+    if(!r.ok){opt.style.opacity="1";opt.style.background="rgba(192,57,43,.2)";opt.style.color="#ff8a8a";opt.querySelector(".msg-time").textContent="помилка: "+(r.error||"?");return}
+    loadChatMessages(chatTG).then(renderChats);
+  }).catch(function(){b.disabled=false;opt.style.opacity="1";opt.style.background="rgba(192,57,43,.2)";opt.querySelector(".msg-time").textContent="немає зв'язку"});
 }
 
 /* ---- Новий запис ---- */
@@ -271,7 +350,6 @@ function loadFree(){
     $("mslot").innerHTML=r.ok&&r.slots.length?r.slots.map(function(s){return '<option value="'+s.i+'">'+s.label+"</option>"}).join(""):'<option value="">Немає вільного часу</option>';
   });
 }
-
 function unlock(){
   var k=$("key").value.trim();$("keyerr").textContent="";if(!k)return;
   fetch("/admin/api/clients",{headers:{"X-Admin-Token":k}}).then(function(r){return r.json().then(function(j){
@@ -281,10 +359,12 @@ function unlock(){
 function download(name,text){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;a.click()}
 
 document.addEventListener("click",function(e){
+  /* Chat item has priority (it's a div, not a button) */
+  var chatEl=e.target.closest("[data-chat]");
+  if(chatEl){e.preventDefault();openChat(+chatEl.dataset.chat);return}
+
   var t=e.target.closest("button");if(!t)return;var d=t.dataset;
-  if(d.chat){openChat(+d.chat);return}
-  if(t.id==="chatback"){$("chatview").classList.remove("open");$("chatlist").classList.remove("hidden-m");chatTG=null;return}
-  if(t.id==="chatsend"){sendChat();return}
+  if(t.id==="chatback"){closeChat();return}
   if(d.tab){["day","sch","cli","chat","rev","bc"].forEach(function(id){$(id).hidden=id!==d.tab});
     document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===d.tab)});
     ({day:renderDay,sch:renderSch,cli:renderClients,rev:renderRev,bc:function(){},chat:renderChats})[d.tab]();return}
@@ -306,22 +386,31 @@ document.addEventListener("click",function(e){
   if(t.id==="bcsend"){var tx=$("bctext").value.trim();$("bcmsg").textContent="";if(!tx)return;
     if(confirm("Надіслати це повідомлення всім клієнтам у Telegram?"))post("/admin/api/broadcast",{text:tx}).then(function(r){$("bcmsg").style.color="var(--ok)";$("bcmsg").textContent=r.ok?"Надіслано: "+r.sent+" з "+r.total:r.error;if(r.ok)$("bctext").value=""})}
 });
+
+/* form submit for chat */
+$("chatform").addEventListener("submit",function(e){e.preventDefault();sendChat()});
+$("chatinput").addEventListener("keydown",function(e){
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat()}
+});
+$("chatinput").addEventListener("input",function(){this.style.height="auto";this.style.height=Math.min(this.scrollHeight,140)+"px"});
+$("chatsearch").addEventListener("input",renderChats);
+
 ["dstart","dend","fm","fs"].forEach(function(id){$(id).addEventListener("change",renderDay)});
 $("q").addEventListener("input",renderDay);$("cq").addEventListener("input",renderClients);$("sdate").addEventListener("change",renderSch);
 ["mdate","msvc","mmst"].forEach(function(id){$(id).addEventListener("change",loadFree)});
 $("key").addEventListener("keydown",function(e){if(e.key==="Enter")unlock()});
-$("chatinput").addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat()}});
 
 setInterval(function(){
   if($("chat").hidden)return;
-  if(!chatTG)renderChats();
+  renderChats();
+  if(chatTG)loadChatMessages(chatTG);
 },15000);
 
 function init(){
   fetch("/api/config").then(function(r){return r.json()}).then(function(c){
     cfg=c;$("fm").innerHTML='<option value="">Усі майстри</option>'+opts(c.masters);
     $("msvc").innerHTML=opts(c.services);$("mmst").innerHTML=opts(c.masters,true);
-  }).catch(function(){}).then(function(){setRange("today");$("sdate").value=iso(new Date())});
+  }).catch(function(){}).then(function(){setRange("today");$("sdate").value=iso(new Date());renderChats()});
 }
 if(!key())showLock();else init();
 })();
