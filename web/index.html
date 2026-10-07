@@ -33,7 +33,7 @@ nav a:hover{color:var(--gold)}
 .row{display:flex;flex-wrap:wrap;gap:12px}
 
 /* scroll progress */
-#scrollbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));z-index:100;transition:width .1s linear;width:0;pointer-events:none;box-shadow:0 0 8px rgba(212,175,55,.4)}
+#scrollbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));z-index:100;transition:width .1s linear;width:0;pointer-events:none;box-shadow:0 0 8px rgba(212,175,55,.55)}
 
 .hero{padding:76px 0 84px;border-bottom:1px solid var(--line);background:
   radial-gradient(ellipse at 20% 0,rgba(212,175,55,.16),transparent 55%),
@@ -52,18 +52,18 @@ h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
 
 /* ---------- WIZARD ---------- */
 .book{max-width:920px;margin:0 auto}
-.steps-head{display:flex;align-items:center;gap:6px;margin:0 0 28px;justify-content:center}
+.steps-head{display:flex;align-items:center;gap:8px;margin:0 0 28px;justify-content:center}
 .step{display:flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.08em;color:#6a6a72;transition:color .3s}
-.step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid #3a3a44;display:grid;place-items:center;font-weight:600;font-size:12px;background:transparent;color:#6a6a72;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;flex:none}
+.step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid #3a3a44;display:grid;place-items:center;font-weight:600;font-size:12px;background:transparent;color:#6a6a72;transition:background .35s ease,border-color .35s ease,color .35s ease;flex:none}
 .step-lbl{text-transform:uppercase;font-weight:600}
 .step.active{color:var(--ink)}
-.step.active .step-num{background:var(--gold);border-color:var(--gold);color:#151515;font-weight:700;box-shadow:0 0 0 4px rgba(212,175,55,.12),0 0 18px rgba(212,175,55,.35)}
+.step.active .step-num{background:var(--gold);border-color:var(--gold);color:#151515;font-weight:700}
 .step.done{color:#a6a6b0}
-.step.done .step-num{background:transparent;border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.08)}
+.step.done .step-num{background:transparent;border-color:var(--gold);color:var(--gold)}
 .step.done .step-num span{display:none}
 .step.done .step-num::before{content:"✓";font-size:12px;font-weight:700;line-height:1}
-.step-line{flex:1;max-width:50px;height:1px;background:#2c2c35;transition:background .5s ease}
-.step-line.done{background:linear-gradient(90deg,rgba(212,175,55,.4),rgba(212,175,55,.15))}
+.step-line{flex:1;max-width:56px;height:2px;background:#2c2c35;border-radius:2px;transition:background .5s ease,box-shadow .5s ease}
+.step-line.done{background:linear-gradient(90deg,rgba(212,175,55,.55),var(--gold));box-shadow:0 0 10px rgba(212,175,55,.45)}
 
 .book-body{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;margin-bottom:22px}
 .step-body{position:relative;min-height:280px}
@@ -92,13 +92,16 @@ h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
 .mst-card b{display:block;font-size:14px;font-weight:600}
 .mst-card small{color:var(--mut);font-size:12px}
 
-.date-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:thin}
-.date-row::-webkit-scrollbar{height:4px}.date-row::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
-.date-chip{flex:none;padding:10px 14px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:600 13px Montserrat,sans-serif;cursor:pointer;transition:.2s;text-align:center;min-width:82px}
+/* Дати — без видимого скролбару */
+.date-row{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:10px;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
+.date-row::-webkit-scrollbar{display:none}
+.date-chip{flex:none;padding:9px 13px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:10px;font:600 12.5px Montserrat,sans-serif;cursor:pointer;transition:.2s;text-align:center;min-width:76px}
 .date-chip:hover{border-color:rgba(212,175,55,.5);transform:translateY(-1px)}
 .date-chip[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:var(--bg);box-shadow:0 4px 14px rgba(212,175,55,.2)}
-.slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
-.slot-chip{padding:10px 8px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:9px;font:600 13px Montserrat,sans-serif;cursor:pointer;transition:.2s cubic-bezier(.3,.9,.3,1);text-align:center}
+
+/* Час — компактніше */
+.slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:6px}
+.slot-chip{padding:8px 4px;background:var(--ch);border:1px solid var(--line);color:var(--ink);border-radius:8px;font:600 12.5px Montserrat,sans-serif;cursor:pointer;transition:.2s cubic-bezier(.3,.9,.3,1);text-align:center}
 .slot-chip:hover{border-color:rgba(212,175,55,.5);transform:translateY(-1px)}
 .slot-chip[aria-pressed=true]{background:linear-gradient(180deg,var(--gold2),var(--gold));border-color:var(--gold);color:var(--bg);box-shadow:0 4px 12px rgba(212,175,55,.25);transform:translateY(-1px)}
 .skeleton{height:44px;border-radius:10px;background:linear-gradient(90deg,var(--ch) 0%,#1f1f24 50%,var(--ch) 100%);background-size:200% 100%;animation:sk 1.4s linear infinite}
@@ -553,7 +556,6 @@ function start(c){
   if(L.every>0)faq.push(["Є знижки для постійних гостей?","Так: кожен "+L.every+"-й запис зі знижкою "+L.percent+"%. Прогрес видно в особистому кабінеті."]);
   $("faqb").innerHTML=faq.map(function(f){return "<details><summary>"+esc(f[0])+"</summary><p>"+esc(f[1])+"</p></details>"}).join("");
   renderChips();renderStep();
-  // автозаповнення збережених контактів
   var savedName=localStorage.getItem("client_name")||"";
   var savedPhone=localStorage.getItem("client_phone")||"";
   if(savedName&&!$("name").value)$("name").value=savedName;
@@ -636,7 +638,6 @@ function submit(){
       loadSlots();
       return;
     }
-    // зберігаємо контакти для наступного разу
     try{localStorage.setItem("client_name",name);localStorage.setItem("client_phone",phone)}catch(e){}
     var s=find(cfg.services,sel.service),m=sel.master==="any"?ANY:find(cfg.masters,sel.master);
     last={start:r.start,min:r.min||s.min,service:s.name};
