@@ -45,7 +45,7 @@ TZ = ZoneInfo(os.getenv("TZ_NAME", "Europe/Kyiv"))
 SHOP_NAME = os.getenv("SHOP_NAME", "Барбершоп «Борода»")
 ADDRESS = os.getenv("SHOP_ADDRESS", "вул. Прикладна, 1")
 MORNING_HOUR = int(os.getenv("MORNING_HOUR", "9"))
-DB_PATH = os.getenv("DB_PATH", "barber.db")
+DB_PATH = os.getenv("DB_PATH", "barber.db")  # на хостингу вкажіть шлях на постійному томі, напр. /data/barber.db
 
 WEB_HOST = os.getenv("WEB_HOST", "0.0.0.0")
 WEB_PORT = int(os.getenv("PORT", "8080"))
@@ -65,6 +65,8 @@ SERVICES = {  # id: (назва, хвилин, ціна грн)
     "kid": ("Дитяча стрижка", 30, 300),
 }
 MASTERS = {"a": "Андрій", "m": "Максим", "o": "Олег"}
+VALID_MASTERS = set(MASTERS) | {"any"}  # "any" = будь-який вільний майстер
+ANY_NAME = "Будь-який вільний"
 OPEN_HOUR = 10  # перший слот о 10:00
 SLOTS = 18  # 18 слотів по 30 хв: останній починається о 18:30, закриття о 19:00
 BOOK_DAYS = 7  # на скільки днів уперед можна записатися
@@ -153,6 +155,10 @@ def fmt(dt: datetime) -> str:
     return f"{dt:%d.%m.%Y} о {dt:%H:%M}"
 
 
+def master_name(mid: str) -> str:
+    return MASTERS.get(mid, ANY_NAME)
+
+
 def normalize_phone(raw: str):
     digits = re.sub(r"\D", "", raw or "")
     if len(digits) == 10 and digits.startswith("0"):
@@ -162,14 +168,18 @@ def normalize_phone(raw: str):
     return None
 
 
-def busy_slots(day: date, master: str) -> set:
+def busy_slots(day: date, master: str, skip_id: int = 0) -> set:
+    """Зайняті слоти майстра. Завершені візити ('done') теж зайняті, щоб час не відкривався повторно."""
     busy = set()
     with closing(db()) as c:
         rows = c.execute(
-            "SELECT service, start FROM appts WHERE master=? AND status='booked' AND substr(start,1,10)=?",
-            (master, day.isoformat()),
+            "SELECT service, start FROM appts "
+            "WHERE master=? AND status IN ('booked','done') AND id<>? AND substr(start,1,10)=?",
+            (master, skip_id, day.isoformat()),
         ).fetchall()
     for r in rows:
+        if r["service"] not in SERVICES:
+            continue
         st = datetime.fromisoformat(r["start"])
         i = ((st.hour * 60 + st.minute) - OPEN_HOUR * 60) // 30
         for k in range(units(r["service"])):
@@ -178,6 +188,11 @@ def busy_slots(day: date, master: str) -> set:
 
 
 def free_slots(day: date, master: str, service: str) -> list:
+    if master == "any":  # об'єднання вільних слотів усіх майстрів
+        out = set()
+        for m in MASTERS:
+            out |= set(free_slots(day, m, service))
+        return sorted(out)
     busy = busy_slots(day, master)
     u = units(service)
     limit = now() + timedelta(minutes=30)  # записатися можна не пізніше ніж за 30 хв
@@ -211,7 +226,9 @@ def plan_reminders(start: datetime, created: datetime) -> list:
 # ---------- Єдина функція створення запису (бот і сайт) ----------
 async def create_appointment(*, name, phone, sid, mid, day, slot, tg_id, source):
     async with LOCK:  # захист від двох записів на один час
-        if slot not in free_slots(day, mid, sid):
+        if mid == "any":  # обираємо першого вільного майстра
+            mid = next((m for m in MASTERS if slot in free_slots(day, m, sid)), None)
+        if mid is None or slot not in free_slots(day, mid, sid):
             raise BookingError("На жаль, цей час щойно зайняли. Оберіть інший.")
         start = slot_dt(day, slot)
         with closing(db()) as c:
@@ -243,7 +260,7 @@ def text_confirm(a) -> str:
         f"{SHOP_NAME}\n"
         f"📅 {fmt(datetime.fromisoformat(a['start']))}\n"
         f"✂️ {name}, {mins} хв\n"
-        f"👤 Майстер: {MASTERS[a['master']]}\n"
+        f"👤 Майстер: {master_name(a['master'])}\n"
         f"💰 {price} ₴\n"
         f"📍 {ADDRESS}\n\n"
         "Ми нагадаємо про візит. Якщо плани змінилися, скасуйте запис: /my"
@@ -257,7 +274,7 @@ def text_reminder(kind: str, a) -> str:
     return (
         f"{head}\n\n"
         f"🕒 {st:%H:%M}, {name}\n"
-        f"👤 Майстер: {MASTERS[a['master']]}\n"
+        f"👤 Майстер: {master_name(a['master'])}\n"
         f"📍 {SHOP_NAME}, {ADDRESS}\n\n"
         "Не встигаєте? Скасуйте запис: /my"
     )
@@ -322,7 +339,7 @@ async def after_booking(bot, a) -> None:
     await notify_admins(
         bot,
         f"🆕 Новий запис ({src})\n{a['name']} · {a['phone']}\n"
-        f"{SERVICES[a['service']][0]}, {MASTERS[a['master']]}\n{fmt(start)}",
+        f"{SERVICES[a['service']][0]}, {master_name(a['master'])}\n{fmt(start)}",
     )
 
 
@@ -347,6 +364,7 @@ def kb_services():
 
 def kb_masters(sid: str):
     b = InlineKeyboardBuilder()
+    b.button(text=ANY_NAME + " майстер", callback_data=f"m:{sid}:any")
     for mid, name in MASTERS.items():
         b.button(text=name, callback_data=f"m:{sid}:{mid}")
     b.button(text="‹ Назад", callback_data="book")
@@ -411,7 +429,7 @@ def my_view(tg_id: int):
         return "У вас немає майбутніх записів.", b.as_markup()
     lines = ["Ваші записи:\n"]
     for r in rows:
-        lines.append(f"• {fmt(datetime.fromisoformat(r['start']))}, {SERVICES[r['service']][0]}, {MASTERS[r['master']]}")
+        lines.append(f"• {fmt(datetime.fromisoformat(r['start']))}, {SERVICES[r['service']][0]}, {master_name(r['master'])}")
         b.button(text=f"Скасувати {datetime.fromisoformat(r['start']):%d.%m %H:%M}", callback_data=f"x:{r['id']}")
     b.button(text="‹ Назад", callback_data="home")
     b.adjust(1)
@@ -437,7 +455,7 @@ def day_view(day: date) -> str:
         st = datetime.fromisoformat(r["start"])
         src = "сайт" if r["source"] == "web" else "бот"
         lines.append(
-            f"{st:%H:%M} · {r['name']} · {r['phone']}\n   {SERVICES[r['service']][0]}, {MASTERS[r['master']]} ({src})"
+            f"{st:%H:%M} · {r['name']} · {r['phone']}\n   {SERVICES[r['service']][0]}, {master_name(r['master'])} ({src})"
         )
     return "\n".join(lines)
 
@@ -490,7 +508,7 @@ async def cb_service(cb: CallbackQuery):
 @router.callback_query(F.data.startswith("m:"))
 async def cb_master(cb: CallbackQuery):
     _, sid, mid = cb.data.split(":")
-    if sid not in SERVICES or mid not in MASTERS:
+    if sid not in SERVICES or mid not in VALID_MASTERS:
         return await cb.answer()
     b = InlineKeyboardBuilder()
     today = now().date()
@@ -509,6 +527,8 @@ async def cb_master(cb: CallbackQuery):
 @router.callback_query(F.data.startswith("d:"))
 async def cb_date(cb: CallbackQuery):
     _, sid, mid, d = cb.data.split(":")
+    if sid not in SERVICES or mid not in VALID_MASTERS:
+        return await cb.answer()
     day = date.fromisoformat(d)
     slots = free_slots(day, mid, sid)
     b = InlineKeyboardBuilder()
@@ -523,6 +543,8 @@ async def cb_date(cb: CallbackQuery):
 @router.callback_query(F.data.startswith("t:"))
 async def cb_time(cb: CallbackQuery, state: FSMContext):
     _, sid, mid, d, i = cb.data.split(":")
+    if sid not in SERVICES or mid not in VALID_MASTERS:
+        return await cb.answer()
     day, i = date.fromisoformat(d), int(i)
     if i not in free_slots(day, mid, sid):
         await cb.answer("Цей час уже зайнятий. Оберіть інший.", show_alert=True)
@@ -536,7 +558,7 @@ async def cb_time(cb: CallbackQuery, state: FSMContext):
         one_time_keyboard=True,
     )
     await cb.message.answer(
-        f"{name}, {MASTERS[mid]}\n📅 {fmt(slot_dt(day, i))}\n💰 {price} ₴\n\n"
+        f"{name}, {master_name(mid)}\n📅 {fmt(slot_dt(day, i))}\n💰 {price} ₴\n\n"
         "Залишилось вказати номер телефону. Натисніть кнопку нижче "
         "або напишіть номер у форматі 0501234567.\n\nСкасувати: /cancel",
         reply_markup=kb,
@@ -629,6 +651,12 @@ async def reminder_loop(bot) -> None:
 RATE: dict = {}
 
 
+def client_ip(request) -> str:
+    """За проксі (Railway, Render, Heroku) справжній IP лежить у X-Forwarded-For."""
+    fwd = request.headers.get("X-Forwarded-For", "")
+    return fwd.split(",")[0].strip() if fwd else (request.remote or "?")
+
+
 def rate_limited(ip: str, limit: int = 8, window: int = 3600) -> bool:
     t = _time.time()
     hits = [x for x in RATE.get(ip, []) if t - x < window]
@@ -663,12 +691,21 @@ async def cors(request, handler):
     return resp
 
 
+async def healthz(request):
+    return web.Response(text="ok")
+
+
+async def options(request):
+    return web.Response()
+
+
 async def api_config(request):
     return web.json_response(
         {
             "ok": True,
             "shop": SHOP_NAME,
             "address": ADDRESS,
+            "hours": f"{OPEN_HOUR}:00–{OPEN_HOUR + SLOTS // 2}:00",
             "bot": BOT_USERNAME,
             "services": [{"id": k, "name": v[0], "min": v[1], "price": v[2]} for k, v in SERVICES.items()],
             "masters": [{"id": k, "name": v} for k, v in MASTERS.items()],
@@ -678,7 +715,7 @@ async def api_config(request):
 
 async def api_days(request):
     sid, mid = request.query.get("service"), request.query.get("master")
-    if sid not in SERVICES or mid not in MASTERS:
+    if sid not in SERVICES or mid not in VALID_MASTERS:
         return jerr("Невірні параметри.")
     today = now().date()
     days = []
@@ -692,7 +729,7 @@ async def api_days(request):
 async def api_slots(request):
     sid, mid = request.query.get("service"), request.query.get("master")
     day = parse_day(request.query.get("date", ""))
-    if sid not in SERVICES or mid not in MASTERS or not day:
+    if sid not in SERVICES or mid not in VALID_MASTERS or not day:
         return jerr("Невірні параметри.")
     return web.json_response(
         {"ok": True, "slots": [{"i": i, "label": slot_label(i)} for i in free_slots(day, mid, sid)]}
@@ -700,7 +737,7 @@ async def api_slots(request):
 
 
 async def api_book(request):
-    if rate_limited(request.remote or "?"):
+    if rate_limited(client_ip(request)):
         return jerr("Забагато спроб. Спробуйте пізніше.", 429)
     try:
         data = await request.json()
@@ -715,7 +752,7 @@ async def api_book(request):
     slot = data.get("slot")
     name = str(data.get("name", "")).strip()[:60]
     phone = normalize_phone(str(data.get("phone", "")))
-    if sid not in SERVICES or mid not in MASTERS or not day or not isinstance(slot, int) or isinstance(slot, bool):
+    if sid not in SERVICES or mid not in VALID_MASTERS or not day or not isinstance(slot, int) or isinstance(slot, bool):
         return jerr("Невірні параметри запису.")
     if len(name) < 2:
         return jerr("Вкажіть ім'я.")
@@ -734,7 +771,7 @@ async def api_book(request):
             "ok": True,
             "when": fmt(datetime.fromisoformat(appt["start"])),
             "service": s[0],
-            "master": MASTERS[mid],
+            "master": master_name(appt["master"]),
             "price": s[2],
             "tg_link": f"https://t.me/{BOT_USERNAME}?start=link_{appt['token']}" if BOT_USERNAME else None,
         }
@@ -748,34 +785,40 @@ async def index(request):
     return web.FileResponse(f)
 
 
-
 # ---------- Адмін-панель ----------
 ADMIN_TOKEN = os.getenv("ADMIN_PANEL_TOKEN", "")
 ADMIN_STATUS = {"booked": "Очікується", "done": "Завершено", "cancelled": "Скасовано"}
 
+
 def admin_ok(request) -> bool:
+    """Токен приймається лише із заголовка, щоб він не потрапляв у URL і логи."""
     if not ADMIN_TOKEN:
         return False
-    return request.headers.get("X-Admin-Token", "") == ADMIN_TOKEN or request.query.get("token", "") == ADMIN_TOKEN
+    return secrets.compare_digest(request.headers.get("X-Admin-Token", ""), ADMIN_TOKEN)
 
-# НОВАЯ ФУНКЦИЯ ВСТАЕТ РОВНО НА МЕСТО СТАРОЙ
+
+def no_access():
+    return web.json_response({"ok": False, "error": "Немає доступу"}, status=403)
+
+
 async def admin_day(request):
     if not admin_ok(request):
-        return web.json_response({"ok": False, "error": "Немає доступу"}, status=403)
-    
-    start_d = request.query.get("start", "")
-    end_d = request.query.get("end", "")
-    
-    if not start_d or not end_d:
-        today = now().date().isoformat()
-        start_d, end_d = today, today
+        return no_access()
+    today = now().date()
+    try:
+        start_d = date.fromisoformat(request.query.get("start", "")).isoformat()
+        end_d = date.fromisoformat(request.query.get("end", "")).isoformat()
+    except ValueError:
+        start_d = end_d = today.isoformat()
+    if start_d > end_d:
+        start_d, end_d = end_d, start_d
 
     with closing(db()) as c:
         rows = c.execute(
-            "SELECT * FROM appts WHERE substr(start,1,10) BETWEEN ? AND ? ORDER BY start", 
-            (start_d, end_d)
+            "SELECT * FROM appts WHERE substr(start,1,10) BETWEEN ? AND ? ORDER BY start",
+            (start_d, end_d),
         ).fetchall()
-        
+
     items = []
     for r in rows:
         st = datetime.fromisoformat(r["start"])
@@ -795,11 +838,11 @@ async def admin_day(request):
                 "source": "сайт" if r["source"] == "web" else "бот",
             }
         )
-        
+
     active = [i for i in items if i["status"] != "cancelled"]
     revenue = sum(i["price"] for i in items if i["status"] == "done")
     lost_revenue = sum(i["price"] for i in items if i["status"] == "cancelled")
-    
+
     return web.json_response(
         {
             "ok": True,
@@ -808,7 +851,7 @@ async def admin_day(request):
                 "count": len(active),
                 "done_count": len([i for i in items if i["status"] == "done"]),
                 "revenue": revenue,
-                "lost_revenue": lost_revenue
+                "lost_revenue": lost_revenue,
             },
         }
     )
@@ -816,7 +859,7 @@ async def admin_day(request):
 
 async def admin_status(request):
     if not admin_ok(request):
-        return web.json_response({"ok": False, "error": "Немає доступу"}, status=403)
+        return no_access()
     try:
         data = await request.json()
         appt_id = int(data.get("id", 0))
@@ -829,6 +872,13 @@ async def admin_status(request):
         a = c.execute("SELECT * FROM appts WHERE id=?", (appt_id,)).fetchone()
         if not a:
             return jerr("Запис не знайдено.", 404)
+        if status == "booked" and a["status"] == "cancelled" and a["service"] in SERVICES:
+            # повернути скасований запис можна лише якщо час досі вільний
+            st = datetime.fromisoformat(a["start"])
+            i = ((st.hour * 60 + st.minute) - OPEN_HOUR * 60) // 30
+            need = {i + k for k in range(units(a["service"]))}
+            if need & busy_slots(st.date(), a["master"], skip_id=appt_id):
+                return jerr("Цей час уже зайнятий іншим записом.", 409)
         c.execute("UPDATE appts SET status=? WHERE id=?", (status, appt_id))
         c.commit()
     if a["status"] != status:
@@ -845,14 +895,16 @@ async def admin_status(request):
 
 async def admin_clients(request):
     if not admin_ok(request):
-        return web.json_response({"ok": False, "error": "Немає доступу"}, status=403)
+        return no_access()
     with closing(db()) as c:
         rows = c.execute("SELECT name, phone, service, start, status FROM appts").fetchall()
     today = now().date()
     clients: dict = {}
     for r in rows:
         p = r["phone"] or "?"
-        cinfo = clients.setdefault(p, {"name": r["name"], "phone": p, "visits": 0, "spent": 0, "last": None, "upcoming": False})
+        cinfo = clients.setdefault(
+            p, {"name": r["name"], "phone": p, "visits": 0, "spent": 0, "last": None, "upcoming": False}
+        )
         if r["name"]:
             cinfo["name"] = r["name"]
         if r["status"] == "done":
@@ -872,11 +924,12 @@ async def admin_page(request):
         return web.Response(text="Адмін-панель не налаштована (ADMIN_PANEL_TOKEN).", status=404)
     return web.FileResponse(f)
 
+
 def build_app(bot) -> web.Application:
     app = web.Application(middlewares=[cors])
     app["bot"] = bot
     app.router.add_get("/", index)
-    app.router.add_get("/healthz", lambda r: web.Response(text="ok"))
+    app.router.add_get("/healthz", healthz)
     app.router.add_get("/admin", admin_page)
     app.router.add_get("/admin/api/day", admin_day)
     app.router.add_get("/admin/api/clients", admin_clients)
@@ -885,7 +938,7 @@ def build_app(bot) -> web.Application:
     app.router.add_get("/api/days", api_days)
     app.router.add_get("/api/slots", api_slots)
     app.router.add_post("/api/book", api_book)
-    app.router.add_route("OPTIONS", "/api/{tail:.*}", lambda r: web.Response())
+    app.router.add_route("OPTIONS", "/api/{tail:.*}", options)
     return app
 
 
@@ -910,6 +963,7 @@ async def main() -> None:
     finally:
         task.cancel()
         await runner.cleanup()
-        
+
+
 if __name__ == "__main__":
     asyncio.run(main())
