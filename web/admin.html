@@ -4,212 +4,208 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Борода CRM PRO</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0a;--surface:#141414;--ink:#f0f0f0;--muted:#888;--line:#2a2a2a;--red:#8b0000;--ok:#2E7D5B;--warn:#E0A94A;--chip:#1f1f1f;--brass:#D4AF37}
+:root{--bg:#0a0a0a;--sf:#141414;--ink:#f0f0f0;--mut:#888;--line:#2a2a2a;--red:#c0392b;--ok:#2E7D5B;--warn:#c98a1c;--chip:#1f1f1f;--brass:#D4AF37}
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;font-size:14px;line-height:1.45;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
-h1,h2{font-family:'Playfair Display',serif;font-weight:600;color:var(--brass);margin:0 0 4px}
-.wrap{max-width:800px;margin:0 auto;padding:0 16px 48px}
-header{padding:24px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
-.tabs{display:flex;gap:6px;margin:14px 0;background:var(--chip);padding:4px;border-radius:12px;border:1px solid var(--line)}
-.tab{flex:1;background:transparent;color:var(--muted);border:0;font:inherit;font-weight:500;padding:10px;border-radius:9px;cursor:pointer;transition:.3s}
-.tab[aria-selected="true"]{background:var(--brass);color:#000}
-.date-filters{display:flex;gap:12px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
-input[type=date],input[type=password]{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink)}
-.btn{background:linear-gradient(45deg,#b8860b,#ffd700);color:#000;border:0;padding:12px 20px;border-radius:8px;font-weight:600;cursor:pointer;text-transform:uppercase}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
-.stat b{display:block;font-size:24px;color:var(--brass)}
-.stat span{font-size:11px;color:var(--muted);text-transform:uppercase}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
-.row{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
-.row:last-child{border-bottom:0}
-.time{font-size:15px;color:var(--brass);font-weight:600;min-width:60px}
-.grow{flex:1}
-.badge{font-size:10px;padding:3px 8px;border-radius:12px;text-transform:uppercase;margin-left:8px}
-.booked{background:var(--warn);color:#fff}
-.done{background:var(--ok);color:#fff}
-.cancelled{background:var(--red);color:#fff}
-.acts{margin-top:10px}
-.mini{background:transparent;border:1px solid var(--line);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:.2s}
-.mini:hover{border-color:var(--brass)}
-.mini.go{background:var(--brass);color:#000;border-color:var(--brass)}
-.empty{color:var(--muted);padding:8px 0;font-style:italic}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);display:grid;place-items:center;z-index:20}
-.dlg{background:var(--surface);padding:24px;border-radius:12px;border:1px solid var(--brass);width:320px;max-width:92vw;text-align:center}
-.err{color:#ff6b6b;font-size:13px;min-height:18px;margin:8px 0 0}
-.foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:20px;border-top:1px solid var(--line);padding-top:10px}
-.link{background:none;border:0;color:var(--brass);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Montserrat,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+h1,h2{font-family:'Playfair Display',serif;color:var(--brass);margin:0 0 4px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 48px}
+header{padding:22px 0;border-bottom:1px solid var(--line);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;margin:0 0 16px;background:var(--chip);padding:4px;border-radius:12px;border:1px solid var(--line);overflow-x:auto}
+.tab{flex:1;white-space:nowrap;background:0;color:var(--mut);border:0;font:inherit;font-weight:500;padding:10px 12px;border-radius:9px;cursor:pointer}
+.tab[aria-selected=true]{background:var(--brass);color:#000}
+.bar{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+input,select,textarea{font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#050505;color:var(--ink)}
+textarea{width:100%;min-height:110px}
+.btn{background:linear-gradient(45deg,#b8860b,#ffd700);color:#000;border:0;padding:10px 16px;border-radius:8px;font:600 12px Montserrat,sans-serif;cursor:pointer;text-transform:uppercase}
+.mini{background:0;border:1px solid var(--line);color:var(--ink);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px}
+.mini:hover{border-color:var(--brass)}.mini.go{background:var(--brass);color:#000;border-color:var(--brass)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:12px}
+.stat{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.stat b{display:block;font-size:21px;color:var(--brass)}.stat span{font-size:11px;color:var(--mut);text-transform:uppercase}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.row{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}
+.time{color:var(--brass);font-weight:600;min-width:58px}.grow{flex:1}.m{color:var(--mut);font-size:12px;margin-top:3px}
+.badge{font-size:10px;padding:3px 8px;border-radius:12px;text-transform:uppercase;margin-left:6px;color:#fff}
+.booked{background:var(--warn)}.done{background:var(--ok)}.cancelled{background:var(--red)}
+.empty{color:var(--mut);font-style:italic;padding:6px 0}
+.tbl{border-collapse:collapse;width:100%;font-size:12px}.tbl th,.tbl td{border:1px solid var(--line);padding:4px 6px;vertical-align:top}.tbl .tm{color:var(--mut);width:52px}
+.tbl td.ap{color:#fff}.tbl{min-width:560px}.sc{overflow-x:auto}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:grid;place-items:center;z-index:20;padding:12px}
+.dlg{background:var(--sf);padding:22px;border-radius:12px;border:1px solid var(--brass);width:360px;max-width:100%;display:grid;gap:10px}
+.err{color:#ff6b6b;font-size:13px;min-height:16px;margin:0}
+.link{background:0;border:0;color:var(--brass);font:inherit;font-size:13px;text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-  <h1>Борода CRM PRO</h1>
-  <span style="color:var(--muted)">Аналітика та керування бізнесом</span>
-</header>
+<header><div><h1>Борода CRM PRO</h1><span class="m">Записи, розклад, клієнти, відгуки, розсилки</span></div>
+<div class="bar" style="margin:0"><button class="btn" id="new">+ Новий запис</button><button class="mini" id="csv">Експорт CSV</button></div></header>
 
 <div class="tabs" role="tablist">
-  <button class="tab" id="t-day" aria-selected="true" data-tab="day">Записи (Період)</button>
-  <button class="tab" id="t-cli" aria-selected="false" data-tab="cli">База клієнтів</button>
+<button class="tab" data-tab="day" aria-selected="true">Записи</button><button class="tab" data-tab="sch" aria-selected="false">Розклад</button>
+<button class="tab" data-tab="cli" aria-selected="false">Клієнти</button><button class="tab" data-tab="rev" aria-selected="false">Відгуки</button>
+<button class="tab" data-tab="bc" aria-selected="false">Розсилка</button></div>
+
+<section id="day">
+<div class="bar"><button class="mini" data-range="today">Сьогодні</button><button class="mini" data-range="tomorrow">Завтра</button><button class="mini" data-range="week">7 днів</button><button class="mini" data-range="month">Місяць</button>
+<input type="date" id="dstart"><input type="date" id="dend"></div>
+<div class="bar"><input id="q" placeholder="Пошук: ім'я або телефон" style="flex:1;min-width:160px"><select id="fm"><option value="">Усі майстри</option></select>
+<select id="fs"><option value="">Усі статуси</option><option value="booked">Очікується</option><option value="done">Завершено</option><option value="cancelled">Скасовано</option></select></div>
+<div class="stats"><div class="stat"><b id="s-rev">0 ₴</b><span>Виручка</span></div><div class="stat"><b id="s-exp">0 ₴</b><span>Очікується</span></div>
+<div class="stat"><b id="s-done">0</b><span>Завершено</span></div><div class="stat"><b id="s-avg">0 ₴</b><span>Сер. чек</span></div>
+<div class="stat"><b id="s-lost" style="color:#ff6b6b">0 ₴</b><span>Втрати</span></div></div>
+<div class="m" id="s-extra" style="margin-bottom:12px"></div>
+<div class="card" id="daylist"></div></section>
+
+<section id="sch" hidden><div class="bar"><input type="date" id="sdate"></div><div class="card sc" id="schbox"></div></section>
+<section id="cli" hidden><div class="bar"><input id="cq" placeholder="Пошук клієнта" style="flex:1"></div><div class="card" id="clilist"></div></section>
+<section id="rev" hidden><div class="card" id="revbox"></div></section>
+<section id="bc" hidden><div class="card"><h2 style="font-size:20px">Розсилка клієнтам у Telegram</h2><p class="m">Отримають усі, хто записувався через бота або увійшов на сайті через Telegram.</p>
+<textarea id="bctext" placeholder="Текст повідомлення, наприклад: цього тижня -10% на бороду"></textarea><p class="err" id="bcmsg"></p><button class="btn" id="bcsend">Надіслати всім</button></div></section>
+
+<div class="bar" style="margin-top:20px;border-top:1px solid var(--line);padding-top:10px"><button class="link" id="rekey">Вийти</button><a class="link" href="/">На сайт</a></div>
 </div>
 
-<section id="day" role="tabpanel">
-  <div class="date-filters">
-    <span style="color:var(--muted)">Період з:</span>
-    <input type="date" id="dstart">
-    <span style="color:var(--muted)">по:</span>
-    <input type="date" id="dend">
-  </div>
+<div class="overlay" id="lock" hidden><div class="dlg"><h2>Авторизація</h2><input type="password" id="key" placeholder="Токен адміністратора"><p class="err" id="keyerr"></p><button class="btn" id="unlock">Увійти</button></div></div>
 
-  <div class="stats">
-    <div class="stat"><b id="s-rev">0 ₴</b><span>Виручка</span></div>
-    <div class="stat"><b id="s-done">0</b><span>Завершено</span></div>
-    <div class="stat"><b id="s-count">0</b><span>Очікується</span></div>
-    <div class="stat"><b id="s-lost" style="color:#ff6b6b">0 ₴</b><span style="color:#ff6b6b">Відміни</span></div>
-  </div>
-  <div class="card" id="daylist"></div>
-</section>
-
-<section id="cli" role="tabpanel" hidden>
-  <div class="card" id="clilist"></div>
-</section>
-
-<div class="foot">
-  <button class="link" id="rekey">Вийти / Змінити ключ</button>
-  <a class="link" href="/">На сайт</a>
-</div>
-</div>
-
-<!-- Вікно входу: за замовчуванням приховане, показується лише коли немає токена -->
-<div class="overlay" id="lock" hidden>
-  <div class="dlg">
-    <h2>Авторизація</h2>
-    <input type="password" id="key" placeholder="Введіть токен" style="margin:16px 0;width:100%">
-    <p class="err" id="keyerr"></p>
-    <button class="btn" id="unlock" style="width:100%">Увійти</button>
-  </div>
-</div>
+<div class="overlay" id="mk" hidden><div class="dlg"><h2>Новий запис</h2>
+<input type="date" id="mdate"><select id="msvc"></select><select id="mmst"></select><select id="mslot"></select>
+<input id="mname" placeholder="Ім'я клієнта"><input id="mphone" placeholder="Телефон 050 123 45 67"><input id="mnote" placeholder="Нотатка (необов'язково)">
+<p class="err" id="mmsg"></p><div class="bar" style="margin:0"><button class="btn" id="msave">Записати</button><button class="mini" id="mclose">Закрити</button></div></div></div>
 
 <script>
 (function(){
-  var STATUS={booked:"Очікується",done:"Завершено",cancelled:"Скасовано"};
-  function $(id){return document.getElementById(id)}
-  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-  function money(n){return (n||0).toLocaleString("uk-UA")+" ₴"}
-  function pad(n){return n<10?"0"+n:""+n}
-  function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
-  function key(){try{return localStorage.getItem("admin_key")||""}catch(e){return ""}}
-  function setKey(k){try{if(k)localStorage.setItem("admin_key",k);else localStorage.removeItem("admin_key")}catch(e){}}
-  function showLock(){$("lock").hidden=false;$("key").focus()}
-
-  function req(path,opts){
-    opts=opts||{};
-    opts.headers=Object.assign({"X-Admin-Token":key()},opts.headers||{});
-    if(opts.body&&typeof opts.body!=="string"){
-      opts.body=JSON.stringify(opts.body); /* було JSON.stringify(opts): на сервер йшов не той об'єкт */
-      opts.headers["Content-Type"]="application/json";
-    }
-    return fetch(path,opts).then(function(r){
-      return r.json().then(function(j){
-        if(r.status===403){setKey("");showLock();throw new Error("Невірний ключ доступу")}
-        return j;
-      });
-    });
-  }
-
-  function renderDay(){
-    var start=$("dstart").value||iso(new Date());
-    var end=$("dend").value||iso(new Date());
-
-    req("/admin/api/day?start="+start+"&end="+end).then(function(r){
-      if(!r.ok){$("daylist").innerHTML='<p class="empty">'+esc(r.error||"Помилка")+"</p>";return}
-
-      $("s-rev").textContent=money(r.stats.revenue);
-      $("s-done").textContent=r.stats.done_count||0;
-      $("s-count").textContent=(r.stats.count-(r.stats.done_count||0))||0;
-      $("s-lost").textContent=money(r.stats.lost_revenue||0);
-
-      if(!r.items.length){$("daylist").innerHTML='<p class="empty">Записів на цей період немає.</p>';return}
-
-      $("daylist").innerHTML=r.items.map(function(a){
-        var acts="";
-        if(a.status==="booked")acts='<button class="mini go" data-act="done" data-id="'+a.id+'">Завершено</button> <button class="mini" data-act="cancelled" data-id="'+a.id+'">Скасувати</button>';
-        else acts='<button class="mini" data-act="booked" data-id="'+a.id+'">Повернути в очікування</button>';
-
-        return '<div class="row"><div class="time">'+esc(a.date)+'<br>'+esc(a.time)+'</div><div class="grow"><b>'+esc(a.name)+'</b>'
-          +' <span class="badge '+esc(a.status)+'">'+esc(STATUS[a.status]||a.status)+'</span>'
-          +'<div style="color:var(--muted);font-size:12px;margin-top:4px">'+esc(a.service)+" · "+esc(a.master)+" · "+money(a.price)+" · "+esc(a.source)+'</div>'
-          +'<div style="font-size:13px;margin-top:2px">'+esc(a.phone)+'</div><div class="acts">'+acts+"</div></div></div>";
-      }).join("");
-    }).catch(function(e){$("daylist").innerHTML='<p class="empty">'+esc(e.message)+"</p>"});
-  }
-
-  function renderClients(){
-    req("/admin/api/clients").then(function(r){
-      if(!r.ok){$("clilist").innerHTML='<p class="empty">'+esc(r.error||"Помилка")+"</p>";return}
-      if(!r.clients.length){$("clilist").innerHTML='<p class="empty">Клієнтів поки немає.</p>';return}
-      var today=new Date();today.setHours(0,0,0,0);
-      $("clilist").innerHTML=r.clients.map(function(c){
-        var days=c.last?Math.round((today-new Date(c.last+"T00:00:00"))/86400000):null;
-        var stale=days!==null&&days>=30&&!c.upcoming;
-        return '<div class="row"><div class="grow"><b>'+esc(c.name)+'</b>'
-          +'<div style="color:var(--muted);font-size:12px;margin-top:4px">'+esc(c.phone)+" · Візитів: "+(c.visits||0)+" · Сума: "+money(c.spent)+(c.last?" · Останній: "+esc(c.last):"")+'</div>'
-          +(stale?'<div class="acts"><button class="mini go" data-phone="'+esc(c.phone)+'">Нагадати про візит</button></div>':"")
-          +"</div></div>";
-      }).join("");
-    }).catch(function(e){$("clilist").innerHTML='<p class="empty">'+esc(e.message)+"</p>"});
-  }
-
-  function unlock(){
-    var k=$("key").value.trim();
-    $("keyerr").textContent="";
-    if(!k){$("keyerr").textContent="Введіть токен.";return}
-    fetch("/admin/api/clients",{headers:{"X-Admin-Token":k}}).then(function(r){
-      return r.json().then(function(j){
-        if(r.ok&&j.ok){setKey(k);$("lock").hidden=true;$("key").value="";renderDay()}
-        else{setKey("");$("keyerr").textContent="Невірний ключ доступу"}
-      });
-    }).catch(function(){setKey("");$("keyerr").textContent="Помилка з'єднання з сервером."});
-  }
-
-  document.addEventListener("click",function(e){
-    var t=e.target.closest("button");if(!t)return;
-    if(t.dataset.tab){
-      ["day","cli"].forEach(function(id){
-        $(id).hidden=id!==t.dataset.tab;
-        $("t-"+id).setAttribute("aria-selected",id===t.dataset.tab);
-      });
-      if(t.dataset.tab==="day")renderDay();else renderClients();
-      return;
-    }
-    if(t.dataset.act){
-      req("/admin/api/status",{method:"POST",body:{id:t.dataset.id,status:t.dataset.act}})
-        .then(function(r){if(r.ok){renderDay()}else alert(r.error||"Помилка")})
-        .catch(function(err){alert(err.message)});
-      return;
-    }
-    if(t.dataset.phone){
-      var text="Привіт! Це барбершоп «Борода». Давно не бачились. Запишіться онлайн на зручний час, і ми вас чекаємо.";
-      try{navigator.clipboard.writeText(text).then(function(){alert("Повідомлення скопійовано")},function(){alert(text)})}catch(err){alert(text)}
-      return;
-    }
-    if(t.id==="unlock"){unlock();return}
-    if(t.id==="rekey"){setKey("");$("key").value="";showLock();return}
+var ST={booked:"Очікується",done:"Завершено",cancelled:"Скасовано"},cfg={services:[],masters:[]};
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function money(n){return (n||0).toLocaleString("uk-UA")+" ₴"}
+function pad(n){return n<10?"0"+n:""+n}
+function iso(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function add(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
+function qs(o){return Object.keys(o).filter(function(k){return o[k]!==""}).map(function(k){return k+"="+encodeURIComponent(o[k])}).join("&")}
+function key(){try{return localStorage.getItem("admin_key")||""}catch(e){return ""}}
+function setKey(k){try{k?localStorage.setItem("admin_key",k):localStorage.removeItem("admin_key")}catch(e){}}
+function showLock(){$("lock").hidden=false;$("key").focus()}
+function req(path,opts){
+  opts=opts||{};opts.headers=Object.assign({"X-Admin-Token":key()},opts.headers||{});
+  if(opts.body&&typeof opts.body!=="string"){opts.body=JSON.stringify(opts.body);opts.headers["Content-Type"]="application/json"}
+  return fetch(path,opts).then(function(r){
+    if(r.status===403){setKey("");showLock();throw new Error("Невірний ключ доступу")}
+    var ct=r.headers.get("content-type")||"";return ct.indexOf("json")>-1?r.json():r.text();
   });
+}
+function post(path,body){return req(path,{method:"POST",body:body})}
+function opts(list,all){return (all?'<option value="any">Будь-який вільний</option>':"")+list.map(function(x){return '<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>'}).join("")}
 
-  $("key").addEventListener("keydown",function(e){if(e.key==="Enter")unlock()});
-  $("dstart").addEventListener("change",renderDay);
-  $("dend").addEventListener("change",renderDay);
+/* ---- Записи ---- */
+function renderDay(){
+  req("/admin/api/day?"+qs({start:$("dstart").value,end:$("dend").value,q:$("q").value.trim(),master:$("fm").value,status:$("fs").value})).then(function(r){
+    if(!r.ok){$("daylist").innerHTML='<p class="empty">'+esc(r.error||"Помилка")+"</p>";return}
+    var s=r.stats;$("s-rev").textContent=money(s.revenue);$("s-exp").textContent=money(s.expected);$("s-done").textContent=s.done_count;$("s-avg").textContent=money(s.avg_check);$("s-lost").textContent=money(s.lost_revenue);
+    var bm=Object.keys(s.by_master).map(function(k){return esc(k)+": "+s.by_master[k].n+" зап., "+money(s.by_master[k].revenue)}).join(" · ");
+    var bs=Object.keys(s.by_service).slice(0,4).map(function(k){return esc(k)+" ×"+s.by_service[k]}).join(", ");
+    $("s-extra").innerHTML=(bm?"Майстри: "+bm:"")+(bs?"<br>Топ послуг: "+bs:"");
+    if(!r.items.length){$("daylist").innerHTML='<p class="empty">Записів немає.</p>';return}
+    $("daylist").innerHTML=r.items.map(function(a){
+      var acts=a.status==="booked"?'<button class="mini go" data-act="done" data-id="'+a.id+'">Завершено</button> <button class="mini" data-act="cancelled" data-id="'+a.id+'">Скасувати</button>':'<button class="mini" data-act="booked" data-id="'+a.id+'">Повернути</button>';
+      return '<div class="row"><div class="time">'+esc(a.date)+"<br>"+esc(a.time)+'</div><div class="grow"><b>'+esc(a.name)+'</b><span class="badge '+esc(a.status)+'">'+esc(ST[a.status]||a.status)+"</span>"
+       +'<div class="m">'+esc(a.service)+" · "+esc(a.master)+" · "+money(a.price)+" · "+esc(a.source)+(a.tg?" · TG":"")+"</div>"
+       +'<div>'+esc(a.phone)+"</div>"+(a.note?'<div class="m">📝 '+esc(a.note)+"</div>":"")
+       +'<div style="margin-top:8px">'+acts+' <button class="mini" data-note="'+a.id+'" data-cur="'+esc(a.note)+'">Нотатка</button>'+(a.tg?' <button class="mini" data-msg="'+esc(a.phone)+'">Написати в TG</button>':"")+"</div></div></div>";
+    }).join("");
+  }).catch(function(e){$("daylist").innerHTML='<p class="empty">'+esc(e.message)+"</p>"});
+}
+function setRange(k){
+  var t=new Date(),a=t,b=t;
+  if(k==="tomorrow")a=b=add(t,1);if(k==="week")b=add(t,6);
+  if(k==="month"){a=new Date(t.getFullYear(),t.getMonth(),1);b=new Date(t.getFullYear(),t.getMonth()+1,0)}
+  $("dstart").value=iso(a);$("dend").value=iso(b);renderDay();
+}
 
-  var today=iso(new Date());
-  $("dstart").value=today;
-  $("dend").value=today;
-  if(!key())showLock();else renderDay();
+/* ---- Розклад ---- */
+function renderSch(){
+  req("/admin/api/schedule?date="+$("sdate").value).then(function(r){
+    var h='<table class="tbl"><tr><th></th>'+r.masters.map(function(m){return "<th>"+esc(m.name)+"</th>"}).join("")+"</tr>";
+    r.slots.forEach(function(l,i){h+='<tr><td class="tm">'+l+"</td>";
+      r.masters.forEach(function(m){var c=r.cells[m.id][i];if(c==="skip")return;
+        h+=c?'<td rowspan="'+c.span+'" class="ap '+esc(c.status)+'"><b>'+esc(c.name)+"</b><br>"+esc(c.service)+"</td>":"<td></td>"});h+="</tr>"});
+    $("schbox").innerHTML=h+"</table>";
+  });
+}
+
+/* ---- Клієнти, відгуки ---- */
+function renderClients(){
+  req("/admin/api/clients").then(function(r){
+    var q=$("cq").value.trim().toLowerCase(),today=new Date();today.setHours(0,0,0,0);
+    var list=r.clients.filter(function(c){return !q||(c.name+" "+c.phone).toLowerCase().indexOf(q)>-1});
+    $("clilist").innerHTML=list.length?list.map(function(c){
+      var d=c.last?Math.round((today-new Date(c.last+"T00:00:00"))/864e5):null,stale=d!==null&&d>=30&&!c.upcoming;
+      return '<div class="row"><div class="grow"><b>'+esc(c.name)+"</b>"+(c.tg?' <span class="badge done">TG</span>':"")+'<div class="m">'+esc(c.phone)+" · Візитів: "+(c.visits||0)+" · Сума: "+money(c.spent)+(c.last?" · Останній: "+esc(c.last):"")+"</div>"
+       +'<div style="margin-top:8px">'+(c.tg?'<button class="mini'+(stale?" go":"")+'" data-msg="'+esc(c.phone)+'" data-pre="'+(stale?"1":"")+'">'+(stale?"Нагадати про візит":"Написати в TG")+"</button>":'<span class="m">Не підключив Telegram</span>')+"</div></div></div>";
+    }).join(""):'<p class="empty">Клієнтів немає.</p>';
+  });
+}
+function renderRev(){
+  req("/admin/api/reviews").then(function(r){
+    $("revbox").innerHTML=r.items.length?'<h2 style="font-size:22px">Середня оцінка: '+r.avg+" ★ ("+r.items.length+")</h2>"+r.items.map(function(i){
+      return '<div class="row"><div class="time">'+"★".repeat(i.rating)+'</div><div class="grow"><b>'+esc(i.name)+'</b><div class="m">'+esc(i.date)+" · "+esc(i.service)+" · "+esc(i.master)+"</div></div></div>"}).join(""):'<p class="empty">Оцінок поки немає. Вони приходять після позначки «Завершено».</p>';
+  });
+}
+
+/* ---- Новий запис ---- */
+function loadFree(){
+  $("mslot").innerHTML="<option>…</option>";
+  req("/admin/api/free?"+qs({date:$("mdate").value,service:$("msvc").value,master:$("mmst").value})).then(function(r){
+    $("mslot").innerHTML=r.ok&&r.slots.length?r.slots.map(function(s){return '<option value="'+s.i+'">'+s.label+"</option>"}).join(""):'<option value="">Немає вільного часу</option>';
+  });
+}
+
+function unlock(){
+  var k=$("key").value.trim();$("keyerr").textContent="";if(!k)return;
+  fetch("/admin/api/clients",{headers:{"X-Admin-Token":k}}).then(function(r){return r.json().then(function(j){
+    if(r.ok&&j.ok){setKey(k);$("lock").hidden=true;$("key").value="";init()}else{setKey("");$("keyerr").textContent="Невірний ключ доступу"}})
+  }).catch(function(){$("keyerr").textContent="Помилка з'єднання з сервером."});
+}
+function download(name,text){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;a.click()}
+
+document.addEventListener("click",function(e){
+  var t=e.target.closest("button");if(!t)return;var d=t.dataset;
+  if(d.tab){["day","sch","cli","rev","bc"].forEach(function(id){$(id).hidden=id!==d.tab});
+    document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",b.dataset.tab===d.tab)});
+    ({day:renderDay,sch:renderSch,cli:renderClients,rev:renderRev,bc:function(){}})[d.tab]();return}
+  if(d.range)return setRange(d.range);
+  if(d.act)return post("/admin/api/status",{id:d.id,status:d.act}).then(function(r){r.ok?renderDay():alert(r.error||"Помилка")}).catch(function(x){alert(x.message)});
+  if(d.note){var n=prompt("Нотатка до запису:",d.cur||"");if(n!==null)post("/admin/api/note",{id:+d.note,note:n}).then(renderDay);return}
+  if(d.msg){var txt=prompt("Повідомлення клієнту в Telegram:",d.pre?"Привіт! Це барбершоп «Борода». Давно не бачились. Запишіться онлайн на зручний час, чекаємо вас!":"");
+    if(txt)post("/admin/api/message",{phone:d.msg,text:txt}).then(function(r){alert(r.ok?"Надіслано":r.error||"Помилка")});return}
+  if(t.id==="unlock")return unlock();
+  if(t.id==="rekey"){setKey("");showLock();return}
+  if(t.id==="new"){$("mmsg").textContent="";$("mdate").value=iso(new Date());$("mk").hidden=false;return loadFree()}
+  if(t.id==="mclose"){$("mk").hidden=true;return}
+  if(t.id==="msave"){
+    var slot=parseInt($("mslot").value,10);if(isNaN(slot)){$("mmsg").textContent="Оберіть вільний час.";return}
+    post("/admin/api/create",{date:$("mdate").value,service:$("msvc").value,master:$("mmst").value,slot:slot,name:$("mname").value,phone:$("mphone").value,note:$("mnote").value}).then(function(r){
+      if(!r.ok){$("mmsg").textContent=r.error||"Помилка";loadFree();return}
+      $("mk").hidden=true;$("mname").value=$("mphone").value=$("mnote").value="";renderDay()});return}
+  if(t.id==="csv"){req("/admin/api/export?"+qs({start:$("dstart").value,end:$("dend").value})).then(function(x){download("boroda_"+$("dstart").value+".csv",x)});return}
+  if(t.id==="bcsend"){var tx=$("bctext").value.trim();$("bcmsg").textContent="";if(!tx)return;
+    if(confirm("Надіслати це повідомлення всім клієнтам у Telegram?"))post("/admin/api/broadcast",{text:tx}).then(function(r){$("bcmsg").style.color="var(--ok)";$("bcmsg").textContent=r.ok?"Надіслано: "+r.sent+" з "+r.total:r.error;if(r.ok)$("bctext").value=""})}
+});
+["dstart","dend","fm","fs"].forEach(function(id){$(id).addEventListener("change",renderDay)});
+$("q").addEventListener("input",renderDay);$("cq").addEventListener("input",renderClients);$("sdate").addEventListener("change",renderSch);
+["mdate","msvc","mmst"].forEach(function(id){$(id).addEventListener("change",loadFree)});
+$("key").addEventListener("keydown",function(e){if(e.key==="Enter")unlock()});
+
+function init(){
+  fetch("/api/config").then(function(r){return r.json()}).then(function(c){
+    cfg=c;$("fm").innerHTML='<option value="">Усі майстри</option>'+opts(c.masters);
+    $("msvc").innerHTML=opts(c.services);$("mmst").innerHTML=opts(c.masters,true);
+  }).catch(function(){}).then(function(){setRange("today");$("sdate").value=iso(new Date())});
+}
+if(!key())showLock();else init();
 })();
 </script>
 </body>
