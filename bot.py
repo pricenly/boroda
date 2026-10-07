@@ -1,10 +1,4 @@
-"""Барбершоп: Telegram-бот + сайт із записом + нагадування. Одна програма, одна база.
-
-- Запис у боті й на сайті потрапляє в одну базу (SQLite), тому зайнятий час зникає в обох місцях.
-- Нагадування: у день візиту (09:00) і приблизно за 4 години до запису (Telegram + SMS, якщо увімкнено).
-- Клієнт із сайту може натиснути «Підключити нагадування в Telegram», і нагадування прийдуть у чат.
-- Сайт (папка web/) віддається цією ж програмою, API: /api/config, /api/days, /api/slots, /api/book.
-"""
+"""Барбершоп: Telegram-бот + сайт із записом + нагадування + CRM з чатами."""
 import asyncio
 import csv
 import io
@@ -27,16 +21,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import (
-    BotCommand,
-    BotCommandScopeChat,
-    CallbackQuery,
-    InlineKeyboardButton,
-    KeyboardButton,
-    MenuButtonWebApp,
-    Message,
-    ReplyKeyboardMarkup,
-    ReplyKeyboardRemove,
-    WebAppInfo,
+    BotCommand, BotCommandScopeChat, CallbackQuery, InlineKeyboardButton,
+    KeyboardButton, MenuButtonWebApp, Message, ReplyKeyboardMarkup,
+    ReplyKeyboardRemove, WebAppInfo,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiohttp import web
@@ -44,45 +31,46 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ---------- Налаштування (з файлу .env) ----------
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split(",") if x]
 TZ = ZoneInfo(os.getenv("TZ_NAME", "Europe/Kyiv"))
 SHOP_NAME = os.getenv("SHOP_NAME", "Барбершоп «Борода»")
 ADDRESS = os.getenv("SHOP_ADDRESS", "вул. Прикладна, 1")
 MORNING_HOUR = int(os.getenv("MORNING_HOUR", "9"))
-DB_PATH = os.getenv("DB_PATH", "barber.db")  # на хостингу вкажіть шлях на постійному томі, напр. /data/barber.db
+DB_PATH = os.getenv("DB_PATH", "barber.db")
 
 WEB_HOST = os.getenv("WEB_HOST", "0.0.0.0")
 WEB_PORT = int(os.getenv("PORT", "8080"))
-ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "")  # потрібно лише якщо сайт лежить на іншому домені
-BOT_USERNAME = os.getenv("BOT_USERNAME", "")  # якщо порожньо, візьметься автоматично
+ALLOWED_ORIGIN = os.getenv("ALLOWED_ORIGIN", "")
+BOT_USERNAME = os.getenv("BOT_USERNAME", "")
 WEB_DIR = Path(__file__).parent / "web"
 
 SMS_ENABLED = os.getenv("SMS_ENABLED", "0") == "1"
 TURBOSMS_TOKEN = os.getenv("TURBOSMS_TOKEN", "")
 TURBOSMS_SENDER = os.getenv("TURBOSMS_SENDER", "")
 
-PUBLIC_URL = os.getenv("PUBLIC_URL", "")  # https-адреса сайту: у боті з'явиться кнопка «Сайт»
-REMIND_HOURS = int(os.getenv("REMIND_HOURS", "4"))  # за скільки годин нагадувати про запис
-REMIND_NOT_BEFORE = int(os.getenv("REMIND_NOT_BEFORE", "7"))  # не будити клієнтів раніше цієї години
-LOYALTY_EVERY = int(os.getenv("LOYALTY_EVERY", "5"))  # кожен N-й запис зі знижкою (0 = вимкнено)
+PUBLIC_URL = os.getenv("PUBLIC_URL", "")
+REMIND_HOURS = int(os.getenv("REMIND_HOURS", "4"))
+REMIND_NOT_BEFORE = int(os.getenv("REMIND_NOT_BEFORE", "7"))
+LOYALTY_EVERY = int(os.getenv("LOYALTY_EVERY", "5"))
 LOYALTY_PERCENT = int(os.getenv("LOYALTY_PERCENT", "10"))
+SHOP_SINCE = os.getenv("SHOP_SINCE", "")
+SHOP_PHONE = os.getenv("SHOP_PHONE", "")
+MAP_URL = os.getenv("MAP_URL", "")
 
-# ---------- Послуги, майстри, графік ----------
-SERVICES = {  # id: (назва, хвилин, ціна грн)
+SERVICES = {
     "cut": ("Стрижка", 45, 400),
     "beard": ("Борода", 30, 250),
     "combo": ("Стрижка + борода", 75, 600),
     "kid": ("Дитяча стрижка", 30, 300),
 }
 MASTERS = {"a": "Андрій", "m": "Максим", "o": "Олег"}
-VALID_MASTERS = set(MASTERS) | {"any"}  # "any" = будь-який вільний майстер
+VALID_MASTERS = set(MASTERS) | {"any"}
 ANY_NAME = "Будь-який вільний"
-OPEN_HOUR = 10  # перший слот о 10:00
-SLOTS = 18  # 18 слотів по 30 хв: останній починається о 18:30, закриття о 19:00
-BOOK_DAYS = 7  # на скільки днів уперед можна записатися
-MAX_ACTIVE_PER_PHONE = 3  # скільки майбутніх записів може мати один номер
+OPEN_HOUR = 10
+SLOTS = 18
+BOOK_DAYS = 7
+MAX_ACTIVE_PER_PHONE = 3
 WEEKDAYS = ["пн", "вт", "ср", "чт", "пт", "сб", "нд"]
 
 router = Router()
@@ -93,11 +81,14 @@ class Booking(StatesGroup):
     phone = State()
 
 
+class ReviewText(StatesGroup):
+    text = State()
+
+
 class BookingError(Exception):
-    """Помилка запису з текстом, який можна показати клієнту."""
+    pass
 
 
-# ---------- База даних ----------
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS appts(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -122,7 +113,18 @@ CREATE TABLE IF NOT EXISTS reminders(
 );
 CREATE TABLE IF NOT EXISTS auth_tokens(token TEXT PRIMARY KEY, tg_id INTEGER, name TEXT, created TEXT);
 CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY, tg_id INTEGER, name TEXT, created TEXT);
-CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT, appt_id INTEGER, tg_id INTEGER, rating INTEGER, created TEXT);
+CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT, appt_id INTEGER, tg_id INTEGER, rating INTEGER, comment TEXT, created TEXT);
+CREATE TABLE IF NOT EXISTS messages(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tg_id INTEGER,
+    name TEXT,
+    phone TEXT,
+    direction TEXT,
+    text TEXT,
+    created TEXT,
+    read INTEGER DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_messages_tg ON messages(tg_id, id);
 """
 
 
@@ -138,7 +140,7 @@ def init_db() -> None:
         old = bool(cols) and (
             any(r["name"] == "tg_id" and r["notnull"] for r in cols) or "token" not in {r["name"] for r in cols}
         )
-        if old:  # міграція зі старої версії бази
+        if old:
             c.executescript("ALTER TABLE appts RENAME TO appts_old;")
         c.executescript(SCHEMA)
         if old:
@@ -151,12 +153,13 @@ def init_db() -> None:
         for col, typ in (("price", "INTEGER"), ("note", "TEXT")):
             if col not in have:
                 c.execute(f"ALTER TABLE appts ADD COLUMN {col} {typ}")
+        if "comment" not in {r["name"] for r in c.execute("PRAGMA table_info(reviews)")}:
+            c.execute("ALTER TABLE reviews ADD COLUMN comment TEXT")
         c.commit()
         backfill_reminders(c)
 
 
 def backfill_reminders(c) -> None:
-    """Майбутнім записам без нагадування (старі записи) створює нагадування."""
     n = now()
     rows = c.execute("SELECT id, start FROM appts WHERE status='booked' AND start>?", (n.isoformat(timespec="seconds"),)).fetchall()
     for a in rows:
@@ -167,7 +170,6 @@ def backfill_reminders(c) -> None:
     c.commit()
 
 
-# ---------- Допоміжні функції ----------
 def now() -> datetime:
     return datetime.now(TZ).replace(tzinfo=None)
 
@@ -203,7 +205,6 @@ def normalize_phone(raw: str):
 
 
 def busy_slots(day: date, master: str, skip_id: int = 0) -> set:
-    """Зайняті слоти майстра. Завершені візити ('done') теж зайняті, щоб час не відкривався повторно."""
     busy = set()
     with closing(db()) as c:
         rows = c.execute(
@@ -222,14 +223,14 @@ def busy_slots(day: date, master: str, skip_id: int = 0) -> set:
 
 
 def free_slots(day: date, master: str, service: str, lead: int = 30) -> list:
-    if master == "any":  # об'єднання вільних слотів усіх майстрів
+    if master == "any":
         out = set()
         for m in MASTERS:
             out |= set(free_slots(day, m, service, lead))
         return sorted(out)
     busy = busy_slots(day, master)
     u = units(service)
-    limit = now() + timedelta(minutes=lead)  # клієнт може записатися не пізніше ніж за 30 хв
+    limit = now() + timedelta(minutes=lead)
     result = []
     for i in range(SLOTS):
         if i + u > SLOTS:
@@ -243,15 +244,11 @@ def free_slots(day: date, master: str, service: str, lead: int = 30) -> list:
 
 
 def plan_reminders(start: datetime, created: datetime) -> list:
-    """Нагадування за REMIND_HOURS год до запису. Щоб не будити клієнтів, не раніше
-    REMIND_NOT_BEFORE:00 того ж дня. Якщо час уже минув на момент запису, нагадування не створюється."""
     when = max(start - timedelta(hours=REMIND_HOURS), datetime.combine(start.date(), time(REMIND_NOT_BEFORE)))
     return [("4h", when)] if created < when < start else []
 
 
-# ---------- Єдина функція створення запису (бот, сайт, CRM) ----------
 def price_for(c, sid: str, tg_id, phone: str) -> int:
-    """Кожен LOYALTY_EVERY-й запис клієнта іде зі знижкою LOYALTY_PERCENT%."""
     base = SERVICES[sid][2]
     if LOYALTY_EVERY > 0:
         n = c.execute(
@@ -264,9 +261,9 @@ def price_for(c, sid: str, tg_id, phone: str) -> int:
 
 
 async def create_appointment(*, name, phone, sid, mid, day, slot, tg_id, source, admin=False, note=""):
-    lead = 0 if admin else 30  # адміністратор може записати й на найближчий час
-    async with LOCK:  # захист від двох записів на один час
-        if mid == "any":  # обираємо першого вільного майстра
+    lead = 0 if admin else 30
+    async with LOCK:
+        if mid == "any":
             mid = next((m for m in MASTERS if slot in free_slots(day, m, sid, lead)), None)
         if mid is None or slot not in free_slots(day, mid, sid, lead):
             raise BookingError("На жаль, цей час щойно зайняли. Оберіть інший.")
@@ -294,7 +291,6 @@ async def create_appointment(*, name, phone, sid, mid, day, slot, tg_id, source,
             return c.execute("SELECT * FROM appts WHERE id=?", (appt_id,)).fetchone()
 
 
-# ---------- Тексти ----------
 def text_confirm(a) -> str:
     name, mins, base = SERVICES[a["service"]]
     price = a["price"] if a["price"] is not None else base
@@ -314,9 +310,8 @@ def text_confirm(a) -> str:
 def text_reminder(kind: str, a) -> str:
     st = datetime.fromisoformat(a["start"])
     name = SERVICES[a["service"]][0]
-    head = "⏰ Нагадуємо про ваш запис сьогодні."
     return (
-        f"{head}\n\n"
+        "⏰ Нагадуємо про ваш запис сьогодні.\n\n"
         f"🕒 {st:%H:%M}, {name}\n"
         f"👤 Майстер: {master_name(a['master'])}\n"
         f"📍 {SHOP_NAME}, {ADDRESS}\n\n"
@@ -334,9 +329,7 @@ def sms_reminder(a) -> str:
     return f"{SHOP_NAME}: нагадуємо, сьогодні о {st:%H:%M} ваш запис. {ADDRESS}"
 
 
-# ---------- Сповіщення ----------
 async def send_sms(phone: str, text: str) -> None:
-    """SMS через TurboSMS. Перевірте формат запиту в документації вашого провайдера."""
     if not (SMS_ENABLED and TURBOSMS_TOKEN and TURBOSMS_SENDER):
         return
     payload = {
@@ -348,9 +341,7 @@ async def send_sms(phone: str, text: str) -> None:
         async with aiohttp.ClientSession() as s:
             async with s.post(
                 "https://api.turbosms.ua/message/send.json",
-                json=payload,
-                headers=headers,
-                timeout=aiohttp.ClientTimeout(total=15),
+                json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=15),
             ) as r:
                 body = await r.text()
                 if r.status != 200:
@@ -360,7 +351,7 @@ async def send_sms(phone: str, text: str) -> None:
 
 
 async def notify_client(bot, a, text: str, sms_text: str, kb=None) -> None:
-    if a["tg_id"]:  # записи з сайту без прив'язки до Telegram отримують лише SMS
+    if a["tg_id"]:
         try:
             await bot.send_message(a["tg_id"], text, reply_markup=kb)
         except Exception:
@@ -387,7 +378,27 @@ async def after_booking(bot, a) -> None:
     )
 
 
-# ---------- Клавіатури ----------
+# ---------- Повідомлення клієнтів ----------
+def client_info_by_tg(tg_id):
+    if not tg_id:
+        return (None, None)
+    with closing(db()) as c:
+        row = c.execute("SELECT name, phone FROM appts WHERE tg_id=? ORDER BY id DESC LIMIT 1", (tg_id,)).fetchone()
+        if row:
+            return (row["name"], row["phone"])
+        row = c.execute("SELECT name FROM messages WHERE tg_id=? AND name IS NOT NULL ORDER BY id DESC LIMIT 1", (tg_id,)).fetchone()
+        return (row["name"] if row else None, None)
+
+
+def save_message(tg_id, name, phone, direction, text):
+    with closing(db()) as c:
+        c.execute(
+            "INSERT INTO messages(tg_id, name, phone, direction, text, created) VALUES(?,?,?,?,?,?)",
+            (tg_id, name, phone, direction, text[:4000], now().isoformat(timespec="seconds")),
+        )
+        c.commit()
+
+
 def kb_main():
     b = InlineKeyboardBuilder()
     b.button(text="Записатися", callback_data="book")
@@ -447,12 +458,10 @@ async def show(cb: CallbackQuery, text: str, kb=None) -> None:
     await cb.answer()
 
 
-# ---------- Команди ----------
 @router.message(CommandStart(deep_link=True))
 async def cmd_start_link(m: Message, command: CommandObject, state: FSMContext):
-    """Посилання з сайту: t.me/бот?start=link_ТОКЕН прив'язує запис до цього чату."""
     payload = command.args or ""
-    if payload.startswith("login_"):  # вхід на сайті через Telegram
+    if payload.startswith("login_"):
         cutoff = (now() - timedelta(minutes=10)).isoformat(timespec="seconds")
         with closing(db()) as c:
             row = c.execute("SELECT token FROM auth_tokens WHERE token=? AND created>?", (payload[6:], cutoff)).fetchone()
@@ -555,7 +564,6 @@ async def cmd_tomorrow(m: Message):
         await m.answer(day_view(now().date() + timedelta(days=1)))
 
 
-# ---------- Постійна панель знизу та команди ----------
 PANEL = {
     "book": "📅 Записатися", "my": "📋 Мої записи", "info": "💈 Ціни", "bonus": "⭐ Бонуси",
     "contacts": "📍 Контакти", "site": "🌐 Сайт", "today": "📊 Сьогодні", "tomorrow": "📆 Завтра",
@@ -632,6 +640,22 @@ async def pn_tomorrow(m: Message):
     await cmd_tomorrow(m)
 
 
+@router.message(Command("skip"))
+async def cmd_skip(m: Message, state: FSMContext):
+    await state.clear()
+    await m.answer("Дякуємо! Чекаємо вас знову ✂️", reply_markup=kb_panel(m.from_user.id))
+
+
+@router.message(ReviewText.text, F.text, ~F.text.startswith("/"))
+async def got_review_text(m: Message, state: FSMContext):
+    rid = (await state.get_data()).get("review_id")
+    with closing(db()) as c:
+        c.execute("UPDATE reviews SET comment=? WHERE id=? AND tg_id=?", (m.text.strip()[:300], rid, m.from_user.id))
+        c.commit()
+    await state.clear()
+    await m.answer("Дякуємо за відгук! 🙏 Чекаємо вас знову ✂️", reply_markup=kb_panel(m.from_user.id))
+
+
 @router.callback_query(F.data.startswith("ok:"))
 async def cb_ok(cb: CallbackQuery, bot: Bot):
     appt_id = int(cb.data.split(":")[1])
@@ -645,7 +669,7 @@ async def cb_ok(cb: CallbackQuery, bot: Bot):
 
 
 @router.callback_query(F.data.startswith("r:"))
-async def cb_rate(cb: CallbackQuery, bot: Bot):
+async def cb_rate(cb: CallbackQuery, bot: Bot, state: FSMContext):
     _, aid, n = cb.data.split(":")
     aid, n = int(aid), int(n)
     if not 1 <= n <= 5:
@@ -656,14 +680,16 @@ async def cb_rate(cb: CallbackQuery, bot: Bot):
             return await cb.answer()
         if c.execute("SELECT 1 FROM reviews WHERE appt_id=?", (aid,)).fetchone():
             return await cb.answer("Дякуємо, оцінку вже враховано.", show_alert=True)
-        c.execute("INSERT INTO reviews(appt_id, tg_id, rating, created) VALUES(?,?,?,?)", (aid, cb.from_user.id, n, now().isoformat(timespec="seconds")))
+        cur = c.execute("INSERT INTO reviews(appt_id, tg_id, rating, created) VALUES(?,?,?,?)", (aid, cb.from_user.id, n, now().isoformat(timespec="seconds")))
+        rid = cur.lastrowid
         c.commit()
-    await show(cb, f"Дякуємо за оцінку {'⭐' * n}! Чекаємо вас знову ✂️")
+    await state.set_state(ReviewText.text)
+    await state.update_data(review_id=rid)
+    await show(cb, f"Дякуємо за оцінку {'⭐' * n}!\n\nНапишіть кілька слів про візит: з вашого дозволу відгук з'явиться на сайті. Або натисніть /skip.")
     if n <= 3:
         await notify_admins(bot, f"⚠️ Низька оцінка {n}/5\n{a['name']} · {a['phone']}\nМайстер: {master_name(a['master'])}")
 
 
-# ---------- Меню та кроки запису ----------
 @router.callback_query(F.data == "home")
 async def cb_home(cb: CallbackQuery):
     await show(cb, f"«{SHOP_NAME}»\n\nОберіть дію:", kb_main())
@@ -752,8 +778,7 @@ async def cb_time(cb: CallbackQuery, state: FSMContext):
     name, mins, price = SERVICES[sid]
     kb = ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text="📱 Поділитися номером", request_contact=True)]],
-        resize_keyboard=True,
-        one_time_keyboard=True,
+        resize_keyboard=True, one_time_keyboard=True,
     )
     await cb.message.answer(
         f"{name}, {master_name(mid)}\n📅 {fmt(slot_dt(day, i))}\n💰 {price} ₴\n\n"
@@ -775,14 +800,8 @@ async def got_phone(m: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     try:
         appt = await create_appointment(
-            name=m.from_user.full_name,
-            phone=phone,
-            sid=data["sid"],
-            mid=data["mid"],
-            day=date.fromisoformat(data["day"]),
-            slot=data["slot"],
-            tg_id=m.from_user.id,
-            source="bot",
+            name=m.from_user.full_name, phone=phone, sid=data["sid"], mid=data["mid"],
+            day=date.fromisoformat(data["day"]), slot=data["slot"], tg_id=m.from_user.id, source="bot",
         )
     except BookingError as e:
         await state.clear()
@@ -793,7 +812,31 @@ async def got_phone(m: Message, state: FSMContext, bot: Bot):
     await after_booking(bot, appt)
 
 
-# ---------- Мої записи ----------
+# ---------- Будь-яке вільне повідомлення клієнта (у CRM-чат) ----------
+@router.message(F.text, ~F.text.startswith("/"))
+async def got_any_text(m: Message, state: FSMContext):
+    if await state.get_state():
+        return
+    if m.from_user.id in ADMIN_IDS:
+        return
+    name, phone = client_info_by_tg(m.from_user.id)
+    name = name or m.from_user.full_name
+    text = (m.text or "").strip()
+    if not text:
+        return
+    with closing(db()) as c:
+        recent = c.execute(
+            "SELECT 1 FROM messages WHERE tg_id=? AND direction='in' AND created>? LIMIT 1",
+            (m.from_user.id, (now() - timedelta(minutes=10)).isoformat(timespec="seconds")),
+        ).fetchone()
+    save_message(m.from_user.id, name, phone, "in", text)
+    if not recent:
+        try:
+            await m.answer("Дякуємо, повідомлення отримано! Майстер відповість найближчим часом ✂️\n\nЗаписатися: /book")
+        except Exception:
+            pass
+
+
 @router.callback_query(F.data == "my")
 async def cb_my(cb: CallbackQuery):
     text, kb = my_view(cb.from_user.id)
@@ -820,7 +863,6 @@ async def cb_cancel(cb: CallbackQuery, bot: Bot):
     await show(cb, "Запис скасовано.\n\n" + text, kb)
 
 
-# ---------- Фонова перевірка нагадувань ----------
 async def reminder_loop(bot) -> None:
     while True:
         try:
@@ -845,12 +887,11 @@ async def reminder_loop(bot) -> None:
         await asyncio.sleep(30)
 
 
-# ---------- Сайт і API ----------
+# ---------- Сайт та API ----------
 RATE: dict = {}
 
 
 def client_ip(request) -> str:
-    """За проксі (Railway, Render, Heroku) справжній IP лежить у X-Forwarded-For."""
     fwd = request.headers.get("X-Forwarded-For", "")
     return fwd.split(",")[0].strip() if fwd else (request.remote or "?")
 
@@ -884,7 +925,7 @@ async def cors(request, handler):
     resp = web.Response() if request.method == "OPTIONS" else await handler(request)
     if ALLOWED_ORIGIN:
         resp.headers["Access-Control-Allow-Origin"] = ALLOWED_ORIGIN
-        resp.headers["Access-Control-Allow-Headers"] = "Content-Type, X-Session"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type, X-Session, X-Admin-Token"
         resp.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
     return resp
 
@@ -897,18 +938,42 @@ async def options(request):
     return web.Response()
 
 
+def site_stats():
+    with closing(db()) as c:
+        visits = c.execute("SELECT COUNT(*) FROM appts WHERE status='done'").fetchone()[0]
+        cnt, avg = c.execute("SELECT COUNT(*), AVG(rating) FROM reviews").fetchone()
+        per = {r[0]: (r[1], r[2]) for r in c.execute("SELECT a.master, COUNT(*), AVG(r.rating) FROM reviews r JOIN appts a ON a.id=r.appt_id GROUP BY a.master")}
+    return {"visits": visits, "reviews": cnt, "rating": round(avg, 1) if avg else 0, "since": SHOP_SINCE}, per
+
+
+async def api_reviews(request):
+    with closing(db()) as c:
+        rows = c.execute(
+            "SELECT r.rating, r.comment, r.created, a.name, a.master FROM reviews r JOIN appts a ON a.id=r.appt_id "
+            "WHERE r.rating>=4 AND r.comment IS NOT NULL AND r.comment!='' ORDER BY r.id DESC LIMIT 30"
+        ).fetchall()
+    items = []
+    for r in rows:
+        p = (r["name"] or "Клієнт").split()
+        items.append({
+            "name": f"{p[0]} {p[1][0]}." if len(p) > 1 else p[0],
+            "rating": r["rating"], "comment": r["comment"],
+            "master": master_name(r["master"]), "date": r["created"][:10],
+        })
+    return web.json_response({"ok": True, "items": items})
+
+
 async def api_config(request):
-    return web.json_response(
-        {
-            "ok": True,
-            "shop": SHOP_NAME,
-            "address": ADDRESS,
-            "hours": f"{OPEN_HOUR}:00–{OPEN_HOUR + SLOTS // 2}:00",
-            "bot": BOT_USERNAME,
-            "services": [{"id": k, "name": v[0], "min": v[1], "price": v[2]} for k, v in SERVICES.items()],
-            "masters": [{"id": k, "name": v} for k, v in MASTERS.items()],
-        }
-    )
+    stats, per = site_stats()
+    return web.json_response({
+        "ok": True, "shop": SHOP_NAME, "address": ADDRESS,
+        "hours": f"{OPEN_HOUR}:00–{OPEN_HOUR + SLOTS // 2}:00",
+        "bot": BOT_USERNAME, "phone": SHOP_PHONE, "map": MAP_URL,
+        "stats": stats,
+        "loyalty": {"every": LOYALTY_EVERY, "percent": LOYALTY_PERCENT},
+        "services": [{"id": k, "name": v[0], "min": v[1], "price": v[2]} for k, v in SERVICES.items()],
+        "masters": [{"id": k, "name": v, "rating": round(per[k][1], 1) if k in per else 0, "reviews": per[k][0] if k in per else 0} for k, v in MASTERS.items()],
+    })
 
 
 async def api_days(request):
@@ -929,9 +994,7 @@ async def api_slots(request):
     day = parse_day(request.query.get("date", ""))
     if sid not in SERVICES or mid not in VALID_MASTERS or not day:
         return jerr("Невірні параметри.")
-    return web.json_response(
-        {"ok": True, "slots": [{"i": i, "label": slot_label(i)} for i in free_slots(day, mid, sid)]}
-    )
+    return web.json_response({"ok": True, "slots": [{"i": i, "label": slot_label(i)} for i in free_slots(day, mid, sid)]})
 
 
 async def api_book(request):
@@ -943,7 +1006,7 @@ async def api_book(request):
         return jerr("Невірний запит.")
     if not isinstance(data, dict):
         return jerr("Невірний запит.")
-    if data.get("website"):  # приманка для ботів: людина це поле не бачить
+    if data.get("website"):
         return web.json_response({"ok": True})
     sid, mid = data.get("service"), data.get("master")
     day = parse_day(str(data.get("date", "")))
@@ -959,23 +1022,20 @@ async def api_book(request):
     sess = get_session(request)
     try:
         appt = await create_appointment(
-            name=name, phone=phone, sid=sid, mid=mid, day=day, slot=slot, tg_id=sess["tg_id"] if sess else None, source="web"
+            name=name, phone=phone, sid=sid, mid=mid, day=day, slot=slot,
+            tg_id=sess["tg_id"] if sess else None, source="web",
         )
     except BookingError as e:
         return jerr(str(e), 409)
     await after_booking(request.app["bot"], appt)
     s = SERVICES[sid]
-    return web.json_response(
-        {
-            "ok": True,
-            "when": fmt(datetime.fromisoformat(appt["start"])),
-            "service": s[0],
-            "master": master_name(appt["master"]),
-            "price": appt["price"] if appt["price"] is not None else s[2],
-            "logged": bool(sess),
-            "tg_link": f"https://t.me/{BOT_USERNAME}?start=link_{appt['token']}" if BOT_USERNAME else None,
-        }
-    )
+    return web.json_response({
+        "ok": True, "when": fmt(datetime.fromisoformat(appt["start"])),
+        "service": s[0], "master": master_name(appt["master"]),
+        "price": appt["price"] if appt["price"] is not None else s[2],
+        "logged": bool(sess), "start": appt["start"], "min": s[1],
+        "tg_link": f"https://t.me/{BOT_USERNAME}?start=link_{appt['token']}" if BOT_USERNAME else None,
+    })
 
 
 async def index(request):
@@ -991,7 +1051,6 @@ ADMIN_STATUS = {"booked": "Очікується", "done": "Завершено", 
 
 
 def admin_ok(request) -> bool:
-    """Токен приймається лише із заголовка, щоб він не потрапляв у URL і логи."""
     if not ADMIN_TOKEN:
         return False
     return secrets.compare_digest(request.headers.get("X-Admin-Token", ""), ADMIN_TOKEN)
@@ -1033,13 +1092,11 @@ async def admin_day(request):
         mname = MASTERS.get(r["master"], r["master"])
         if (mf and r["master"] != mf) or (sf and r["status"] != sf) or (q and q not in f"{r['name']} {r['phone']}".lower()):
             continue
-        items.append(
-            {
-                "id": r["id"], "date": f"{st:%d.%m}", "time": f"{st:%H:%M}", "name": r["name"], "phone": r["phone"],
-                "service": svc[0], "master": mname, "price": price, "status": r["status"],
-                "source": SRC.get(r["source"], "бот"), "tg": bool(r["tg_id"]), "note": r["note"] or "",
-            }
-        )
+        items.append({
+            "id": r["id"], "date": f"{st:%d.%m}", "time": f"{st:%H:%M}", "name": r["name"], "phone": r["phone"],
+            "service": svc[0], "master": mname, "price": price, "status": r["status"],
+            "source": SRC.get(r["source"], "бот"), "tg": bool(r["tg_id"]), "note": r["note"] or "",
+        })
         if r["status"] != "cancelled":
             m = by_master.setdefault(mname, {"n": 0, "revenue": 0})
             m["n"] += 1
@@ -1047,22 +1104,18 @@ async def admin_day(request):
             by_service[svc[0]] = by_service.get(svc[0], 0) + 1
     done = [i for i in items if i["status"] == "done"]
     revenue = sum(i["price"] for i in done)
-    return web.json_response(
-        {
-            "ok": True,
-            "items": items,
-            "stats": {
-                "count": len([i for i in items if i["status"] != "cancelled"]),
-                "done_count": len(done),
-                "revenue": revenue,
-                "avg_check": revenue // len(done) if done else 0,
-                "expected": sum(i["price"] for i in items if i["status"] == "booked"),
-                "lost_revenue": sum(i["price"] for i in items if i["status"] == "cancelled"),
-                "by_master": by_master,
-                "by_service": dict(sorted(by_service.items(), key=lambda x: -x[1])),
-            },
-        }
-    )
+    return web.json_response({
+        "ok": True, "items": items,
+        "stats": {
+            "count": len([i for i in items if i["status"] != "cancelled"]),
+            "done_count": len(done), "revenue": revenue,
+            "avg_check": revenue // len(done) if done else 0,
+            "expected": sum(i["price"] for i in items if i["status"] == "booked"),
+            "lost_revenue": sum(i["price"] for i in items if i["status"] == "cancelled"),
+            "by_master": by_master,
+            "by_service": dict(sorted(by_service.items(), key=lambda x: -x[1])),
+        },
+    })
 
 
 async def admin_status(request):
@@ -1081,7 +1134,6 @@ async def admin_status(request):
         if not a:
             return jerr("Запис не знайдено.", 404)
         if status == "booked" and a["status"] == "cancelled" and a["service"] in SERVICES:
-            # повернути скасований запис можна лише якщо час досі вільний
             st = datetime.fromisoformat(a["start"])
             i = ((st.hour * 60 + st.minute) - OPEN_HOUR * 60) // 30
             need = {i + k for k in range(units(a["service"]))}
@@ -1119,9 +1171,7 @@ async def admin_clients(request):
     clients: dict = {}
     for r in rows:
         p = r["phone"] or "?"
-        cinfo = clients.setdefault(
-            p, {"name": r["name"], "phone": p, "visits": 0, "spent": 0, "last": None, "upcoming": False, "tg": False}
-        )
+        cinfo = clients.setdefault(p, {"name": r["name"], "phone": p, "visits": 0, "spent": 0, "last": None, "upcoming": False, "tg": False})
         if r["name"]:
             cinfo["name"] = r["name"]
         if r["tg_id"]:
@@ -1144,7 +1194,6 @@ async def admin_page(request):
     return web.FileResponse(f)
 
 
-# ---------- Вхід через Telegram і особистий кабінет ----------
 def get_session(request):
     tok = request.headers.get("X-Session", "")
     if not tok:
@@ -1199,22 +1248,18 @@ async def api_me(request):
         rows = c.execute("SELECT * FROM appts WHERE tg_id=? ORDER BY start DESC LIMIT 30", (s["tg_id"],)).fetchall()
     cur = now().isoformat(timespec="seconds")
     cnt = len([r for r in rows if r["status"] in ("done", "booked")])
-    items = [
-        {
-            "id": r["id"], "when": fmt(datetime.fromisoformat(r["start"])), "status": r["status"],
-            "service": SERVICES.get(r["service"], ("?",))[0], "master": master_name(r["master"]),
-            "price": r["price"] if r["price"] is not None else SERVICES.get(r["service"], (0, 0, 0))[2],
-            "upcoming": r["status"] == "booked" and r["start"] > cur,
-        }
-        for r in rows
-    ]
-    return web.json_response(
-        {
-            "ok": True, "name": s["name"], "phone": rows[0]["phone"] if rows else "", "items": items,
-            "bonus": ((-(cnt + 1)) % LOYALTY_EVERY) if LOYALTY_EVERY > 0 else None,
-            "bonus_every": LOYALTY_EVERY, "bonus_percent": LOYALTY_PERCENT,
-        }
-    )
+    items = [{
+        "id": r["id"], "when": fmt(datetime.fromisoformat(r["start"])), "start": r["start"], "status": r["status"],
+        "sid": r["service"], "mid": r["master"], "min": SERVICES.get(r["service"], (0, 30))[1],
+        "service": SERVICES.get(r["service"], ("?",))[0], "master": master_name(r["master"]),
+        "price": r["price"] if r["price"] is not None else SERVICES.get(r["service"], (0, 0, 0))[2],
+        "upcoming": r["status"] == "booked" and r["start"] > cur,
+    } for r in rows]
+    return web.json_response({
+        "ok": True, "name": s["name"], "phone": rows[0]["phone"] if rows else "", "items": items,
+        "bonus": ((-(cnt + 1)) % LOYALTY_EVERY) if LOYALTY_EVERY > 0 else None,
+        "bonus_every": LOYALTY_EVERY, "bonus_percent": LOYALTY_PERCENT,
+    })
 
 
 async def api_me_cancel(request):
@@ -1235,7 +1280,6 @@ async def api_me_cancel(request):
     return web.json_response({"ok": True})
 
 
-# ---------- CRM: розклад, ручний запис, нотатки, повідомлення, розсилка, відгуки, експорт ----------
 async def admin_schedule(request):
     if not admin_ok(request):
         return no_access()
@@ -1254,9 +1298,7 @@ async def admin_schedule(request):
         cells[r["master"]][i] = {"id": r["id"], "name": r["name"], "service": SERVICES[r["service"]][0], "status": r["status"], "span": span}
         for k in range(1, span):
             cells[r["master"]][i + k] = "skip"
-    return web.json_response(
-        {"ok": True, "masters": [{"id": k, "name": v} for k, v in MASTERS.items()], "slots": [slot_label(i) for i in range(SLOTS)], "cells": cells}
-    )
+    return web.json_response({"ok": True, "masters": [{"id": k, "name": v} for k, v in MASTERS.items()], "slots": [slot_label(i) for i in range(SLOTS)], "cells": cells})
 
 
 async def admin_free(request):
@@ -1327,6 +1369,7 @@ async def admin_message(request):
         await request.app["bot"].send_message(row["tg_id"], text)
     except Exception:
         return jerr("Telegram не прийняв повідомлення (клієнт міг заблокувати бота).")
+    save_message(row["tg_id"], None, phone, "out", text)
     return web.json_response({"ok": True})
 
 
@@ -1345,6 +1388,7 @@ async def admin_broadcast(request):
     for tg in ids:
         try:
             await request.app["bot"].send_message(tg, text)
+            save_message(tg, None, None, "out", text)
             sent += 1
         except Exception:
             pass
@@ -1382,8 +1426,75 @@ async def admin_export(request):
     return web.Response(text="\ufeff" + buf.getvalue(), content_type="text/csv", charset="utf-8")
 
 
+# ---------- CRM: чати ----------
+async def admin_chats(request):
+    if not admin_ok(request):
+        return no_access()
+    with closing(db()) as c:
+        rows = c.execute(
+            "SELECT tg_id, name, phone, direction, text, created, read FROM messages WHERE tg_id IS NOT NULL ORDER BY id DESC LIMIT 4000"
+        ).fetchall()
+        clients = {r["tg_id"]: r for r in c.execute("SELECT tg_id, name, phone FROM appts WHERE tg_id IS NOT NULL ORDER BY id").fetchall()}
+    chats = {}
+    for r in rows:
+        tg = r["tg_id"]
+        if tg not in chats:
+            info = clients.get(tg)
+            chats[tg] = {
+                "tg_id": tg,
+                "name": (info["name"] if info else None) or r["name"] or "Клієнт",
+                "phone": (info["phone"] if info else None) or r["phone"] or "",
+                "last": r["text"] or "",
+                "last_dir": r["direction"],
+                "last_at": r["created"],
+                "unread": 0,
+            }
+        if r["direction"] == "in" and not r["read"]:
+            chats[tg]["unread"] += 1
+    return web.json_response({"ok": True, "chats": sorted(chats.values(), key=lambda x: x["last_at"], reverse=True)})
+
+
+async def admin_chat(request):
+    if not admin_ok(request):
+        return no_access()
+    try:
+        tg = int(request.query.get("tg_id", "0"))
+    except (ValueError, TypeError):
+        return jerr("Невірний параметр.")
+    with closing(db()) as c:
+        rows = c.execute("SELECT id, direction, text, created FROM messages WHERE tg_id=? ORDER BY id ASC LIMIT 1000", (tg,)).fetchall()
+        c.execute("UPDATE messages SET read=1 WHERE tg_id=? AND direction='in' AND read=0", (tg,))
+        c.commit()
+    name, phone = client_info_by_tg(tg)
+    if not name:
+        with closing(db()) as c:
+            r = c.execute("SELECT name FROM messages WHERE tg_id=? AND name IS NOT NULL ORDER BY id DESC LIMIT 1", (tg,)).fetchone()
+            name = r["name"] if r else "Клієнт"
+    items = [{"id": r["id"], "dir": r["direction"], "text": r["text"], "at": r["created"]} for r in rows]
+    return web.json_response({"ok": True, "name": name or "Клієнт", "phone": phone or "", "items": items})
+
+
+async def admin_chat_send(request):
+    if not admin_ok(request):
+        return no_access()
+    try:
+        d = await request.json()
+        tg = int(d.get("tg_id", 0))
+        text = str(d.get("text", "")).strip()[:4000]
+    except Exception:
+        return jerr("Невірний запит.")
+    if not tg or not text:
+        return jerr("Порожнє повідомлення.")
+    try:
+        await request.app["bot"].send_message(tg, text)
+    except Exception:
+        return jerr("Telegram не прийняв повідомлення (клієнт міг заблокувати бота).")
+    name, phone = client_info_by_tg(tg)
+    save_message(tg, name, phone, "out", text)
+    return web.json_response({"ok": True})
+
+
 async def setup_bot_ui(bot) -> None:
-    """Меню команд (☰ біля поля вводу) і кнопка «Сайт»."""
     base = [
         BotCommand(command="start", description="Головне меню"),
         BotCommand(command="book", description="Записатися"),
@@ -1420,6 +1531,7 @@ def build_app(bot) -> web.Application:
     app.router.add_get("/api/days", api_days)
     app.router.add_get("/api/slots", api_slots)
     app.router.add_post("/api/book", api_book)
+    app.router.add_get("/api/reviews", api_reviews)
     app.router.add_post("/api/auth/start", api_auth_start)
     app.router.add_get("/api/auth/check", api_auth_check)
     app.router.add_post("/api/auth/logout", api_logout)
@@ -1433,7 +1545,11 @@ def build_app(bot) -> web.Application:
     app.router.add_post("/admin/api/broadcast", admin_broadcast)
     app.router.add_get("/admin/api/reviews", admin_reviews)
     app.router.add_get("/admin/api/export", admin_export)
+    app.router.add_get("/admin/api/chats", admin_chats)
+    app.router.add_get("/admin/api/chat", admin_chat)
+    app.router.add_post("/admin/api/chat/send", admin_chat_send)
     app.router.add_route("OPTIONS", "/api/{tail:.*}", options)
+    app.router.add_route("OPTIONS", "/admin/api/{tail:.*}", options)
     return app
 
 
